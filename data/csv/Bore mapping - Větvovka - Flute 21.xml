@@ -1,0 +1,40 @@
+<boremapper-document>
+  <bore>
+    <corrections top-groove-width="0" top-groove-height="0" bottom-groove-width="0" bottom-groove-height="0" />
+    <points>
+      <point position="0" top-groove-width="36" top-groove-height="10.8" top-cutter-width="25" top-cutter-height="11.5625" bottom-groove-width="31.5" bottom-groove-height="12.5" bottom-cutter-width="" bottom-cutter-height="" />
+      <point position="4" top-groove-width="36" top-groove-height="10.8" top-cutter-width="25" top-cutter-height="11.5625" bottom-groove-width="35.2" bottom-groove-height="14.5" bottom-cutter-width="25" bottom-cutter-height="11.5625" />
+      <point position="20" top-groove-width="36.1" top-groove-height="10.8" top-cutter-width="25" top-cutter-height="11.5625" bottom-groove-width="36.1" bottom-groove-height="16" bottom-cutter-width="25" bottom-cutter-height="11.5625" />
+      <point position="40" top-groove-width="34.9" top-groove-height="13.4" top-cutter-width="25" top-cutter-height="11.5625" bottom-groove-width="35.1" bottom-groove-height="16" bottom-cutter-width="25" bottom-cutter-height="11.5625" />
+      <point position="60" top-groove-width="34.2" top-groove-height="18.2" top-cutter-width="25" top-cutter-height="11.5625" bottom-groove-width="34.6" bottom-groove-height="15.8" bottom-cutter-width="25" bottom-cutter-height="11.5625" />
+      <point position="80" top-groove-width="34.2" top-groove-height="17.4" top-cutter-width="25" top-cutter-height="11.5625" bottom-groove-width="34.5" bottom-groove-height="15.5" bottom-cutter-width="25" bottom-cutter-height="11.5625" />
+      <point position="100" top-groove-width="33.9" top-groove-height="17.3" top-cutter-width="25" top-cutter-height="11.5625" bottom-groove-width="35" bottom-groove-height="15.6" bottom-cutter-width="25" bottom-cutter-height="11.5625" />
+      <point position="120" top-groove-width="34.7" top-groove-height="16" top-cutter-width="25" top-cutter-height="11.5625" bottom-groove-width="35.5" bottom-groove-height="15.8" bottom-cutter-width="25" bottom-cutter-height="11.5625" />
+      <point position="140" top-groove-width="35.4" top-groove-height="15.1" top-cutter-width="25" top-cutter-height="11.5625" bottom-groove-width="36.4" bottom-groove-height="16" bottom-cutter-width="25" bottom-cutter-height="11.5625" />
+      <point position="160" top-groove-width="35" top-groove-height="15.1" top-cutter-width="25" top-cutter-height="11.5625" bottom-groove-width="36.4" bottom-groove-height="15.8" bottom-cutter-width="25" bottom-cutter-height="11.5625" />
+      <point position="180" top-groove-width="30.6" top-groove-height="13.5" top-cutter-width="25" top-cutter-height="11.5625" bottom-groove-width="32.2" bottom-groove-height="16.1" bottom-cutter-width="25" bottom-cutter-height="11.5625" />
+      <point position="200" top-groove-width="29.4" top-groove-height="12.6" top-cutter-width="25" top-cutter-height="11.5625" bottom-groove-width="30.6" bottom-groove-height="17.1" bottom-cutter-width="25" bottom-cutter-height="11.5625" />
+      <point position="220" top-groove-width="30.7" top-groove-height="13.8" top-cutter-width="25" top-cutter-height="11.5625" bottom-groove-width="31.2" bottom-groove-height="15.6" bottom-cutter-width="25" bottom-cutter-height="11.5625" />
+      <point position="240" top-groove-width="30.6" top-groove-height="14.5" top-cutter-width="25" top-cutter-height="11.5625" bottom-groove-width="31.2" bottom-groove-height="13.9" bottom-cutter-width="25" bottom-cutter-height="11.5625" />
+      <point position="260" top-groove-width="30" top-groove-height="14.8" top-cutter-width="25" top-cutter-height="11.5625" bottom-groove-width="30.1" bottom-groove-height="13.8" bottom-cutter-width="25" bottom-cutter-height="11.5625" />
+      <point position="280" top-groove-width="29.5" top-groove-height="14.7" top-cutter-width="25" top-cutter-height="11.5625" bottom-groove-width="30" bottom-groove-height="13.3" bottom-cutter-width="25" bottom-cutter-height="11.5625" />
+      <point position="300" top-groove-width="29.8" top-groove-height="14.2" top-cutter-width="25" top-cutter-height="11.5625" bottom-groove-width="30" bottom-groove-height="13.4" bottom-cutter-width="25" bottom-cutter-height="11.5625" />
+      <point position="320" top-groove-width="30.2" top-groove-height="13.8" top-cutter-width="25" top-cutter-height="11.5625" bottom-groove-width="29.4" bottom-groove-height="13.5" bottom-cutter-width="25" bottom-cutter-height="11.5625" />
+      <point position="340" top-groove-width="29.4" top-groove-height="14.3" top-cutter-width="25" top-cutter-height="11.5625" bottom-groove-width="29.1" bottom-groove-height="13.3" bottom-cutter-width="25" bottom-cutter-height="11.5625" />
+      <point position="360" top-groove-width="28.9" top-groove-height="13.6" top-cutter-width="25" top-cutter-height="11.5625" bottom-groove-width="29.2" bottom-groove-height="13.4" bottom-cutter-width="25" bottom-cutter-height="11.5625" />
+      <point position="380" top-groove-width="29.1" top-groove-height="13.5" top-cutter-width="25" top-cutter-height="11.5625" bottom-groove-width="29.2" bottom-groove-height="13.8" bottom-cutter-width="25" bottom-cutter-height="11.5625" />
+      <point position="400" top-groove-width="29.7" top-groove-height="14.2" top-cutter-width="25" top-cutter-height="11.5625" bottom-groove-width="29.6" bottom-groove-height="15" bottom-cutter-width="25" bottom-cutter-height="11.5625" />
+      <point position="420" top-groove-width="31.9" top-groove-height="14.4" top-cutter-width="25" top-cutter-height="11.5625" bottom-groove-width="31.5" bottom-groove-height="14.8" bottom-cutter-width="25" bottom-cutter-height="11.5625" />
+      <point position="440" top-groove-width="29.1" top-groove-height="13.2" top-cutter-width="25" top-cutter-height="11.5625" bottom-groove-width="29.8" bottom-groove-height="14.2" bottom-cutter-width="25" bottom-cutter-height="11.5625" />
+      <point position="460" top-groove-width="27" top-groove-height="11.6" top-cutter-width="25" top-cutter-height="11.5625" bottom-groove-width="27.8" bottom-groove-height="14.2" bottom-cutter-width="25" bottom-cutter-height="11.5625" />
+      <point position="480" top-groove-width="26.8" top-groove-height="11" top-cutter-width="25" top-cutter-height="11.5625" bottom-groove-width="27.9" bottom-groove-height="16" bottom-cutter-width="25" bottom-cutter-height="11.5625" />
+      <point position="490" top-groove-width="26.4" top-groove-height="10.6" top-cutter-width="25" top-cutter-height="11.5625" bottom-groove-width="28.3" bottom-groove-height="16.3" bottom-cutter-width="25" bottom-cutter-height="11.5625" />
+      <point position="500" top-groove-width="11.2" top-groove-height="3.2" top-cutter-width="" top-cutter-height="" bottom-groove-width="12" bottom-groove-height="9" bottom-cutter-width="" bottom-cutter-height="" />
+      <point position="520" top-groove-width="11.4" top-groove-height="4.2" top-cutter-width="" top-cutter-height="" bottom-groove-width="12" bottom-groove-height="8.1" bottom-cutter-width="" bottom-cutter-height="" />
+      <point position="540" top-groove-width="12.1" top-groove-height="5.5" top-cutter-width="" top-cutter-height="" bottom-groove-width="12" bottom-groove-height="7" bottom-cutter-width="" bottom-cutter-height="" />
+      <point position="560" top-groove-width="12" top-groove-height="7.4" top-cutter-width="" top-cutter-height="" bottom-groove-width="12" bottom-groove-height="5.2" bottom-cutter-width="" bottom-cutter-height="" />
+      <point position="570" top-groove-width="12" top-groove-height="8.1" top-cutter-width="" top-cutter-height="" bottom-groove-width="11.5" bottom-groove-height="5" bottom-cutter-width="" bottom-cutter-height="" />
+    </points>
+  </bore>
+  <wid-export bore-origin="0" />
+</boremapper-document>

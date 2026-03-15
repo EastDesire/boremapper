@@ -17,6 +17,8 @@ BORE_PARTS = ('bottom', 'top')
 
 BORE_TABLE_WIDTH = 700
 
+# TODO: <size_factor> probably no longer needed, when using "stretch" resize mode on table header
+
 # <label>, <editable>, <size_factor>, <description>
 BORE_TABLE_COLUMNS = [
     ('b W', True, 1.0, 'Bottom: Groove Width'),
@@ -30,6 +32,9 @@ BORE_TABLE_COLUMNS = [
     ('ED', False, 1.0, 'Equivalent Diameter'),
     ('OD', True, 1.0, 'Override Diameter'),
 ]
+
+BORE_TABLE_MIN_COLUMN_WIDTH = 70
+BORE_TABLE_MAX_COLUMN_WIDTH = 150
 
 DOCUMENT_WINDOW_WIDTH = BORE_TABLE_WIDTH + 100
 DOCUMENT_WINDOW_HEIGHT = 600

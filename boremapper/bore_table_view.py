@@ -1,8 +1,7 @@
 from PySide6.QtCore import QItemSelection, QItemSelectionRange, QModelIndex, QPersistentModelIndex, Qt, Signal
 from PySide6.QtGui import QKeyEvent
 from PySide6.QtWidgets import QAbstractItemDelegate, QStyleOptionViewItem, QTableView, QItemDelegate, QAbstractItemView, \
-    QHeaderView, \
-    QLineEdit, QWidget
+    QHeaderView, QLineEdit, QWidget
 
 from boremapper import validators, const
 from boremapper.models.bore_table_model import BoreTableModel
@@ -282,6 +281,12 @@ class BoreTableHorizontalHeader(QHeaderView):
         self.table_view = table_view
         self.setModel(table_view.model())
         self.setSectionsClickable(True)
+        self.setHighlightSections(True) # TODO: use?
+        #self.setStyle(QStyleFactory.create('fusion')) # TODO
+        #self.setStyleSheet("QHeaderView::section:checked { background-color: #FF0000; }") # TODO
+        self.setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
+        self.setMinimumSectionSize(const.BORE_TABLE_MIN_COLUMN_WIDTH)
+        self.setMaximumSectionSize(const.BORE_TABLE_MAX_COLUMN_WIDTH)
 
 
 class BoreTableVerticalHeader(QHeaderView):
@@ -292,6 +297,7 @@ class BoreTableVerticalHeader(QHeaderView):
         self.setModel(table_view.model())
         self.setSectionResizeMode(QHeaderView.ResizeMode.Fixed)
         self.setSectionsClickable(True)
+        #self.setHighlightSections(True) # TODO: use?
 
 
 class BoreTableItemDelegate(QItemDelegate):

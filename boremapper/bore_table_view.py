@@ -73,6 +73,9 @@ class BoreTableView(QTableView):
         # TODO
         #self.selectionModel().selection() ??????
         return []
+    
+    def selected_cells_count(self) -> int:
+        return len(self.selectionModel().selectedIndexes())
 
     def current_row(self) -> int|None:
         index = self.currentIndex()

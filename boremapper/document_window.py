@@ -289,13 +289,14 @@ class DocumentWindow(QMainWindow):
         cd = self.current_column_detail()
         show_widget = None
 
-        match cd['feature']:
-            case 'groove':
-                show_widget = 'groove'
-            case 'cutter':
-                show_widget = 'cutter'
-            case 'equivalent_diameter' | 'override_diameter':
-                show_widget = 'joined'
+        if self.table_view.selected_cells_count() == 1:
+            match cd['feature']:
+                case 'groove':
+                    show_widget = 'groove'
+                case 'cutter':
+                    show_widget = 'cutter'
+                case 'equivalent_diameter' | 'override_diameter':
+                    show_widget = 'joined'
 
         for k, widget in self.point_detail_widgets.items():
             widget.setVisible(k == show_widget)

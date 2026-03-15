@@ -258,7 +258,7 @@ class BorePointModel(Model):
                     })
                     c[p + '_area'] = None
 
-        areas = (c[p + '_area'] for p in const.BORE_PARTS)
+        areas = list(c[p + '_area'] for p in const.BORE_PARTS)
         c['area'] = None if None in areas else sum(areas)
         c['equivalent_diameter'] = \
             None if c['area'] is None else \

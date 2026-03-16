@@ -64,6 +64,7 @@ class DocumentWindow(QMainWindow):
         self.init_status_bar()
 
         self.restore_gui()
+        
         self.update_title()
         self.update_status_bar()
         self.update_menu()

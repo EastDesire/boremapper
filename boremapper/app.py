@@ -108,7 +108,7 @@ class App(QApplication):
         # If the document is opened in any window, bring it into view.
         """
         for dw in self.document_windows:
-            if dw.file == file:
+            if dw.model.file == file:
                 dw.bring_into_view()
                 return True
         return False

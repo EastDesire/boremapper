@@ -33,7 +33,6 @@ class DocumentWindow(QMainWindow):
         super().__init__()
 
         self.app = app
-
         self.model = model
         self.model.setParent(self)
 
@@ -58,6 +57,7 @@ class DocumentWindow(QMainWindow):
 
         self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose, True)
 
+        self.init_model()
         self.init_undo_stack()
         self.init_menu()
         self.init_content()
@@ -68,6 +68,9 @@ class DocumentWindow(QMainWindow):
         self.update_status_bar()
         self.update_menu()
         self.update_point_detail()
+        
+    def init_model(self):
+        self.model.file_changed.connect(self.on_file_changed)
 
     def init_undo_stack(self):
         # Note that the parent should be specified, or the undo_stack might be deleted too soon during exit
@@ -353,6 +356,10 @@ class DocumentWindow(QMainWindow):
     def on_table_selection_changed(self):
         self.update_menu()
         self.update_point_detail()
+        
+    def on_file_changed(self):
+        self.update_title()
+        self.update_menu()
 
     def on_action_file_new_trigger(self):
         self.app.new_document(show_init=True)

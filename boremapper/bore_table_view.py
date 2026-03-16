@@ -304,27 +304,31 @@ class BoreTableItemDelegate(QItemDelegate):
 
     def __init__(self, parent):
         super().__init__(parent)
+        self.commitData.connect(self.on_commit_data)
+        self.closeEditor.connect(self.on_close_editor)
 
     def createEditor(self, parent: 'QWidget', option: 'QStyleOptionViewItem', index: 'QModelIndex|QPersistentModelIndex', /):
-        print('Creating editor')
+        print('Creating editor') # TODO
         editor = QLineEdit(parent)
         editor.setValidator(validators.OptionalDoubleValidator())
-        editor.editingFinished.connect(self.on_editing_finished)
-        editor.returnPressed.connect(self.on_return_pressed)
         return editor
 
     def destroyEditor(self, editor: 'QWidget', index: 'QModelIndex|QPersistentModelIndex', /):
         editor.destroy()
 
-    def setEditorData(self, editor: 'QWidget', index: 'QModelIndex|QPersistentModelIndex', /):
-        super().setEditorData(editor, index)
-        print('setEditorData')
+    # TODO needed?
+    #def setEditorData(self, editor: 'QWidget', index: 'QModelIndex|QPersistentModelIndex', /):
+    #    super().setEditorData(editor, index)
+    #    # TODO
+    #    print('setEditorData')
+    #    # TODO
+    #    if isinstance(editor, QLineEdit):
+    #        editor.selectAll()
+        
+    def on_commit_data(self):
         # TODO
-        #if isinstance(editor, QLineEdit):
-        #    editor.selectAll()
+        print('Data committed')
 
-    def on_editing_finished(self):
-        print('Editing finished')
-
-    def on_return_pressed(self):
-        print('Return pressed')
+    def on_close_editor(self):
+        # TODO
+        print('Editor closed')

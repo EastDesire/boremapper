@@ -14,8 +14,7 @@ class BoreTableModel(QAbstractTableModel):
     Note: This model references data from the main model, it doesn't hold any model state by itself.
     """
 
-    # TODO use
-    data_updated = Signal(QModelIndex, typing.Any, int)
+    data_set = Signal(QModelIndex, typing.Any, int)
     
     muted_text_alpha = 0.3
 
@@ -97,7 +96,9 @@ class BoreTableModel(QAbstractTableModel):
         return None
 
     def setData(self, index: 'QModelIndex|QPersistentModelIndex', value: typing.Any, /, role: int = ...):
-        self.data_updated.emit(index, value, role)
+        print('setData')
+        # TODO: on_data_set
+        self.data_set.emit(index, value, role)
         return True
         pass
         # TODO

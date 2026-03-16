@@ -76,9 +76,7 @@ class DocumentWindow(QMainWindow):
     def init_undo_stack(self):
         # Note that the parent should be specified, or the undo_stack might be deleted too soon during exit
         self.undo_stack = QUndoStack(self)
-        # TODO
-        # TODO: pozor, nepoužívat v .connect lambda metodu, neuměla by se při destroyi odpojit
-        #self.undo_stack.cleanChanged.connect(lambda: self.state.changed([scope.CleanState]))
+        self.undo_stack.cleanChanged.connect(self.on_clean_state_changed)
 
     def init_menu(self):
         menu_bar = QMenuBar(self)
@@ -362,6 +360,10 @@ class DocumentWindow(QMainWindow):
         self.update_title()
         self.update_menu()
 
+    def on_clean_state_changed(self):
+        self.update_title()
+        self.update_menu()
+
     def on_action_file_new_trigger(self):
         self.app.new_document(show_init=True)
 
@@ -505,7 +507,6 @@ class DocumentWindow(QMainWindow):
 
             self.undo_stack.setClean()
             self.model.file = file
-            #self.state.changed([scope.File]) # TODO use handler on file change instead
         except OSError:
             self.app.error_writing_file(file)
             return
@@ -563,14 +564,6 @@ class DocumentWindow(QMainWindow):
             if not detail.get('is_command'):
                 # Reset the clean state, because the model change doesn't come from a command, so it's not handled by undo stack
                 self.undo_stack.resetClean()
-        """
-
-    def on_after_global_state_change(self, parent, scopes, detail):
-        pass
-        # TODO
-        """
-        if scopes.any([scope.Settings]):
-            self.update_menu()
         """
 
     def on_before_close(self):

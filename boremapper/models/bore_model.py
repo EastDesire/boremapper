@@ -180,8 +180,9 @@ class BorePointModel(Model):
     def __setattr__(self, name, value):
         if not name in self.__dict__['_data']:
             raise AttributeError(name)
-        self.invalidate() # Changing the data -> derived values are no longer valid
-        self.__dict__['_data'][name] = value
+        if self.__dict__['_data'][name] != value:
+            self.__dict__['_data'][name] = value
+            self.invalidate() # Changing the data -> derived values are no longer valid
 
     def invalidate(self):
         self.__dict__['_cache'].clear()

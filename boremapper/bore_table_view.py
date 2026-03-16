@@ -280,10 +280,9 @@ class BoreTableHorizontalHeader(QHeaderView):
         super().__init__(Qt.Orientation.Horizontal, parent=table_view) # TODO: really set parent?
         self.table_view = table_view
         self.setModel(table_view.model())
+        self.setSelectionModel(self.table_view.selectionModel())
         self.setSectionsClickable(True)
-        self.setHighlightSections(True) # TODO: use?
-        #self.setStyle(QStyleFactory.create('fusion')) # TODO
-        #self.setStyleSheet("QHeaderView::section:checked { background-color: #FF0000; }") # TODO
+        self.setHighlightSections(True)
         self.setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
         self.setMinimumSectionSize(const.BORE_TABLE_MIN_COLUMN_WIDTH)
         self.setMaximumSectionSize(const.BORE_TABLE_MAX_COLUMN_WIDTH)
@@ -295,9 +294,10 @@ class BoreTableVerticalHeader(QHeaderView):
         super().__init__(Qt.Orientation.Vertical, parent=table_view) # TODO: really set parent?
         self.table_view = table_view
         self.setModel(table_view.model())
-        self.setSectionResizeMode(QHeaderView.ResizeMode.Fixed)
+        self.setSelectionModel(self.table_view.selectionModel())
         self.setSectionsClickable(True)
-        #self.setHighlightSections(True) # TODO: use?
+        self.setHighlightSections(True)
+        self.setSectionResizeMode(QHeaderView.ResizeMode.Fixed)
 
 
 class BoreTableItemDelegate(QItemDelegate):

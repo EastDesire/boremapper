@@ -566,33 +566,6 @@ class DocumentWindow(QMainWindow):
         """
         self.app.settings.write({ 'document_window': { 'geometry': self.saveGeometry() } })
 
-    def on_before_state_change(self, parent, scopes, detail):
-        pass
-        # TODO
-        """
-        if scopes.any([scope.ModelBore]):
-            self.table_view.model().on_before_model_changes()
-        """
-
-    def on_after_state_change(self, parent, scopes, detail):
-        pass
-        # TODO
-        """
-        if scopes.any([scope.File, scope.CleanState]):
-            self.update_title()
-        if scopes.any([scope.Model]):
-            # TODO: ensure to put corrections into 'bore' in the model, so that it structurally makes sense
-            self.update_status_bar()
-        if scopes.any([scope.Model, scope.CleanState, scope.TableSelection]):
-            self.update_menu()
-        if scopes.any([scope.ModelBore]):
-            self.table_view.model().on_after_model_changes()
-        if scopes.any([scope.Model]):
-            if not detail.get('is_command'):
-                # Reset the clean state, because the model change doesn't come from a command, so it's not handled by undo stack
-                self.undo_stack.resetClean()
-        """
-
     def on_before_close(self):
         """
         When returns False, the close event will be aborted.

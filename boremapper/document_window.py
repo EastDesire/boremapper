@@ -61,11 +61,7 @@ class DocumentWindow(QMainWindow):
         self.init_status_bar()
 
         self.restore_gui()
-        
-        self.update_title()
-        self.update_status_bar()
-        self.update_menu()
-        self.update_point_detail()
+        self.update_all()
         
     def init_models(self):
         self.model.file_changed.connect(self.on_file_change)
@@ -249,6 +245,30 @@ class DocumentWindow(QMainWindow):
         dialog.fileSelected.connect(self.on_document_save_dialog_file_selected)
         return dialog
 
+    def update_all(self):
+        self.update_menu()
+        self.update_title()
+        self.update_status_bar()
+        self.update_point_detail()
+
+    def update_menu(self):
+        selected_rows = len(self.table_view.selected_rows())
+        selected_anything = len(self.table_view.selectedIndexes()) > 0
+        selected_one_range = len(self.table_view.selected_ranges()) == 1
+
+        self.actions['file_save'].setDisabled(self.is_saved())
+
+        self.actions['cut'].setEnabled(selected_one_range)
+        self.actions['copy'].setEnabled(selected_one_range)
+        self.actions['paste'].setEnabled(selected_one_range)
+        self.actions['delete'].setEnabled(selected_anything)
+
+        self.actions['delete_positions'].setText('Delete Positions (%d)' % selected_rows)
+        self.actions['delete_positions'].setVisible(selected_rows != 0)
+
+        self.actions['beep_hints'].setChecked(self.app.settings.load('audio', 'beep_hints'))
+        self.actions['voice_hints'].setChecked(self.app.settings.load('audio', 'voice_hints'))
+
     def update_title(self):
         title = self.document_name()
         if not self.is_clean():
@@ -270,24 +290,6 @@ class DocumentWindow(QMainWindow):
                 format_length(c.top_groove_height),
             )
         )
-
-    def update_menu(self):
-        selected_rows = len(self.table_view.selected_rows())
-        selected_anything = len(self.table_view.selectedIndexes()) > 0
-        selected_one_range = len(self.table_view.selected_ranges()) == 1
-
-        self.actions['file_save'].setDisabled(self.is_saved())
-
-        self.actions['cut'].setEnabled(selected_one_range)
-        self.actions['copy'].setEnabled(selected_one_range)
-        self.actions['paste'].setEnabled(selected_one_range)
-        self.actions['delete'].setEnabled(selected_anything)
-
-        self.actions['delete_positions'].setText('Delete Positions (%d)' % selected_rows)
-        self.actions['delete_positions'].setVisible(selected_rows != 0)
-
-        self.actions['beep_hints'].setChecked(self.app.settings.load('audio', 'beep_hints'))
-        self.actions['voice_hints'].setChecked(self.app.settings.load('audio', 'voice_hints'))
 
     def update_point_detail(self):
         cd = self.current_column_detail()

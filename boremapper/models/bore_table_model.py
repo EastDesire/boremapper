@@ -129,7 +129,7 @@ class BoreTableModel(QAbstractTableModel):
                     return getattr(point, p + '_' + ('resolved_' if variant == DataVariant.DISPLAYED else '') + 'cutter_height')
             
         elif cd['feature'] == 'diameter':
-            return getattr(point, 'diameter' if variant == DataVariant.DISPLAYED else 'override_diameter')
+            return getattr(point, 'diameter' if variant == DataVariant.DISPLAYED else 'custom_diameter')
 
         return None
 
@@ -150,7 +150,7 @@ class BoreTableModel(QAbstractTableModel):
                     setattr(point, p + '_cutter_height', value)
                 
         elif cd['feature'] == 'diameter':
-            point.override_diameter = value
+            point.custom_diameter = value
 
     @staticmethod
     def column_def(index: int):

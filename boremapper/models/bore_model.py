@@ -134,7 +134,7 @@ class BorePointModel(Model):
         # Input parameters
         self.__dict__['_data'] = {
             'position': position,
-            'override_diameter': kwargs['override_diameter'] if 'override_diameter' in kwargs else None,
+            'custom_diameter': kwargs['custom_diameter'] if 'custom_diameter' in kwargs else None,
         }
 
         for p in const.BORE_PARTS:
@@ -247,10 +247,10 @@ class BorePointModel(Model):
 
         # Resolve final diameter at given point
         try:
-            if d['override_diameter'] is not None:
-                if d['override_diameter'] < 0:
-                    raise ValueError('Invalid override diameter')
-                c['diameter'] = d['override_diameter']
+            if d['custom_diameter'] is not None:
+                if d['custom_diameter'] < 0:
+                    raise ValueError('Invalid custom diameter')
+                c['diameter'] = d['custom_diameter']
             elif c['equivalent_diameter'] is not None:
                 c['diameter'] = c['equivalent_diameter']
             else:

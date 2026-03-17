@@ -45,10 +45,10 @@ class JoinedDetailWidget(PointDetailWidget):
             ),
         ]
         
-        if point.override_diameter is not None:
+        if point.custom_diameter is not None:
             props.append((
                 'Custom Diameter',
-                format_length(point.override_diameter),
+                format_length(point.custom_diameter),
                 '',
             ))
 

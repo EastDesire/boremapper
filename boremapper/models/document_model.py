@@ -40,7 +40,7 @@ class DocumentModel(Model):
         for point in self.bore.points:
             e_point = ET.SubElement(e_points, 'point')
             e_point.set('position', xml_build_float(point.position))
-            e_point.set('override-diameter', xml_build_float(point.override_diameter))
+            e_point.set('custom-diameter', xml_build_float(point.custom_diameter))
             for p in const.BORE_PARTS:
                 e_point.set(p + '-groove-width', xml_build_float(getattr(point, p + '_groove_width')))
                 e_point.set(p + '-groove-height', xml_build_float(getattr(point, p + '_groove_height')))
@@ -111,7 +111,7 @@ class DocumentModel(Model):
             point = BorePointModel(
                 doc.bore.points,
                 position=xml_parse_float(e_point.attrib['position']),
-                override_diameter=xml_parse_float(e_point.attrib['override-diameter']) if 'override-diameter' in e_point.attrib else None,
+                custom_diameter=xml_parse_float(e_point.attrib['custom-diameter']) if 'custom-diameter' in e_point.attrib else None,
             )
             for p in const.BORE_PARTS:
                 setattr(point, p + '_groove_width', xml_parse_float(e_point.attrib[p + '-groove-width']))

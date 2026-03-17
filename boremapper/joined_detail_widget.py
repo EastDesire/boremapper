@@ -39,7 +39,7 @@ class JoinedDetailWidget(PointDetailWidget):
                 '',
             ),
             (
-                'Equivalent Diameter (ED)',
+                'Equivalent Diameter',
                 format_length(point.equivalent_diameter),
                 '',
             ),
@@ -47,7 +47,7 @@ class JoinedDetailWidget(PointDetailWidget):
         
         if point.override_diameter is not None:
             props.append((
-                'Override Diameter (OD)',
+                'Custom Diameter',
                 format_length(point.override_diameter),
                 '',
             ))

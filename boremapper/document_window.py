@@ -309,20 +309,20 @@ class DocumentWindow(QMainWindow):
         if show_widget is not None:
             widget = self.point_detail_widgets[show_widget]
             widget.set_target(
-                self.current_bore_point_index(),
+                self.current_point_index(),
                 cd['feature'],
                 cd['part'],
             )
             widget.update_content()
 
-    def current_bore_point_index(self) -> int|None:
+    def current_point_index(self) -> int|None:
         row = self.table_view.current_row()
         if 0 <= row < len(self.model.bore.points):
             return row
         return None
 
-    def current_bore_point(self) -> 'BorePointModel|None':
-        index = self.current_bore_point_index()
+    def current_point(self) -> 'BorePointModel|None':
+        index = self.current_point_index()
         if index is None:
             return None
         return self.model.bore.points[index]
@@ -331,7 +331,7 @@ class DocumentWindow(QMainWindow):
         return BoreTableModel.column_detail(self.table_view.current_column())
 
     def try_say_current_position(self):
-        point = self.current_bore_point()
+        point = self.current_point()
         if point is not None:
             say_text = format_position_for_speech(format_length(point.position))
             threading.Thread(
@@ -356,7 +356,7 @@ class DocumentWindow(QMainWindow):
         )
 
     def on_point_data_change(self, index: int):
-        if index == self.current_bore_point_index:
+        if index == self.current_point_index:
             self.on_current_point_data_change()
 
     def on_points_layout_change(self):

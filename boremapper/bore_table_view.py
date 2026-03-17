@@ -42,14 +42,6 @@ class BoreTableView(QTableView):
             QAbstractItemView.EditTrigger.EditKeyPressed
         )
 
-        column_sizes_sum = sum(map(
-            lambda e: self.model().column_def(e[0])['size_factor'],
-            enumerate(const.BORE_TABLE_COLUMNS)
-        ))
-        for index, _ in enumerate(const.BORE_TABLE_COLUMNS):
-            col = self.model().column_def(index)
-            self.setColumnWidth(index, const.BORE_TABLE_WIDTH * (col['size_factor'] / column_sizes_sum))
-
     def selected_ranges(self) -> list:
         sel_ranges = self.selectionModel().selection()
         return [sel_ranges.at(i) for i in range(0, sel_ranges.count())]

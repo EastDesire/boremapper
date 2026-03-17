@@ -24,19 +24,17 @@ BORE_PARTS = ('bottom', 'top')
 
 BORE_TABLE_WIDTH = 700 # TODO: smaller?
 
-# TODO: <size_factor> probably no longer needed, when using "stretch" resize mode on table header
-
-# (<label>, <editable>, <size_factor>, <description>)
+# (<label>, <editable>, <description>)
 BORE_TABLE_COLUMNS = [
-    ('b W', True, 1.0, 'Bottom: Groove Width'),
-    ('b H', True, 1.0, 'Bottom: Groove Height'),
-    ('b CW', True, 1.0, 'Bottom: Cutter Width'),
-    ('b CH', True, 1.0, 'Bottom: Cutter Height'),
-    ('t W', True, 1.0, 'Top: Groove Width'),
-    ('t H', True, 1.0, 'Top: Groove Height'),
-    ('t CW', True, 1.0, 'Top: Cutter Width'),
-    ('t CH', True, 1.0, 'Top: Cutter Height'),
-    ('D', True, 1.0, 'Diameter'),
+    ('b W', True, 'Bottom: Groove Width'),
+    ('b H', True, 'Bottom: Groove Height'),
+    ('b CW', True, 'Bottom: Cutter Width'),
+    ('b CH', True, 'Bottom: Cutter Height'),
+    ('t W', True, 'Top: Groove Width'),
+    ('t H', True, 'Top: Groove Height'),
+    ('t CW', True, 'Top: Cutter Width'),
+    ('t CH', True, 'Top: Cutter Height'),
+    ('D', True, 'Diameter'),
 ]
 
 BORE_TABLE_MIN_COLUMN_WIDTH = 70

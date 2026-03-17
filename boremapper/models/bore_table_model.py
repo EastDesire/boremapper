@@ -164,8 +164,7 @@ class BoreTableModel(QAbstractTableModel):
         return {
             'label': c[0],
             'editable': c[1],
-            'size_factor': c[2],
-            'description': c[3],
+            'description': c[2],
         }
 
     @staticmethod

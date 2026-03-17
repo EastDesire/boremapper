@@ -6,7 +6,7 @@ from boremapper.models.model import Model
 
 class SettingsModel(Model):
 
-    updated = Signal(list)
+    changed = Signal(list)
 
     def __init__(self, parent: QObject, definitions: dict = None):
         super().__init__(parent)
@@ -60,7 +60,7 @@ class SettingsModel(Model):
                     changes.append((group, param, value))
                 qs.endGroup()
         if changes:
-            self.updated.emit(changes)
+            self.changed.emit(changes)
 
     def toggle(self, group, param):
         """

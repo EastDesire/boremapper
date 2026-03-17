@@ -5,7 +5,7 @@ from boremapper.models.model import Model
 
 class WidExportModel(Model):
 
-    updated = Signal()
+    changed = Signal()
 
     def __init__(self, parent: 'DocumentModel'):
         super().__init__(parent)
@@ -32,7 +32,7 @@ class WidExportModel(Model):
                     self.__dict__['_data'][name] = value
                 except KeyError:
                     raise AttributeError(name)
-            self.on_update()
+            self.on_change()
 
-    def on_update(self):
-        self.updated.emit()
+    def on_change(self):
+        self.changed.emit()

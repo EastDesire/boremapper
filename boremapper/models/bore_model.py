@@ -13,22 +13,22 @@ class BoreModel(Model):
         self.points = BorePointsModel(self)
 
         self.corrections = BoreCorrectionsModel(self)
-        self.corrections.updated.connect(self.on_corrections_change)
+        self.corrections.changed.connect(self.on_corrections_change)
 
     # TODO test
     def on_corrections_change(self):
         for idx, point in enumerate(self.points):
             point.invalidate() # Cached calculations are dependent on corrections -> invalidate cache
-            self.points.point_updated.emit(idx)
+            self.points.point_changed.emit(idx)
 
 
 class BorePointsModel(Model):
 
     # Emitted when a point changes, but stays at its index
-    point_updated = Signal(int)
+    point_changed = Signal(int)
     
     # Emitted when the points layout changes (reordering, adding, deleting)
-    layout_updated = Signal()
+    layout_changed = Signal()
     # TODO: if needed, add signals layoutAboutToBeChanged and layoutChanged, and emit them when adding/deleting points here
     #  (and then pass them somewhere to BoreTableModel, so that it knows about layout changes)
 
@@ -47,12 +47,12 @@ class BorePointsModel(Model):
 
     def __setitem__(self, index: int, point: 'BorePointModel'):
         self._points[index] = point
-        self.point_updated.emit(index)
+        self.point_changed.emit(index)
 
     def __delitem__(self, index):
         # TODO: also need destroy()?
         del self._points[index]
-        self.layout_updated.emit()
+        self.layout_changed.emit()
 
     def _add_point(self, point: 'BorePointModel') -> int:
         insert_at = None
@@ -83,7 +83,7 @@ class BorePointsModel(Model):
                 inserted_indexes.append(index)
 
         if inserted_indexes:
-            self.layout_updated.emit()
+            self.layout_changed.emit()
 
         return inserted_indexes
 
@@ -101,7 +101,7 @@ class BorePointsModel(Model):
             # TODO: also need destroy()?
             del self._points[index]
 
-        self.layout_updated.emit()
+        self.layout_changed.emit()
 
     def find(self, point_to_find: 'BorePointModel') -> int|None:
         for idx, point in enumerate(self._points):
@@ -156,17 +156,17 @@ class BorePointModel(Model):
 
         if self.__dict__['_data'][name] != value:
             self.__dict__['_data'][name] = value
-            self.on_update()
+            self.on_change()
 
     def invalidate(self):
         self.__dict__['_cache'].clear()
 
-    def on_update(self):
+    def on_change(self):
         self.invalidate() # Changing the data -> derived values are no longer valid
 
         index = self.parent().find(self)
         if index is not None:
-            self.parent().point_updated.emit(index)
+            self.parent().point_changed.emit(index)
 
     def _get_derived_param(self, name):
         if not self.__dict__['_cache']:
@@ -274,7 +274,7 @@ class BorePointModel(Model):
 
 class BoreCorrectionsModel(Model):
 
-    updated = Signal()
+    changed = Signal()
 
     def __init__(self, parent: 'BoreModel'):
         super().__init__(parent)
@@ -303,7 +303,7 @@ class BoreCorrectionsModel(Model):
                     self.__dict__['_data'][name] = value
                 except KeyError:
                     raise AttributeError(name)
-            self.on_update()
+            self.on_change()
 
-    def on_update(self):
-        self.updated.emit()
+    def on_change(self):
+        self.changed.emit()

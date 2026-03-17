@@ -22,8 +22,8 @@ class BoreTableModel(QAbstractTableModel):
         super().__init__(parent)
 
         # TODO: call (if needed at all) layoutAboutToBeChanged() and layoutChanged() somehow only when changing order/number of items
-        self.parent().bore.points.point_updated.connect(self.on_point_update)
-        self.parent().bore.points.layout_updated.connect(self.on_points_layout_update)
+        self.parent().bore.points.point_changed.connect(self.on_point_change)
+        self.parent().bore.points.layout_changed.connect(self.on_points_layout_change)
 
     def rowCount(self, /, parent: 'QModelIndex|QPersistentModelIndex' = ...) -> int:
         return len(self.parent().bore.points)
@@ -201,10 +201,10 @@ class BoreTableModel(QAbstractTableModel):
             'subcolumn': subcolumn,
         }
 
-    def on_point_update(self, index: int):
+    def on_point_change(self, index: int):
         leftmost_index = self.index(index, 0)
         rightmost_index = self.index(index, self.columnCount() - 1)
         self.dataChanged.emit(leftmost_index, rightmost_index)
 
-    def on_points_layout_update(self):
+    def on_points_layout_change(self):
         self.layoutChanged.emit()

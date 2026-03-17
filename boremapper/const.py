@@ -10,16 +10,23 @@ ORGANIZATION_HANDLE = 'JanOdvarko'
 # When comparing or storing floats, we round them to this number of decimals to avoid issues with floating point error
 FLOAT_SAFE_DECIMALS = 10
 
-LENGTH_UNITS = 'mm'
-LENGTH_DISPLAY_DECIMALS = 2
+LENGTH_UNITS = 'mm' # TODO: remove after UNITS are implemented
+LENGTH_DISPLAY_DECIMALS = 2 # TODO: remove after UNITS are implemented
+
+# TODO: use
+# (<mm_conversion_factor>, <display_decimals>)
+UNITS = {
+    'mm': (1, 2),
+    'in': (25.4, 3),
+}
 
 BORE_PARTS = ('bottom', 'top')
 
-BORE_TABLE_WIDTH = 700
+BORE_TABLE_WIDTH = 700 # TODO: smaller?
 
 # TODO: <size_factor> probably no longer needed, when using "stretch" resize mode on table header
 
-# <label>, <editable>, <size_factor>, <description>
+# (<label>, <editable>, <size_factor>, <description>)
 BORE_TABLE_COLUMNS = [
     ('b W', True, 1.0, 'Bottom: Groove Width'),
     ('b H', True, 1.0, 'Bottom: Groove Height'),

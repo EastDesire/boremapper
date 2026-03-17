@@ -33,6 +33,8 @@ class DocumentWindow(QMainWindow):
         self.model = model
         self.model.setParent(self)
         self.table_model = None
+        
+        self.is_touched = False
 
         self.layout = None
         self.content_widget = None
@@ -59,7 +61,7 @@ class DocumentWindow(QMainWindow):
         self.init_menu()
         self.init_content()
         self.init_status_bar()
-
+        
         self.restore_gui()
         self.update_all()
         
@@ -347,7 +349,7 @@ class DocumentWindow(QMainWindow):
         return (
             self.is_clean() and
             self.model.file is None and
-            True # self.model == self.default_model() # TODO: unsure how to approach this. Maybe set some flag on any change (by command or non-command)
+            not self.is_touched
         )
 
     def is_saved(self):
@@ -383,6 +385,7 @@ class DocumentWindow(QMainWindow):
         self.update_menu()
 
     def on_clean_state_change(self):
+        self.is_touched = True
         self.update_title()
         self.update_menu()
 

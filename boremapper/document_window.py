@@ -26,9 +26,6 @@ from boremapper.wid_export_window import WidExportWindow
 
 class DocumentWindow(QMainWindow):
 
-    # TODO rem
-    #closed = Signal(QObject)
-
     def __init__(self, app: 'App', model: 'DocumentModel'):
         super().__init__()
 

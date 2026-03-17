@@ -74,6 +74,8 @@ class DocumentWindow(QMainWindow):
         self.model.file_changed.connect(self.on_file_change)
         self.model.bore.points.point_changed.connect(self.on_point_data_change)
         self.model.bore.points.layout_changed.connect(self.on_points_layout_change)
+        self.model.bore.corrections.changed.connect(self.on_bore_corrections_change)
+        self.model.wid_export.changed.connect(self.on_wid_export_change)
         
         self.table_model = BoreTableModel(self.model)
 
@@ -366,6 +368,13 @@ class DocumentWindow(QMainWindow):
     def on_current_point_data_change(self):
         self.update_point_detail()
 
+    def on_bore_corrections_change(self):
+        self.on_nonstacked_change()
+        self.update_status_bar()
+
+    def on_wid_export_change(self):
+        self.on_nonstacked_change()
+
     def on_table_selection_change(self):
         self.update_menu()
         self.update_point_detail()
@@ -509,6 +518,10 @@ class DocumentWindow(QMainWindow):
 
     def do_command(self, command: QUndoCommand):
         self.undo_stack.push(command)
+
+    def on_nonstacked_change(self):
+        # Reset the clean state, because the change doesn't come from a command, so it's not included in undo stack
+        self.undo_stack.resetClean()
 
     def save_document_as(self, file: str):
         try:

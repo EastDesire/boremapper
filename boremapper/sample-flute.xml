@@ -32,7 +32,7 @@
       <point position="455" override-diameter="" bottom-groove-width="12" bottom-groove-height="5.3" bottom-cutter-width="" bottom-cutter-height="" top-groove-width="" top-groove-height="7" top-cutter-width="" top-cutter-height="" />
       <point position="460" override-diameter="" bottom-groove-width="12" bottom-groove-height="5.3" bottom-cutter-width="" bottom-cutter-height="-1" top-groove-width="-50" top-groove-height="7" top-cutter-width="" top-cutter-height="" />
     </points>
-    <corrections bottom-groove-width="10" bottom-groove-height="50" top-groove-width="0" top-groove-height="0" />
+    <corrections bottom-groove-width="10" bottom-groove-height="50" top-groove-width="80" top-groove-height="0" />
   </bore>
   <wid-export bore-origin="0" />
 </boremapper-document>

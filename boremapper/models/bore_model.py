@@ -10,53 +10,27 @@ class BoreModel(Model):
     def __init__(self, parent: 'DocumentModel'):
         super().__init__(parent)
 
-        self.corrections = BoreCorrectionsModel(self)
         self.points = BorePointsModel(self)
 
-        # Bore points use corrections in their cached parameters, so changing the corrections must invalidate the cache
-        self.corrections.updated.connect(self.points.invalidate_all)
-
-
-class BoreCorrectionsModel(Model):
-
-    updated = Signal()
-
-    def __init__(self, parent: 'BoreModel'):
-        super().__init__(parent)
-
-        self.__dict__['_data'] = {}
-
-        for p in const.BORE_PARTS:
-            self.__dict__['_data'][p + '_groove_width'] = 0
-            self.__dict__['_data'][p + '_groove_height'] = 0
+        self.corrections = BoreCorrectionsModel(self)
+        self.corrections.updated.connect(self.on_corrections_change)
 
     # TODO test
-    def __getattr__(self, name):
-        try:
-            return self.__dict__['_data'][name]
-        except KeyError:
-            raise AttributeError(name)
-
-    # TODO test
-    def __setattr__(self, name, value):
-        self.set_many({ name: value })
-
-    def set_many(self, values: dict):
-        if values:
-            for name, value in values.items():
-                try:
-                    self.__dict__['_data'][name] = value
-                except KeyError:
-                    raise AttributeError(name)
-            self.on_updated()
-
-    def on_updated(self):
-        self.updated.emit()
+    def on_corrections_change(self):
+        for idx, point in enumerate(self.points):
+            point.invalidate() # Cached calculations are dependent on corrections -> invalidate cache
+            self.points.point_updated.emit(idx)
 
 
 class BorePointsModel(Model):
 
-    updated = Signal()
+    # Emitted when a point changes, but stays at its index
+    point_updated = Signal(int)
+    
+    # Emitted when the points layout changes (reordering, adding, deleting)
+    layout_updated = Signal()
+    # TODO: if needed, add signals layoutAboutToBeChanged and layoutChanged, and emit them when adding/deleting points here
+    #  (and then pass them somewhere to BoreTableModel, so that it knows about layout changes)
 
     def __init__(self, parent: 'BoreModel'):
         super().__init__(parent)
@@ -73,12 +47,12 @@ class BorePointsModel(Model):
 
     def __setitem__(self, index: int, point: 'BorePointModel'):
         self._points[index] = point
-        self.on_points_updated()
+        self.point_updated.emit(index)
 
     def __delitem__(self, index):
         # TODO: also need destroy()?
         del self._points[index]
-        self.on_points_updated()
+        self.layout_updated.emit()
 
     def _add_point(self, point: 'BorePointModel') -> int:
         insert_at = None
@@ -109,7 +83,7 @@ class BorePointsModel(Model):
                 inserted_indexes.append(index)
 
         if inserted_indexes:
-            self.on_points_updated()
+            self.layout_updated.emit()
 
         return inserted_indexes
 
@@ -127,7 +101,13 @@ class BorePointsModel(Model):
             # TODO: also need destroy()?
             del self._points[index]
 
-        self.on_points_updated()
+        self.layout_updated.emit()
+
+    def find(self, point_to_find: 'BorePointModel') -> int|None:
+        for idx, point in enumerate(self._points):
+            if point == point_to_find:
+                return idx
+        return None
 
     def find_position(self, position: float) -> int|None:
         """
@@ -138,19 +118,12 @@ class BorePointsModel(Model):
                 return idx
         return None
 
-    def on_points_updated(self):
-        self.updated.emit()
-
-    def invalidate_all(self):
-        for item in self._points:
-            item.invalidate()
-
 
 class BorePointModel(Model):
     """
     To make sure the derived parameters are always up-to-date when accessed from outside, the class automatically
     invalidates its cache upon changing its input parameters.
-    However, when changing external parameters used in the calculations (e.g. corrections), it is necessary
+    However, when the external parameters used in the calculations (e.g. corrections) are being changed, it is necessary
     to explicitly invalidate the cache to let the class calculate fresh values.
     """
 
@@ -180,12 +153,20 @@ class BorePointModel(Model):
     def __setattr__(self, name, value):
         if not name in self.__dict__['_data']:
             raise AttributeError(name)
+
         if self.__dict__['_data'][name] != value:
             self.__dict__['_data'][name] = value
-            self.invalidate() # Changing the data -> derived values are no longer valid
+            self.on_update()
 
     def invalidate(self):
         self.__dict__['_cache'].clear()
+
+    def on_update(self):
+        self.invalidate() # Changing the data -> derived values are no longer valid
+
+        index = self.parent().find(self)
+        if index is not None:
+            self.parent().point_updated.emit(index)
 
     def _get_derived_param(self, name):
         if not self.__dict__['_cache']:
@@ -224,6 +205,7 @@ class BorePointModel(Model):
 
         warnings = []
         corr = self.parent().parent().corrections
+        
         d = self.__dict__['_data']
         c = self.__dict__['_cache'] = {}
 
@@ -288,3 +270,40 @@ class BorePointModel(Model):
             (warning['part'].capitalize() + ' part: ' if 'part' in warning else '') +
             warning['text']
         )
+
+
+class BoreCorrectionsModel(Model):
+
+    updated = Signal()
+
+    def __init__(self, parent: 'BoreModel'):
+        super().__init__(parent)
+
+        self.__dict__['_data'] = {}
+
+        for p in const.BORE_PARTS:
+            self.__dict__['_data'][p + '_groove_width'] = 0
+            self.__dict__['_data'][p + '_groove_height'] = 0
+
+    # TODO test
+    def __getattr__(self, name):
+        try:
+            return self.__dict__['_data'][name]
+        except KeyError:
+            raise AttributeError(name)
+
+    # TODO test
+    def __setattr__(self, name, value):
+        self.set_many({ name: value })
+
+    def set_many(self, values: dict):
+        if values:
+            for name, value in values.items():
+                try:
+                    self.__dict__['_data'][name] = value
+                except KeyError:
+                    raise AttributeError(name)
+            self.on_update()
+
+    def on_update(self):
+        self.updated.emit()

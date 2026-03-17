@@ -3,7 +3,7 @@ from PySide6.QtGui import QKeyEvent
 from PySide6.QtWidgets import QAbstractItemDelegate, QStyleOptionViewItem, QTableView, QItemDelegate, QAbstractItemView, \
     QHeaderView, QLineEdit, QWidget
 
-from boremapper import validators, const
+from boremapper import validators, const, commands
 from boremapper.models.bore_table_model import BoreTableModel
 from boremapper.utils import str_to_number
 
@@ -14,10 +14,13 @@ class BoreTableView(QTableView):
     data_entered = Signal()
     selection_changed = Signal()
 
-    def __init__(self, parent: 'DocumentWindow', model: 'BoreTableModel'):
-        super().__init__(parent)
+    def __init__(self, document_window: 'DocumentWindow', model: 'BoreTableModel'):
+        super().__init__(document_window)
 
+        self.dw = document_window
+        
         self.setModel(model)
+        self.model().data_set.connect(self.on_data_set)
 
         self.setHorizontalHeader(BoreTableHorizontalHeader(self))
         self.setVerticalHeader(BoreTableVerticalHeader(self))
@@ -55,10 +58,6 @@ class BoreTableView(QTableView):
         for idx, _ in enumerate(const.BORE_TABLE_COLUMNS):
             col = self.model().column_def(idx)
             self.setColumnWidth(idx, const.BORE_TABLE_WIDTH * (col['size_factor'] / column_sizes_sum))
-
-        #self.model().dataChanged.connect(self.on_data_changed)
-        # TODO: use?
-        #self.model().data_set.connect(self.on_data_set)
 
     def selected_rows(self):
         rows = []
@@ -100,18 +99,17 @@ class BoreTableView(QTableView):
 
     def on_selection_changed(self, selected: 'QItemSelection', deselected: 'QItemSelection'):
         self.selection_changed.emit()
-
-    # TODO: invoke somewhere?
-    def on_data_set(self, index: 'QModelIndex|QPersistentModelIndex', value: str, role):
-        print('on_data_set')
+        
+    # TODO
+    def on_data_set(self, index: 'QModelIndex|QPersistentModelIndex', value: str):
+        print('on_data_set') # TODO
         parsed_val = str_to_number(value, float, allow_empty=True)
 
         if parsed_val is not None:
+            # TODO: how to approchach rounding when converting from different units?
             # We round the value so that we store only decimals that are visible
             parsed_val = round(parsed_val, const.LENGTH_DISPLAY_DECIMALS)
 
-        """
-        # TODO put back (and maybe emit as a signal and do the command in document window)
         self.dw.do_command(
             commands.EditCells(self.dw, [{
                 'row': index.row(),
@@ -119,26 +117,6 @@ class BoreTableView(QTableView):
                 'value': parsed_val,
             }])
         )
-        """
-
-    """
-    def on_data_changed(self, top_left, bottom_right, roles):
-        print('on_data_changed')
-        parsed_val = str_to_number(item.text(), float, allow_empty=True)
-
-        if parsed_val is not None:
-            # We round the value so that we store only decimals that are visible
-            parsed_val = round(parsed_val, const.LENGTH_DISPLAY_DECIMALS)
-
-        # TODO put back (and maybe emit as a signal and do the command in document window)
-        self.dw.do_command(
-            commands.EditCells(self.dw, [{
-                'row': item.row(),
-                'column': item.column(),
-                'value': parsed_val,
-            }])
-        )
-    """
 
     def on_data_entered(self):
         print('Data entered') # TODO
@@ -311,6 +289,7 @@ class BoreTableItemDelegate(QItemDelegate):
         print('Creating editor') # TODO
         editor = QLineEdit(parent)
         editor.setValidator(validators.OptionalDoubleValidator())
+        editor.returnPressed.connect(self.on_return_pressed)
         return editor
 
     def destroyEditor(self, editor: 'QWidget', index: 'QModelIndex|QPersistentModelIndex', /):
@@ -332,3 +311,7 @@ class BoreTableItemDelegate(QItemDelegate):
     def on_close_editor(self):
         # TODO
         print('Editor closed')
+
+    def on_return_pressed(self):
+        # TODO
+        print('Return pressed')

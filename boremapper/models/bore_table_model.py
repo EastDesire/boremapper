@@ -14,16 +14,16 @@ class BoreTableModel(QAbstractTableModel):
     Note: This model references data from the main model, it doesn't hold any model state by itself.
     """
 
-    data_set = Signal(QModelIndex, typing.Any, int)
+    data_set = Signal(QModelIndex, typing.Any)
     
     muted_text_alpha = 0.3
 
     def __init__(self, parent: 'DocumentModel'):
         super().__init__(parent)
 
-        # TODO: test
-        self.parent().bore.corrections.updated.connect(self.on_table_related_changes)
-        self.parent().bore.points.updated.connect(self.on_table_related_changes)
+        # TODO: call (if needed at all) layoutAboutToBeChanged() and layoutChanged() somehow only when changing order/number of items
+        self.parent().bore.points.point_updated.connect(self.on_point_update)
+        self.parent().bore.points.layout_updated.connect(self.on_points_layout_update)
 
     def rowCount(self, /, parent: 'QModelIndex|QPersistentModelIndex' = ...) -> int:
         return len(self.parent().bore.points)
@@ -96,27 +96,27 @@ class BoreTableModel(QAbstractTableModel):
         return None
 
     def setData(self, index: 'QModelIndex|QPersistentModelIndex', value: typing.Any, /, role: int = ...):
-        print('setData')
-        # TODO: on_data_set
-        self.data_set.emit(index, value, role)
-        return True
-        pass
-        # TODO
-        """
+        print('setData') # TODO
         if not index.isValid():
             return None
-        row = index.row()
-        column = index.column()
         match role:
             case Qt.ItemDataRole.EditRole:
+                # QAbstractItemModel requires this signal to be explicitly emitted when data successfully changes
+                self.dataChanged.emit(index, index, [Qt.ItemDataRole.EditRole])
+                self.data_set.emit(index, value)
+                return True # TODO needed? does anything?
+                
+                """ TODO rem
+                self.parent().bore_points.set_value_for_cell(row, column, parsed_val)
+                
                 parsed_val = str_to_number(value, float, allow_empty=True)
                 if parsed_val is not None:
                     # We round the value so that we store only decimals that are visible
                     parsed_val = round(parsed_val, const.LENGTH_DISPLAY_DECIMALS)
                 self.parent().bore_points.set_value_for_cell(row, column, parsed_val)
                 return True
-        return False
-        """
+                """
+        return False # TODO needed? does anything?
 
     def flags(self, index: 'QModelIndex|QPersistentModelIndex', /) -> Qt.ItemFlag:
         c = self.column_def(index.column())
@@ -168,10 +168,6 @@ class BoreTableModel(QAbstractTableModel):
         elif cd['feature'] == 'override_diameter':
             point.override_diameter = value
 
-    def on_table_related_changes(self):
-        print('Table related changes') # TODO
-        self.layoutChanged.emit()
-
     @staticmethod
     def column_def(index: int):
         c = const.BORE_TABLE_COLUMNS[index]
@@ -205,16 +201,10 @@ class BoreTableModel(QAbstractTableModel):
             'subcolumn': subcolumn,
         }
 
-    """
-    TODO rem?
+    def on_point_update(self, index: int):
+        leftmost_index = self.index(index, 0)
+        rightmost_index = self.index(index, self.columnCount() - 1)
+        self.dataChanged.emit(leftmost_index, rightmost_index)
 
-    # TODO: use
-    def on_before_model_changes(self):
-        print('on_before_model_changes') # TODO
-        self.layoutAboutToBeChanged.emit()
-
-    # TODO: use
-    def on_after_model_changes(self):
-        print('on_after_model_changes') # TODO
+    def on_points_layout_update(self):
         self.layoutChanged.emit()
-    """

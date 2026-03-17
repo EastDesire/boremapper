@@ -35,10 +35,10 @@ class DocumentWindow(QMainWindow):
         self.app = app
         self.model = model
         self.model.setParent(self)
+        self.table_model = None
 
         self.layout = None
         self.content_widget = None
-        self.table_model = None
         self.table_view = None
         self.detail_panel = None
         self.point_detail_widgets = {}
@@ -57,7 +57,7 @@ class DocumentWindow(QMainWindow):
 
         self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose, True)
 
-        self.init_model()
+        self.init_models()
         self.init_undo_stack()
         self.init_menu()
         self.init_content()
@@ -70,8 +70,12 @@ class DocumentWindow(QMainWindow):
         self.update_menu()
         self.update_point_detail()
         
-    def init_model(self):
+    def init_models(self):
         self.model.file_changed.connect(self.on_file_changed)
+        
+        self.table_model = BoreTableModel(self.model)
+        self.table_model.dataChanged.connect(self.on_table_data_changed)
+        self.table_model.layoutChanged.connect(self.on_table_layout_changed)
 
     def init_undo_stack(self):
         # Note that the parent should be specified, or the undo_stack might be deleted too soon during exit
@@ -204,7 +208,6 @@ class DocumentWindow(QMainWindow):
         self.content_widget = QWidget(self)
         self.content_widget.setLayout(self.layout)
 
-        self.table_model = BoreTableModel(self.model)
         self.table_view = BoreTableView(self, self.table_model)
         self.table_view.selection_changed.connect(self.on_table_selection_changed)
         
@@ -351,6 +354,15 @@ class DocumentWindow(QMainWindow):
             self.is_clean() and
             self.model.file is not None
         )
+
+    def on_table_data_changed(self, top_left: 'QModelIndex', bottom_right: 'QModelIndex'):
+        current_index = self.current_bore_point_index()
+        if current_index is not None and top_left.row() <= current_index <= bottom_right.row():
+            # Data of the current row has been changed
+            self.update_point_detail()
+
+    def on_table_layout_changed(self):
+        self.update_point_detail()
 
     def on_table_selection_changed(self):
         self.update_menu()

@@ -17,20 +17,15 @@ class EditCells(QUndoCommand):
     def redo(self):
         self.undo_data = self.cells_data(self.redo_data)
         self.set_cells_data(self.redo_data)
-        self.cells_changed()
 
         if self.undone:
             self.select_cells_by_data(self.redo_data)
 
     def undo(self):
         self.set_cells_data(reversed(self.undo_data))
-        self.cells_changed()
 
         self.select_cells_by_data(self.undo_data)
         self.undone = True
-
-    def cells_changed(self):
-        self.dw.model.bore.points.updated.emit()
 
     def cells_data(self, data):
         out = []

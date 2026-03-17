@@ -1,17 +1,19 @@
-from PySide6.QtCore import QItemSelection, QItemSelectionRange, QModelIndex, QPersistentModelIndex, Qt, Signal
-from PySide6.QtGui import QKeyEvent
-from PySide6.QtWidgets import QAbstractItemDelegate, QStyleOptionViewItem, QTableView, QItemDelegate, QAbstractItemView, \
+import itertools
+
+from PySide6.QtCore import QItemSelection, QItemSelectionRange, QModelIndex, QPersistentModelIndex, Qt, Signal, \
+    QItemSelectionModel
+from PySide6.QtGui import QGuiApplication
+from PySide6.QtWidgets import QStyleOptionViewItem, QTableView, QItemDelegate, QAbstractItemView, \
     QHeaderView, QLineEdit, QWidget
 
 from boremapper import validators, const, commands
+from boremapper.enums import DataVariant
 from boremapper.models.bore_table_model import BoreTableModel
-from boremapper.utils import str_to_number
+from boremapper.utils import str_to_number, format_length, has_same_values_in_columns
 
 
 class BoreTableView(QTableView):
 
-    # TODO use?
-    data_entered = Signal()
     selection_changed = Signal()
 
     def __init__(self, document_window: 'DocumentWindow', model: 'BoreTableModel'):
@@ -21,35 +23,24 @@ class BoreTableView(QTableView):
         
         self.setModel(model)
         self.model().data_set.connect(self.on_data_set)
-
-        self.setHorizontalHeader(BoreTableHorizontalHeader(self))
-        self.setVerticalHeader(BoreTableVerticalHeader(self))
+        self.selectionModel().selectionChanged.connect(self.on_selection_change)
 
         self.setShowGrid(True)
-        # TODO: grid keeps its color after color scheme
+        
+        self.setHorizontalHeader(BoreTableHorizontalHeader(self))
+        self.setVerticalHeader(BoreTableVerticalHeader(self))
 
         self.setSelectionMode(QAbstractItemView.SelectionMode.ContiguousSelection)
         self.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectItems)
 
-        self.setItemDelegate(BoreTableItemDelegate(self))
+        item_delegate = BoreTableItemDelegate(self)
+        item_delegate.data_committed.connect(self.on_data_committed, Qt.ConnectionType.QueuedConnection)
+        self.setItemDelegate(item_delegate)
 
         self.setEditTriggers(
             QAbstractItemView.EditTrigger.DoubleClicked |
             QAbstractItemView.EditTrigger.EditKeyPressed
         )
-
-        self.selectionModel().selectionChanged.connect(self.on_selection_change)
-
-        # TODO: use?
-        #self.selectionModel().currentRowChanged.connect(self.on_current_row_change())
-
-        #self.itemSelectionChanged.connect(self.on_item_selection_change)
-        ## Note that QueuedConnection is needed here, since DirectConnection sometimes causes runtime error
-        ## 'Internal C++ object already deleted', or in combination message box it causes segmentation fault.
-        #self.itemChanged.connect(self.on_item_change, Qt.ConnectionType.QueuedConnection)
-
-        # TODO: still use?
-        #self.data_entered.connect(self.on_data_entered, Qt.ConnectionType.QueuedConnection)
 
         column_sizes_sum = sum(map(
             lambda e: self.model().column_def(e[0])['size_factor'],
@@ -59,18 +50,15 @@ class BoreTableView(QTableView):
             col = self.model().column_def(index)
             self.setColumnWidth(index, const.BORE_TABLE_WIDTH * (col['size_factor'] / column_sizes_sum))
 
-    def selected_rows(self):
-        rows = []
-        for sel_range in self.selected_ranges():
-            if sel_range.columnCount() == self.model().columnCount(): # Only if entire row selected
-                for row in range(sel_range.topRow(), sel_range.bottomRow() + 1):
-                    rows.append(row)
-        return rows
+    def selected_ranges(self) -> list:
+        sel_ranges = self.selectionModel().selection()
+        return [sel_ranges.at(i) for i in range(0, sel_ranges.count())]
 
-    def selected_ranges(self):
-        # TODO
-        #self.selectionModel().selection() ??????
-        return []
+    def selected_rows(self) -> list:
+        """
+        Returns indexes of fully selected rows
+        """
+        return [index.row() for index in self.selectionModel().selectedRows(0)]
     
     def selected_cells_count(self) -> int:
         return len(self.selectionModel().selectedIndexes())
@@ -84,25 +72,31 @@ class BoreTableView(QTableView):
         return index.column() if index else None
 
     def set_cell_selected(self, row: int, column: int, is_selected: bool):
-        # TODO
-        #self.setRangeSelected(QTableWidgetSelectionRange(row, column, row, column), is_selected)
-        pass
+        index = self.model().index(row, column)
+        if index is not None:
+            self.selectionModel().select(
+                QItemSelection(index, index),
+                QItemSelectionModel.SelectionFlag.Select if is_selected else \
+                QItemSelectionModel.SelectionFlag.Deselect
+            )
 
     def select_rows_by_indexes(self, indexes: list|tuple):
-        pass
-        """
-        # TODO: do this in document window upon emitting a signal here
         self.clearSelection()
+        
+        last_column_index = self.model().columnCount() - 1
         for index in indexes:
-            self.setRangeSelected(QTableWidgetSelectionRange(index, 0, index, self.columnCount() - 1), True)
-        """
+            self.selectionModel().select(
+                QItemSelection(
+                    self.model().index(index, 0),
+                    self.model().index(index, last_column_index),
+                ),
+                QItemSelectionModel.SelectionFlag.Select
+            )
 
     def on_selection_change(self, selected: 'QItemSelection', deselected: 'QItemSelection'):
         self.selection_changed.emit()
         
-    # TODO
     def on_data_set(self, index: 'QModelIndex|QPersistentModelIndex', value: str):
-        print('on_data_set') # TODO
         parsed_val = str_to_number(value, float, allow_empty=True)
 
         if parsed_val is not None:
@@ -118,11 +112,10 @@ class BoreTableView(QTableView):
             }])
         )
 
-    def on_data_entered(self):
-        print('Data entered') # TODO
-        # TODO: do this in document window upon emitting a signal here
-        #self.dw.app.try_beep()
-        #self.move_to_next_entry()
+    def on_data_committed(self, using_return: bool):
+        if using_return:
+            self.dw.app.try_beep()
+            self.move_to_next_entry()
 
     def move_to_next_entry(self):
         index = self.currentIndex()
@@ -132,27 +125,22 @@ class BoreTableView(QTableView):
             row != -1 and
             column != -1
         ):
-            pass
-            # TODO: do this in document window upon emitting a signal here
-            #if row + 1 < self.model().rowCount(): # TODO: get row count directly like this?
-            #    next_index = self.model().index(row + 1, column)
-            #    self.setCurrentIndex(next_index)
-            #    self.edit(next_index)
-            #    self.dw.try_say_current_position()
-            #else:
-            #    self.dw.app.try_say('end')
+            if row + 1 < self.model().rowCount():
+                next_index = self.model().index(row + 1, column)
+                self.setCurrentIndex(next_index)
+                self.edit(next_index)
+                self.dw.try_say_current_position()
+            else:
+                self.dw.app.try_say('end')
 
     def delete_sel_range(self, sel_range: 'QItemSelectionRange'):
-        pass
-        """
         data = []
-        # TODO: do this in document window upon emitting a signal here
-        for row in range(sel_range.topRow(), sel_range.bottomRow() + 1):
-            for column in range(sel_range.leftColumn(), sel_range.rightColumn() + 1):
-                item = self.item(row, column)
+        for row in range(sel_range.top(), sel_range.bottom() + 1):
+            for column in range(sel_range.left(), sel_range.right() + 1):
+                index = self.model().index(row, column)
                 if (
-                    (item.flags() & Qt.ItemFlag.ItemIsEditable) and
-                    self.model_value_for_cell(row, column) is not None
+                    (index.flags() & Qt.ItemFlag.ItemIsEditable) and
+                    self.model().value_for_cell(row, column, DataVariant.RAW) is not None
                 ):
                     data.append({
                         'row': row,
@@ -160,20 +148,14 @@ class BoreTableView(QTableView):
                         'value': None,
                     })
         if data:
-            # TODO put back (and maybe emit as a signal and do the command in document window)
             self.dw.do_command(commands.EditCells(self.dw, data))
-        """
 
     def copy_from_sel_range(self, sel_range: 'QItemSelectionRange'):
-        pass
-        """
-        # TODO: do this in document window upon emitting a signal here
         lines = []
-        for row in range(sel_range.topRow(), sel_range.bottomRow() + 1):
+        for row in range(sel_range.top(), sel_range.bottom() + 1):
             line = []
-            for column in range(sel_range.leftColumn(), sel_range.rightColumn() + 1):
-                #value = self.item(row, column).text()
-                value = self.model_value_for_cell(row, column)
+            for column in range(sel_range.left(), sel_range.right() + 1):
+                value = self.model().value_for_cell(row, column, DataVariant.RAW)
                 line.append(format_length(value, decimals=10))
             lines.append(line)
 
@@ -181,81 +163,53 @@ class BoreTableView(QTableView):
 
         clipboard = QGuiApplication.clipboard()
         clipboard.setText(text)
-        """
 
     def paste_into_sel_range(self, sel_range: 'QItemSelectionRange'):
-        pass
-        """
         clipboard = QGuiApplication.clipboard()
         text = clipboard.text()
 
-        # TODO: do this in document window upon emitting a signal here
-        
-        origin_row = sel_range.topRow()
-        origin_column = sel_range.leftColumn()
+        origin_row = sel_range.top()
+        origin_column = sel_range.left()
 
         lines = [line.split('\t') for line in text.split('\n')]
 
         # When pasting less rows than selected, and each of the pasted columns contains the same values,
         # stretch the values vertically across the entire selection.
         stretch_mode = \
-            0 < len(lines) < sel_range.rowCount() and \
-            len(lines[0]) == sel_range.columnCount() and \
+            0 < len(lines) < sel_range.model().rowCount() and \
+            len(lines[0]) == sel_range.model().columnCount() and \
             has_same_values_in_columns(lines)
 
         paste_lines = \
             lines if not stretch_mode else \
-            itertools.repeat(lines[0], sel_range.rowCount())
+            itertools.repeat(lines[0], sel_range.model().rowCount())
 
         data = []
         for line_index, line in enumerate(paste_lines):
             row = origin_row + line_index
-            if row >= self.rowCount():
+            if row >= self.model().rowCount():
                 break # Cell would be outside boundaries
 
             for value_index, value in enumerate(line):
                 column = origin_column + value_index
-                if column >= self.columnCount():
+                if column >= self.model().columnCount():
                     break # Cell would be outside boundaries
 
-                item = self.item(row, column)
-                if item.flags() & Qt.ItemFlag.ItemIsEditable:
+                index = self.model().index(row, column)
+                if index.flags() & Qt.ItemFlag.ItemIsEditable:
                     data.append({
                         'row': row,
                         'column': column,
                         'value': str_to_number(value, float, allow_empty=True),
                     })
         if data:
-            # TODO put back (and maybe emit as a signal and do the command in document window)
             self.dw.do_command(commands.EditCells(self.dw, data))
-        """
-
-    # TODO: rem?
-    def closeEditor(self, editor: 'QWidget', hint: 'QAbstractItemDelegate.EndEditHint', /):
-        super().closeEditor(editor, hint)
-
-    def keyPressEvent(self, event: 'QKeyEvent'):
-        # This is important to check before calling super() method in order to get the original state before the key was pressed
-        is_editing = self.state() == QAbstractItemView.State.EditingState
-
-        super().keyPressEvent(event)
-
-        if (
-            is_editing and
-            event.key() in (Qt.Key.Key_Return, Qt.Key.Key_Enter) and
-            not event.isAutoRepeat()
-        ):
-            index = self.currentIndex()
-            if index and index.isValid():
-                # TODO: do it like this, by calling flags directly?
-                if self.model().flags(index) & Qt.ItemFlag.ItemIsEditable:
-                    self.data_entered.emit()
 
 
 class BoreTableHorizontalHeader(QHeaderView):
 
     def __init__(self, table_view: 'BoreTableView'):
-        super().__init__(Qt.Orientation.Horizontal, parent=table_view) # TODO: really set parent?
+        super().__init__(Qt.Orientation.Horizontal, parent=table_view)
         self.table_view = table_view
         self.setModel(table_view.model())
         self.setSelectionModel(self.table_view.selectionModel())
@@ -269,7 +223,7 @@ class BoreTableHorizontalHeader(QHeaderView):
 class BoreTableVerticalHeader(QHeaderView):
 
     def __init__(self, table_view: 'BoreTableView'):
-        super().__init__(Qt.Orientation.Vertical, parent=table_view) # TODO: really set parent?
+        super().__init__(Qt.Orientation.Vertical, parent=table_view)
         self.table_view = table_view
         self.setModel(table_view.model())
         self.setSelectionModel(self.table_view.selectionModel())
@@ -279,39 +233,28 @@ class BoreTableVerticalHeader(QHeaderView):
 
 
 class BoreTableItemDelegate(QItemDelegate):
+    
+    data_committed = Signal(bool)
 
     def __init__(self, parent):
         super().__init__(parent)
         self.commitData.connect(self.on_commit_data)
-        self.closeEditor.connect(self.on_close_editor)
+        self._return_pressed_for_commit = None
 
     def createEditor(self, parent: 'QWidget', option: 'QStyleOptionViewItem', index: 'QModelIndex|QPersistentModelIndex', /):
-        print('Creating editor') # TODO
+        self._return_pressed_for_commit = False
+        
         editor = QLineEdit(parent)
         editor.setValidator(validators.OptionalDoubleValidator())
         editor.returnPressed.connect(self.on_return_pressed)
+        
         return editor
 
     def destroyEditor(self, editor: 'QWidget', index: 'QModelIndex|QPersistentModelIndex', /):
         editor.destroy()
 
-    # TODO needed?
-    #def setEditorData(self, editor: 'QWidget', index: 'QModelIndex|QPersistentModelIndex', /):
-    #    super().setEditorData(editor, index)
-    #    # TODO
-    #    print('setEditorData')
-    #    # TODO
-    #    if isinstance(editor, QLineEdit):
-    #        editor.selectAll()
-        
-    def on_commit_data(self):
-        # TODO
-        print('Data committed')
-
-    def on_close_editor(self):
-        # TODO
-        print('Editor closed')
-
     def on_return_pressed(self):
-        # TODO
-        print('Return pressed')
+        self._return_pressed_for_commit = True
+
+    def on_commit_data(self):
+        self.data_committed.emit(self._return_pressed_for_commit)

@@ -176,13 +176,13 @@ class BoreTableView(QTableView):
         # When pasting less rows than selected, and each of the pasted columns contains the same values,
         # stretch the values vertically across the entire selection.
         stretch_mode = \
-            0 < len(lines) < sel_range.model().rowCount() and \
-            len(lines[0]) == sel_range.model().columnCount() and \
+            0 < len(lines) < sel_range.height() and \
+            len(lines[0]) == sel_range.width() and \
             has_same_values_in_columns(lines)
 
         paste_lines = \
             lines if not stretch_mode else \
-            itertools.repeat(lines[0], sel_range.model().rowCount())
+            itertools.repeat(lines[0], sel_range.height())
 
         data = []
         for line_index, line in enumerate(paste_lines):

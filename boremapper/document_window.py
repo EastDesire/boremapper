@@ -302,7 +302,7 @@ class DocumentWindow(QMainWindow):
                     show_widget = 'groove'
                 case 'cutter':
                     show_widget = 'cutter'
-                case 'equivalent_diameter' | 'override_diameter':
+                case 'diameter':
                     show_widget = 'joined'
 
         for k, widget in self.point_detail_widgets.items():

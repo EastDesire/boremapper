@@ -83,7 +83,7 @@ class BoreTableModel(QAbstractTableModel):
                 if any(w['part'] == cd['part'] for w in point.warnings):
                     return QBrush(Qt.GlobalColor.red)
 
-                if cd['feature'] == 'cutter':
+                if cd['feature'] in ('cutter', 'diameter'):
                     val = self.value_for_cell(row, column, DataVariant.RAW)
                     if val is None:
                         color = QPalette().color(QPalette.ColorRole.Text)
@@ -128,11 +128,8 @@ class BoreTableModel(QAbstractTableModel):
                 case 3:
                     return getattr(point, p + '_' + ('resolved_' if variant == DataVariant.DISPLAYED else '') + 'cutter_height')
             
-        elif cd['feature'] == 'equivalent_diameter':
-            return point.equivalent_diameter
-        
-        elif cd['feature'] == 'override_diameter':
-            return point.override_diameter
+        elif cd['feature'] == 'diameter':
+            return getattr(point, 'diameter' if variant == DataVariant.DISPLAYED else 'override_diameter')
 
         return None
 
@@ -152,7 +149,7 @@ class BoreTableModel(QAbstractTableModel):
                 case 3:
                     setattr(point, p + '_cutter_height', value)
                 
-        elif cd['feature'] == 'override_diameter':
+        elif cd['feature'] == 'diameter':
             point.override_diameter = value
 
     @staticmethod
@@ -177,10 +174,7 @@ class BoreTableModel(QAbstractTableModel):
             part = 'bottom' if index < 4 else 'top'
             
         elif index == 8:
-            feature = 'equivalent_diameter'
-            
-        elif index == 9:
-            feature = 'override_diameter'
+            feature = 'diameter'
 
         return {
             'feature': feature,

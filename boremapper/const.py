@@ -29,8 +29,7 @@ BORE_TABLE_COLUMNS = [
     ('t H', True, 1.0, 'Top: Groove Height'),
     ('t CW', True, 1.0, 'Top: Cutter Width'),
     ('t CH', True, 1.0, 'Top: Cutter Height'),
-    ('ED', False, 1.0, 'Equivalent Diameter'),
-    ('OD', True, 1.0, 'Override Diameter'),
+    ('D', True, 1.0, 'Diameter'),
 ]
 
 BORE_TABLE_MIN_COLUMN_WIDTH = 70

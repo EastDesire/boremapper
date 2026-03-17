@@ -21,7 +21,6 @@ class BoreTableModel(QAbstractTableModel):
     def __init__(self, parent: 'DocumentModel'):
         super().__init__(parent)
 
-        # TODO: call (if needed at all) layoutAboutToBeChanged() and layoutChanged() somehow only when changing order/number of items
         self.parent().bore.points.point_changed.connect(self.on_point_change)
         self.parent().bore.points.layout_changed.connect(self.on_points_layout_change)
 
@@ -96,27 +95,15 @@ class BoreTableModel(QAbstractTableModel):
         return None
 
     def setData(self, index: 'QModelIndex|QPersistentModelIndex', value: typing.Any, /, role: int = ...):
-        print('setData') # TODO
         if not index.isValid():
-            return None
+            return False
         match role:
             case Qt.ItemDataRole.EditRole:
-                # QAbstractItemModel requires this signal to be explicitly emitted when data successfully changes
+                # Note: QAbstractItemModel requires this signal to be explicitly emitted when data successfully changes
                 self.dataChanged.emit(index, index, [Qt.ItemDataRole.EditRole])
                 self.data_set.emit(index, value)
-                return True # TODO needed? does anything?
-                
-                """ TODO rem
-                self.parent().bore_points.set_value_for_cell(row, column, parsed_val)
-                
-                parsed_val = str_to_number(value, float, allow_empty=True)
-                if parsed_val is not None:
-                    # We round the value so that we store only decimals that are visible
-                    parsed_val = round(parsed_val, const.LENGTH_DISPLAY_DECIMALS)
-                self.parent().bore_points.set_value_for_cell(row, column, parsed_val)
                 return True
-                """
-        return False # TODO needed? does anything?
+        return False
 
     def flags(self, index: 'QModelIndex|QPersistentModelIndex', /) -> Qt.ItemFlag:
         c = self.column_def(index.column())

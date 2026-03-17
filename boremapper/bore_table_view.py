@@ -38,12 +38,12 @@ class BoreTableView(QTableView):
             QAbstractItemView.EditTrigger.EditKeyPressed
         )
 
-        self.selectionModel().selectionChanged.connect(self.on_selection_changed)
+        self.selectionModel().selectionChanged.connect(self.on_selection_change)
 
         # TODO: use?
-        #self.selectionModel().currentRowChanged.connect(self.on_current_row_changed())
+        #self.selectionModel().currentRowChanged.connect(self.on_current_row_change())
 
-        #self.itemSelectionChanged.connect(self.on_item_selection_changed)
+        #self.itemSelectionChanged.connect(self.on_item_selection_change)
         ## Note that QueuedConnection is needed here, since DirectConnection sometimes causes runtime error
         ## 'Internal C++ object already deleted', or in combination message box it causes segmentation fault.
         #self.itemChanged.connect(self.on_item_change, Qt.ConnectionType.QueuedConnection)
@@ -97,7 +97,7 @@ class BoreTableView(QTableView):
             self.setRangeSelected(QTableWidgetSelectionRange(index, 0, index, self.columnCount() - 1), True)
         """
 
-    def on_selection_changed(self, selected: 'QItemSelection', deselected: 'QItemSelection'):
+    def on_selection_change(self, selected: 'QItemSelection', deselected: 'QItemSelection'):
         self.selection_changed.emit()
         
     # TODO

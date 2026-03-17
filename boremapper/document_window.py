@@ -71,16 +71,16 @@ class DocumentWindow(QMainWindow):
         self.update_point_detail()
         
     def init_models(self):
-        self.model.file_changed.connect(self.on_file_changed)
+        self.model.file_changed.connect(self.on_file_change)
         
         self.table_model = BoreTableModel(self.model)
-        self.table_model.dataChanged.connect(self.on_table_data_changed)
-        self.table_model.layoutChanged.connect(self.on_table_layout_changed)
+        self.table_model.dataChanged.connect(self.on_table_data_change)
+        self.table_model.layoutChanged.connect(self.on_table_layout_change)
 
     def init_undo_stack(self):
         # Note that the parent should be specified, or the undo_stack might be deleted too soon during exit
         self.undo_stack = QUndoStack(self)
-        self.undo_stack.cleanChanged.connect(self.on_clean_state_changed)
+        self.undo_stack.cleanChanged.connect(self.on_clean_state_change)
 
     def init_menu(self):
         menu_bar = QMenuBar(self)
@@ -209,7 +209,7 @@ class DocumentWindow(QMainWindow):
         self.content_widget.setLayout(self.layout)
 
         self.table_view = BoreTableView(self, self.table_model)
-        self.table_view.selection_changed.connect(self.on_table_selection_changed)
+        self.table_view.selection_changed.connect(self.on_table_selection_change)
         
         self.detail_panel = QVBoxLayout()
         self.point_detail_widgets = {
@@ -355,24 +355,24 @@ class DocumentWindow(QMainWindow):
             self.model.file is not None
         )
 
-    def on_table_data_changed(self, top_left: 'QModelIndex', bottom_right: 'QModelIndex'):
+    def on_table_data_change(self, top_left: 'QModelIndex', bottom_right: 'QModelIndex'):
         current_index = self.current_bore_point_index()
         if current_index is not None and top_left.row() <= current_index <= bottom_right.row():
             # Data of the current row has been changed
             self.update_point_detail()
 
-    def on_table_layout_changed(self):
+    def on_table_layout_change(self):
         self.update_point_detail()
 
-    def on_table_selection_changed(self):
+    def on_table_selection_change(self):
         self.update_menu()
         self.update_point_detail()
         
-    def on_file_changed(self):
+    def on_file_change(self):
         self.update_title()
         self.update_menu()
 
-    def on_clean_state_changed(self):
+    def on_clean_state_change(self):
         self.update_title()
         self.update_menu()
 

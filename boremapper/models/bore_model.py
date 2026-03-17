@@ -29,8 +29,6 @@ class BorePointsModel(Model):
     
     # Emitted when the points layout changes (reordering, adding, deleting)
     layout_changed = Signal()
-    # TODO: if needed, add signals layoutAboutToBeChanged and layoutChanged, and emit them when adding/deleting points here
-    #  (and then pass them somewhere to BoreTableModel, so that it knows about layout changes)
 
     def __init__(self, parent: 'BoreModel'):
         super().__init__(parent)

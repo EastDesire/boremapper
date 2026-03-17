@@ -356,7 +356,7 @@ class DocumentWindow(QMainWindow):
         )
 
     def on_point_data_change(self, index: int):
-        if index == self.current_point_index:
+        if index == self.current_point_index():
             self.on_current_point_data_change()
 
     def on_points_layout_change(self):

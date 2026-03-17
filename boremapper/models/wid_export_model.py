@@ -32,7 +32,7 @@ class WidExportModel(Model):
                     self.__dict__['_data'][name] = value
                 except KeyError:
                     raise AttributeError(name)
-            self.on_updated()
+            self.on_update()
 
-    def on_updated(self):
+    def on_update(self):
         self.updated.emit()

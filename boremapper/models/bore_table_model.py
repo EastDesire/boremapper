@@ -97,12 +97,18 @@ class BoreTableModel(QAbstractTableModel):
     def setData(self, index: 'QModelIndex|QPersistentModelIndex', value: typing.Any, /, role: int = ...):
         if not index.isValid():
             return False
+        
         match role:
             case Qt.ItemDataRole.EditRole:
+                orig_data = self.data(index, role)
+                if value == orig_data:
+                    return False # Cell data not changed
+                
                 # Note: QAbstractItemModel requires this signal to be explicitly emitted when data successfully changes
                 self.dataChanged.emit(index, index, [Qt.ItemDataRole.EditRole])
                 self.data_set.emit(index, value)
                 return True
+        
         return False
 
     def flags(self, index: 'QModelIndex|QPersistentModelIndex', /) -> Qt.ItemFlag:

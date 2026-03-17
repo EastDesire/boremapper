@@ -72,10 +72,10 @@ class DocumentWindow(QMainWindow):
         
     def init_models(self):
         self.model.file_changed.connect(self.on_file_change)
+        self.model.bore.points.point_changed.connect(self.on_point_data_change)
+        self.model.bore.points.layout_changed.connect(self.on_points_layout_change)
         
         self.table_model = BoreTableModel(self.model)
-        self.table_model.dataChanged.connect(self.on_table_data_change)
-        self.table_model.layoutChanged.connect(self.on_table_layout_change)
 
     def init_undo_stack(self):
         # Note that the parent should be specified, or the undo_stack might be deleted too soon during exit
@@ -355,13 +355,15 @@ class DocumentWindow(QMainWindow):
             self.model.file is not None
         )
 
-    def on_table_data_change(self, top_left: 'QModelIndex', bottom_right: 'QModelIndex'):
-        current_index = self.current_bore_point_index()
-        if current_index is not None and top_left.row() <= current_index <= bottom_right.row():
-            # Data of the current row has been changed
-            self.update_point_detail()
+    def on_point_data_change(self, index: int):
+        if index == self.current_bore_point_index:
+            self.on_current_point_data_change()
 
-    def on_table_layout_change(self):
+    def on_points_layout_change(self):
+        # Changing the points layout might also result in different data in current point
+        self.on_current_point_data_change()
+
+    def on_current_point_data_change(self):
         self.update_point_detail()
 
     def on_table_selection_change(self):

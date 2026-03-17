@@ -55,9 +55,9 @@ class BoreTableView(QTableView):
             lambda e: self.model().column_def(e[0])['size_factor'],
             enumerate(const.BORE_TABLE_COLUMNS)
         ))
-        for idx, _ in enumerate(const.BORE_TABLE_COLUMNS):
-            col = self.model().column_def(idx)
-            self.setColumnWidth(idx, const.BORE_TABLE_WIDTH * (col['size_factor'] / column_sizes_sum))
+        for index, _ in enumerate(const.BORE_TABLE_COLUMNS):
+            col = self.model().column_def(index)
+            self.setColumnWidth(index, const.BORE_TABLE_WIDTH * (col['size_factor'] / column_sizes_sum))
 
     def selected_rows(self):
         rows = []
@@ -208,13 +208,13 @@ class BoreTableView(QTableView):
             itertools.repeat(lines[0], sel_range.rowCount())
 
         data = []
-        for line_idx, line in enumerate(paste_lines):
-            row = origin_row + line_idx
+        for line_index, line in enumerate(paste_lines):
+            row = origin_row + line_index
             if row >= self.rowCount():
                 break # Cell would be outside boundaries
 
-            for value_idx, value in enumerate(line):
-                column = origin_column + value_idx
+            for value_index, value in enumerate(line):
+                column = origin_column + value_index
                 if column >= self.columnCount():
                     break # Cell would be outside boundaries
 

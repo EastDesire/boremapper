@@ -17,9 +17,9 @@ class BoreModel(Model):
 
     # TODO test
     def on_corrections_change(self):
-        for idx, point in enumerate(self.points):
+        for index, point in enumerate(self.points):
             point.invalidate() # Cached calculations are dependent on corrections -> invalidate cache
-            self.points.point_changed.emit(idx)
+            self.points.point_changed.emit(index)
 
 
 class BorePointsModel(Model):
@@ -104,18 +104,18 @@ class BorePointsModel(Model):
         self.layout_changed.emit()
 
     def find(self, point_to_find: 'BorePointModel') -> int|None:
-        for idx, point in enumerate(self._points):
+        for index, point in enumerate(self._points):
             if point == point_to_find:
-                return idx
+                return index
         return None
 
     def find_position(self, position: float) -> int|None:
         """
         Note that rounding to displayed decimal places is used during lookup.
         """
-        for idx, point in enumerate(self._points):
+        for index, point in enumerate(self._points):
             if round(point.position, const.LENGTH_DISPLAY_DECIMALS) == round(position, const.LENGTH_DISPLAY_DECIMALS):
-                return idx
+                return index
         return None
 
 

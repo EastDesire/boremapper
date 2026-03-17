@@ -66,7 +66,7 @@ class BoreTableModel(QAbstractTableModel):
 
         match role:
             case Qt.ItemDataRole.DisplayRole:
-                val = self.value_for_cell(row, column, DataVariant.RESOLVED)
+                val = self.value_for_cell(row, column, DataVariant.DISPLAYED)
                 return format_length(val)
 
             case Qt.ItemDataRole.EditRole:
@@ -120,13 +120,13 @@ class BoreTableModel(QAbstractTableModel):
             p = cd['part']
             match cd['subcolumn']:
                 case 0:
-                    return getattr(point, p + '_' + ('resolved_' if variant == DataVariant.RESOLVED else '') + 'groove_width')
+                    return getattr(point, p + '_groove_width')
                 case 1:
-                    return getattr(point, p + '_' + ('resolved_' if variant == DataVariant.RESOLVED else '') + 'groove_height')
+                    return getattr(point, p + '_groove_height')
                 case 2:
-                    return getattr(point, p + '_' + ('resolved_' if variant == DataVariant.RESOLVED else '') + 'cutter_width')
+                    return getattr(point, p + '_' + ('resolved_' if variant == DataVariant.DISPLAYED else '') + 'cutter_width')
                 case 3:
-                    return getattr(point, p + '_' + ('resolved_' if variant == DataVariant.RESOLVED else '') + 'cutter_height')
+                    return getattr(point, p + '_' + ('resolved_' if variant == DataVariant.DISPLAYED else '') + 'cutter_height')
             
         elif cd['feature'] == 'equivalent_diameter':
             return point.equivalent_diameter

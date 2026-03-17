@@ -155,7 +155,7 @@ class BoreTableView(QTableView):
         for row in range(sel_range.top(), sel_range.bottom() + 1):
             line = []
             for column in range(sel_range.left(), sel_range.right() + 1):
-                value = self.model().value_for_cell(row, column, DataVariant.RAW)
+                value = self.model().value_for_cell(row, column, DataVariant.DISPLAYED)
                 line.append(format_length(value, decimals=10))
             lines.append(line)
 

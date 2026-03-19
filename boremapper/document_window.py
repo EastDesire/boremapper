@@ -198,7 +198,6 @@ class DocumentWindow(QMainWindow):
         self.setMenuBar(menu_bar)
 
     def init_content(self):
-
         self.layout = QHBoxLayout()
 
         self.content_widget = QWidget(self)

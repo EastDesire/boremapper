@@ -446,10 +446,7 @@ class DocumentWindow(QMainWindow):
         selected_rows = self.table_view.selected_rows()
         if not selected_rows:
             return
-        self.do_command(commands.DeletePositions(
-            self,
-            selected_rows
-        ))
+        self.do_command(commands.DeletePositions(self, selected_rows))
 
     def on_action_beep_hints_trigger(self):
         self.app.settings.toggle('audio', 'beep_hints')

@@ -96,13 +96,9 @@ class BoreTableView(QTableView):
             # We round the value so that we store only decimals that are visible
             parsed_val = round(parsed_val, const.LENGTH_DISPLAY_DECIMALS)
 
-        self.dw.do_command(
-            commands.EditCells(self.dw, [{
-                'row': index.row(),
-                'column': index.column(),
-                'value': parsed_val,
-            }])
-        )
+        data = [{'row': index.row(), 'column': index.column(), 'value': parsed_val}]
+        if self.validate_cells_data(data):
+            self.dw.do_command(commands.EditCells(self.dw, data))
 
     def on_data_committed(self, using_return: bool):
         if using_return:
@@ -134,11 +130,7 @@ class BoreTableView(QTableView):
                     (index.flags() & Qt.ItemFlag.ItemIsEditable) and
                     self.model().value_for_cell(row, column, DataVariant.RAW) is not None
                 ):
-                    data.append({
-                        'row': row,
-                        'column': column,
-                        'value': None,
-                    })
+                    data.append({'row': row, 'column': column, 'value': None})
         if data:
             self.dw.do_command(commands.EditCells(self.dw, data))
 
@@ -189,13 +181,25 @@ class BoreTableView(QTableView):
 
                 index = self.model().index(row, column)
                 if index.flags() & Qt.ItemFlag.ItemIsEditable:
-                    data.append({
-                        'row': row,
-                        'column': column,
-                        'value': str_to_number(value, float, allow_empty=True),
-                    })
-        if data:
+                    value = str_to_number(value, float, allow_empty=True)
+                    data.append({'row': row, 'column': column, 'value': value})
+                    
+        if data and self.validate_cells_data(data):
             self.dw.do_command(commands.EditCells(self.dw, data))
+            
+    def validate_cells_data(self, data: list):
+        try:
+            for d in data:
+                if d['value'] is None:
+                    continue
+                if abs(d['value']) > const.MAX_INPUT_VALUE:
+                    raise OverflowError()
+                
+        except OverflowError:
+            self.dw.app.error_value_overflow()
+            return False
+        
+        return True
 
 
 class BoreTableHorizontalHeader(QHeaderView):

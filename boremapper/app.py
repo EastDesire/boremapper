@@ -158,6 +158,9 @@ class App(QApplication):
     def error_invalid_file_data(self):
         self.show_error('Invalid file data')
 
+    def error_value_overflow(self):
+        self.show_error('Value is out of available range')
+
     def msg_incomplete_data_for_export(self, incomplete_positions: list):
         max_items = 3
         show_positions = [format_length(p) for p in incomplete_positions[:max_items]]

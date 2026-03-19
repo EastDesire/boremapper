@@ -8,7 +8,6 @@ from PySide6.QtWidgets import QFileDialog, QFrame, QHBoxLayout, QLabel, QMainWin
     QStatusBar, QVBoxLayout, QWidget
 
 from boremapper import commands, const
-from boremapper.point_detail_widget import PointDetailWidget
 from boremapper.utils import format_length, format_position_for_speech
 from boremapper.bore_table_view import BoreTableView
 from boremapper.joined_detail_widget import JoinedDetailWidget
@@ -40,7 +39,7 @@ class DocumentWindow(QMainWindow):
         self.content_widget = None
         self.table_view = None
         self.detail_panel = None
-        self.point_detail_widgets = {}
+        self.detail_widgets = {}
         
         self.undo_stack = None
 
@@ -209,20 +208,16 @@ class DocumentWindow(QMainWindow):
         self.table_view.selection_changed.connect(self.on_table_selection_change)
         
         self.detail_panel = QVBoxLayout()
-        self.point_detail_widgets = {
+        self.detail_widgets = {
             'groove': GrooveDetailWidget(self, self.model.bore),
             'cutter': CutterDetailWidget(self, self.model.bore),
             'joined': JoinedDetailWidget(self, self.model.bore),
         }
-        for widget in self.point_detail_widgets.values():
-            widget.setMinimumWidth(PointDetailWidget.MIN_SIZE)
-            widget.setMaximumWidth(PointDetailWidget.MAX_SIZE)
+        for widget in self.detail_widgets.values():
             self.detail_panel.addWidget(widget)
 
         self.layout.addWidget(self.table_view, stretch=60)
         self.layout.addLayout(self.detail_panel, stretch=40)
-
-        # TODO: connect user input signals here
 
         self.setCentralWidget(self.content_widget)
 
@@ -251,7 +246,7 @@ class DocumentWindow(QMainWindow):
         self.update_menu()
         self.update_title()
         self.update_status_bar()
-        self.update_point_detail()
+        self.update_detail()
 
     def update_menu(self):
         selected_rows = len(self.table_view.selected_rows())
@@ -293,7 +288,7 @@ class DocumentWindow(QMainWindow):
             )
         )
 
-    def update_point_detail(self):
+    def update_detail(self):
         cd = self.current_column_detail()
         show_widget = None
 
@@ -306,11 +301,11 @@ class DocumentWindow(QMainWindow):
                 case 'diameter':
                     show_widget = 'joined'
 
-        for k, widget in self.point_detail_widgets.items():
+        for k, widget in self.detail_widgets.items():
             widget.setVisible(k == show_widget)
         
         if show_widget is not None:
-            widget = self.point_detail_widgets[show_widget]
+            widget = self.detail_widgets[show_widget]
             widget.set_target(
                 self.current_point_index(),
                 cd['feature'],
@@ -367,7 +362,7 @@ class DocumentWindow(QMainWindow):
         self.on_current_point_data_change()
 
     def on_current_point_data_change(self):
-        self.update_point_detail()
+        self.update_detail()
 
     def on_bore_corrections_change(self):
         self.on_nonstacked_change()
@@ -378,7 +373,7 @@ class DocumentWindow(QMainWindow):
 
     def on_table_selection_change(self):
         self.update_menu()
-        self.update_point_detail()
+        self.update_detail()
         
     def on_file_change(self):
         self.update_title()

@@ -25,6 +25,9 @@ class PointDetailWidget(QWidget):
             part = None,
         )
 
+        self.setMinimumWidth(self.MIN_SIZE)
+        self.setMaximumWidth(self.MAX_SIZE)
+
         self.layout = QVBoxLayout()
         self.layout.setContentsMargins(0, self.SPACING, 0, 0)
         self.layout.setSpacing(self.SPACING)
@@ -63,6 +66,7 @@ class PointDetailWidget(QWidget):
         
         self.message_list = PointMessageList()
         self.message_list.setMinimumHeight(50)
+
         
     def update_content(self):
         self.position_label.setText(self._position_text())

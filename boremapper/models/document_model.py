@@ -33,6 +33,7 @@ class DocumentModel(Model):
 
     def to_xml(self) -> ET.Element:
         e_root = ET.Element('boremapper-document')
+        e_root.set('version', const.DOCUMENT_XML_VERSION)
 
         e_bore = ET.SubElement(e_root, 'bore')
 

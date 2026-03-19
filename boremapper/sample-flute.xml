@@ -1,4 +1,4 @@
-<boremapper-document>
+<boremapper-document version="0.1">
   <bore>
     <points>
       <point position="0" custom-diameter="" bottom-groove-width="24" bottom-groove-height="12" bottom-cutter-width="" bottom-cutter-height="" top-groove-width="24" top-groove-height="19" top-cutter-width="" top-cutter-height="" />

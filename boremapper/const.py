@@ -7,6 +7,8 @@ APP_VERSION = '0.1.0'
 
 ORGANIZATION_HANDLE = 'JanOdvarko'
 
+DOCUMENT_XML_VERSION = '0.1'
+
 # When comparing or storing floats, we round them to this number of decimals to avoid issues with floating point error
 FLOAT_SAFE_DECIMALS = 10
 

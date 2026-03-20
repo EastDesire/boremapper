@@ -61,7 +61,6 @@ class GrooveDetailDiagram(PointDetailDiagram):
         needed_height = sp.groove_h + self.min_wall + self.dim_space
         post_scale = min(1, height / needed_height)
         
-        # Post-scaling
         transform = QTransform()
         transform.translate(left + width / 2, top + height / 2)
         transform.scale(post_scale, post_scale)

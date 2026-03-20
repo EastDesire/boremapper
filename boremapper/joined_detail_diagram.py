@@ -70,7 +70,6 @@ class JoinedDetailDiagram(PointDetailDiagram):
         needed_height = scaled.bore_height + 2 * self.min_wall + 2 * self.dim_space
         post_scale = min(1, height / needed_height)
         
-        # Post-scaling
         transform = QTransform()
         transform.translate(left + width / 2, top + height / 2)
         transform.scale(post_scale, post_scale)

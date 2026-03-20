@@ -10,7 +10,6 @@ class JoinedDetailWidget(PointDetailWidget):
 
         self.diagram = JoinedDetailDiagram(self, parent.app)
         self.diagram.setMinimumHeight(PointDetailWidget.MIN_SIZE)
-        self.diagram.setMaximumHeight(PointDetailWidget.MAX_SIZE)
 
         self.content_layout.addWidget(self.property_table, stretch=0)
         self.content_layout.addWidget(self.message_list, stretch=0)

@@ -2,7 +2,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QVBoxLayout, QWidget, QLabel, QHBoxLayout, QScrollArea, QSizePolicy
 
 from boremapper.bunch import Bunch
-from boremapper.utils import format_length
+from boremapper.profile_detail_diagram import ProfileDetailDiagram
 
 
 class ProfileDetailWidget(QWidget):
@@ -55,9 +55,16 @@ class ProfileDetailWidget(QWidget):
         self.content_scroll.setWidgetResizable(True)
         self.layout.addWidget(self.content_scroll)
 
+        self.diagram = ProfileDetailDiagram(self, parent.app)
+        # TODO: needed? Here and in other classes
+        #self.diagram.setMinimumHeight(PointDetailWidget.MIN_SIZE)
+        #self.diagram.setMaximumHeight(PointDetailWidget.MAX_SIZE)
+
+        self.content_layout.addWidget(self.diagram, stretch=100)
+
     def update_content(self):
         self.target_label.setText(self.target_name())
-        # TODO: redraw the diagram?
+        self.diagram.update()
 
     def set_target(self, point_index_range: tuple, feature: str|None, part: str|None, prop: str|None):
         self.target.point_index_range = point_index_range

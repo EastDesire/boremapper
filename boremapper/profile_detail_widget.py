@@ -34,13 +34,10 @@ class ProfileDetailWidget(QWidget):
         self.target_label = QLabel(self)
         self.target_label.setStyleSheet('font-weight: bold')
 
-        self.range_label = QLabel(self)
-
         self.title_layout = QHBoxLayout()
         self.title_layout.setSpacing(20)
         self.title_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.title_layout.addWidget(self.target_label)
-        self.title_layout.addWidget(self.range_label)
         self.title_layout.addStretch()
         self.layout.addLayout(self.title_layout, stretch=0)
 
@@ -59,7 +56,6 @@ class ProfileDetailWidget(QWidget):
         self.layout.addWidget(self.content_scroll)
 
     def update_content(self):
-        self.range_label.setText(self._range_text())
         self.target_label.setText(self.target_name())
         # TODO: redraw the diagram?
 
@@ -86,17 +82,3 @@ class ProfileDetailWidget(QWidget):
                 prop = 'Bore Diameter'
             
         return loc + ' \u2192 ' + prop + ' Profile'
-
-    # TODO: probably completely remove the range text, as we plan to always show the entire bore
-    def _range_text(self) -> str:
-        positions = [p.position for p in self.target_points()]
-        if len(positions) < 2:
-            return ''
-        
-        position_from = min(positions)
-        position_to = max(positions)
-        
-        return 'Bore at: %s\u2013%s' % (
-            format_length(position_from),
-            format_length(position_to),
-        )

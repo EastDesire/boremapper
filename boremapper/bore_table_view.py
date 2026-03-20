@@ -46,11 +46,17 @@ class BoreTableView(QTableView):
         sel_ranges = self.selectionModel().selection()
         return [sel_ranges.at(i) for i in range(0, sel_ranges.count())]
 
-    def selected_rows(self) -> list:
+    def fully_selected_rows(self) -> list:
         """
         Returns indexes of fully selected rows
         """
         return [index.row() for index in self.selectionModel().selectedRows(0)]
+
+    def partially_selected_rows(self) -> list:
+        """
+        Returns indexes of rows where at least one cell is selected
+        """
+        return sorted(set(index.row() for index in self.selectionModel().selectedIndexes()))
     
     def selected_cells_count(self) -> int:
         return len(self.selectionModel().selectedIndexes())

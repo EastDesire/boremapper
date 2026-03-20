@@ -8,6 +8,7 @@ from PySide6.QtWidgets import QFileDialog, QFrame, QHBoxLayout, QLabel, QMainWin
     QStatusBar, QVBoxLayout, QWidget
 
 from boremapper import commands, const
+from boremapper.profile_detail_widget import ProfileDetailWidget
 from boremapper.utils import format_length, format_position_for_speech
 from boremapper.bore_table_view import BoreTableView
 from boremapper.joined_detail_widget import JoinedDetailWidget
@@ -211,6 +212,7 @@ class DocumentWindow(QMainWindow):
             'groove': GrooveDetailWidget(self, self.model.bore),
             'cutter': CutterDetailWidget(self, self.model.bore),
             'joined': JoinedDetailWidget(self, self.model.bore),
+            'profile': ProfileDetailWidget(self, self.model.bore),
         }
         for widget in self.detail_widgets.values():
             self.detail_panel.addWidget(widget)
@@ -248,7 +250,7 @@ class DocumentWindow(QMainWindow):
         self.update_detail()
 
     def update_menu(self):
-        selected_rows = len(self.table_view.selected_rows())
+        selected_rows = len(self.table_view.fully_selected_rows())
         selected_anything = len(self.table_view.selectedIndexes()) > 0
         selected_one_range = len(self.table_view.selected_ranges()) == 1
 
@@ -289,28 +291,32 @@ class DocumentWindow(QMainWindow):
 
     def update_detail(self):
         cd = self.current_column_detail()
-        show_widget = None
+        sel_ranges = self.table_view.selected_ranges()
+        widget_name = None
+        widget_target = None
 
         if self.table_view.selected_cells_count() == 1:
             match cd['feature']:
                 case 'groove':
-                    show_widget = 'groove'
+                    widget_name = 'groove'
                 case 'cutter':
-                    show_widget = 'cutter'
-                case 'diameter':
-                    show_widget = 'joined'
+                    widget_name = 'cutter'
+                case _:
+                    widget_name = 'joined'
+            widget_target = (self.current_point_index(), cd['feature'], cd['part'])
+                
+        elif len(sel_ranges) == 1 and sel_ranges[0].width() == 1 and sel_ranges[0].height() > 1:
+            # Single-column continuous range of multiple rows
+            widget_name = 'profile'
+            widget_target = (self.table_view.partially_selected_rows(), cd['feature'], cd['part'], cd['property'])
 
         for k, widget in self.detail_widgets.items():
-            widget.setVisible(k == show_widget)
-        
-        if show_widget is not None:
-            widget = self.detail_widgets[show_widget]
-            widget.set_target(
-                self.current_point_index(),
-                cd['feature'],
-                cd['part'],
-            )
-            widget.update_content()
+            if k == widget_name:
+                widget.setVisible(True)
+                widget.set_target(*widget_target)
+                widget.update_content()
+            else:
+                widget.setVisible(False)
 
     def current_point_index(self) -> int|None:
         row = self.table_view.current_row()
@@ -443,7 +449,7 @@ class DocumentWindow(QMainWindow):
         self.show_insert_positions_range_window()
 
     def on_action_delete_positions_trigger(self):
-        selected_rows = self.table_view.selected_rows()
+        selected_rows = self.table_view.fully_selected_rows()
         if not selected_rows:
             return
         self.do_command(commands.DeletePositions(self, selected_rows))

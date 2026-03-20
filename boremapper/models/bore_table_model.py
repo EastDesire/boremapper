@@ -124,15 +124,11 @@ class BoreTableModel(QAbstractTableModel):
 
         if cd['part'] is not None:
             p = cd['part']
-            match cd['subcolumn']:
-                case 0:
-                    return getattr(point, p + '_groove_width')
-                case 1:
-                    return getattr(point, p + '_groove_height')
-                case 2:
-                    return getattr(point, p + '_' + ('resolved_' if variant == DataVariant.DISPLAYED else '') + 'cutter_width')
-                case 3:
-                    return getattr(point, p + '_' + ('resolved_' if variant == DataVariant.DISPLAYED else '') + 'cutter_height')
+            match cd['feature']:
+                case 'groove':
+                    return getattr(point, p + '_groove_' + cd['property'])
+                case 'cutter':
+                    return getattr(point, p + '_' + ('resolved_' if variant == DataVariant.DISPLAYED else '') + 'cutter_' + cd['property'])
             
         elif cd['feature'] == 'diameter':
             return getattr(point, 'diameter' if variant == DataVariant.DISPLAYED else 'custom_diameter')
@@ -145,15 +141,11 @@ class BoreTableModel(QAbstractTableModel):
 
         if cd['part'] is not None:
             p = cd['part']
-            match cd['subcolumn']:
-                case 0:
-                    setattr(point, p + '_groove_width', value)
-                case 1:
-                    setattr(point, p + '_groove_height', value)
-                case 2:
-                    setattr(point, p + '_cutter_width', value)
-                case 3:
-                    setattr(point, p + '_cutter_height', value)
+            match cd['feature']:
+                case 'groove':
+                    setattr(point, p + '_groove_' + cd['property'], value)
+                case 'cutter':
+                    setattr(point, p + '_cutter_' + cd['property'], value)
                 
         elif cd['feature'] == 'diameter':
             point.custom_diameter = value
@@ -171,12 +163,13 @@ class BoreTableModel(QAbstractTableModel):
     def column_detail(index: int) -> dict|None:
         feature = None
         part = None
-        subcolumn = None
+        prop = None
         
         if 0 <= index <= 7:
             subcolumn = index % 4
             feature = 'groove' if subcolumn < 2 else 'cutter'
             part = 'bottom' if index < 4 else 'top'
+            prop = 'width' if subcolumn % 2 == 0 else 'height'
             
         elif index == 8:
             feature = 'diameter'
@@ -184,7 +177,7 @@ class BoreTableModel(QAbstractTableModel):
         return {
             'feature': feature,
             'part': part,
-            'subcolumn': subcolumn,
+            'property': prop,
         }
 
     def on_point_data_change(self, index: int):

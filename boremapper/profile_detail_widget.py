@@ -17,7 +17,7 @@ class ProfileDetailWidget(QWidget):
         self.model = model
         
         self.target = Bunch(
-            point_indexes = [], # TODO
+            point_index_range = None,
             feature = None,
             part = None,
             property = None,
@@ -59,15 +59,12 @@ class ProfileDetailWidget(QWidget):
         self.target_label.setText(self.target_name())
         # TODO: redraw the diagram?
 
-    def set_target(self, point_indexes: list, feature: str|None, part: str|None, prop: str|None):
-        self.target.point_indexes = point_indexes
+    def set_target(self, point_index_range: tuple, feature: str|None, part: str|None, prop: str|None):
+        self.target.point_index_range = point_index_range
         self.target.feature = feature
         self.target.part = part
         self.target.property = prop
         self.update_content()
-
-    def target_points(self) -> list:
-        return [self.model.points[index] for index in self.target.point_indexes]
 
     def target_name(self) -> str:
         loc = ''

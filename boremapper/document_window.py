@@ -307,8 +307,9 @@ class DocumentWindow(QMainWindow):
                 
         elif len(sel_ranges) == 1 and sel_ranges[0].width() == 1 and sel_ranges[0].height() > 1:
             # Single-column continuous range of multiple rows
+            range = (sel_ranges[0].top(), sel_ranges[0].bottom())
             widget_name = 'profile'
-            widget_target = (self.table_view.partially_selected_rows(), cd['feature'], cd['part'], cd['property'])
+            widget_target = (range, cd['feature'], cd['part'], cd['property'])
 
         for k, widget in self.detail_widgets.items():
             if k == widget_name:

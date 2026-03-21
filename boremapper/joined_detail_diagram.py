@@ -29,7 +29,7 @@ class JoinedDetailDiagram(PointDetailDiagram):
                 getattr(point, p + '_resolved_cutter_width'),
                 getattr(point, p + '_resolved_cutter_height'),
             ):
-                return # Missing values necessary to draw the diagram
+                return # Insufficient data to draw the diagram
 
         bore_height = point.bottom_resolved_groove_height + point.top_resolved_groove_height
         diagram_max_groove_w = width - 2 * self.min_wall - 2 * self.dim_space

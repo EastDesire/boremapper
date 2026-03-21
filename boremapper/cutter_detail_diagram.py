@@ -38,7 +38,7 @@ class CutterDetailDiagram(PointDetailDiagram):
             getattr(point, p + '_resolved_cutter_width'),
             getattr(point, p + '_resolved_cutter_height'),
         ):
-            return # Missing values necessary to draw the diagram
+            return # Insufficient data to draw the diagram
 
         diagram_max_cutter_w = width - 2 * self.dim_space
 

@@ -13,8 +13,7 @@ class InsertPositionWindow(QWidget):
         self.dw = document_window
 
         self.setWindowTitle('Insert Position')
-        # Non-modal, so that we can scroll the document window contents when adding the positions
-        self.setWindowModality(Qt.WindowModality.NonModal)
+        self.setWindowModality(Qt.WindowModality.WindowModal)
         self.setWindowFlags(Qt.WindowType.Dialog)
         self.setFixedSize(220, 120)
 

@@ -88,7 +88,7 @@ class GrooveDetailDiagram(PointDetailDiagram):
 
         # Groove outline
 
-        pen = self.bold_line_pen()
+        pen = self.thick_line_pen()
         pen.setJoinStyle(Qt.PenJoinStyle.MiterJoin)
         self.painter.setPen(pen)
 

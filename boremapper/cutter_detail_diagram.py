@@ -69,13 +69,13 @@ class CutterDetailDiagram(PointDetailDiagram):
         x_len = sp.cutter_w / 2 + self.dim_line_pos + self.ext_line_overrun
         y_len = sp.cutter_h + self.bottom_dim_offset + self.dim_space
 
-        self.painter.setPen(self.dash_dot_line_pen())
+        self.painter.setPen(self.dash_dot_line_pen(self.muted_alpha))
         self.painter.drawLine(0, 0, 0, -y_len)
         self.painter.drawLine(0, 0, 0, y_len)
         self.painter.drawLine(0, 0, -x_len, 0)
         self.painter.drawLine(0, 0, x_len, 0)
 
-        self.painter.setPen(self.dash_line_pen())
+        self.painter.setPen(self.dash_line_pen(self.muted_alpha))
         self.painter.drawEllipse(-sp.cutter_w / 2, -sp.cutter_h, sp.cutter_w, sp.cutter_h * 2)
 
         # Shank
@@ -101,7 +101,7 @@ class CutterDetailDiagram(PointDetailDiagram):
         path.closeSubpath()
         self.painter.fillPath(path, self.face_brush())
 
-        pen = self.bold_line_pen()
+        pen = self.thick_line_pen()
         pen.setCapStyle(Qt.PenCapStyle.FlatCap)
         self.painter.setPen(pen)
 
@@ -123,7 +123,7 @@ class CutterDetailDiagram(PointDetailDiagram):
         path.lineTo(sp.cutter_w / 2, -sp.cutter_h / 2)
         path.closeSubpath()
 
-        pen = self.bold_line_pen()
+        pen = self.thick_line_pen()
         pen.setJoinStyle(Qt.PenJoinStyle.MiterJoin)
         self.painter.setPen(pen)
 

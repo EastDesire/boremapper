@@ -19,7 +19,8 @@ class ShortDimensionLineStyle(IntEnum):
 class Diagram(QWidget):
 
     font_families = ['Arial', 'Helvetica', 'sans-serif']
-    lower_alpha = 0.6
+    muted_alpha = 0.55
+    extra_muted_alpha = 0.2
 
     # Dimension line and text
     dim_space = 64 # Space reserved for a dimension line with text
@@ -28,7 +29,7 @@ class Diagram(QWidget):
     dim_line_arrow_angle = 30
     dim_line_extend = 50
     dim_text_box_height = 24 # Height of the dimension text (including space)
-    dim_font_size = 16
+    dim_font_size = 14
 
     # Extension line, mark
     ext_line_overrun = 7
@@ -88,30 +89,30 @@ class Diagram(QWidget):
         color.setAlphaF(alpha)
         return color
 
-    def solid_line_pen(self):
-        pen = QPen()
-        pen.setWidth(1)
-        pen.setColor(self.foreground_color())
-        return pen
-    
-    def bold_line_pen(self):
+    def thick_line_pen(self, alpha=1.0):
         pen = QPen()
         pen.setWidth(2)
-        pen.setColor(self.foreground_color())
+        pen.setColor(self.foreground_color(alpha))
         return pen
 
-    def dash_line_pen(self):
+    def thin_line_pen(self, alpha=1.0):
         pen = QPen()
         pen.setWidth(1)
-        pen.setColor(self.foreground_color(self.lower_alpha))
+        pen.setColor(self.foreground_color(alpha))
+        return pen
+
+    def dash_line_pen(self, alpha=1.0):
+        pen = QPen()
+        pen.setWidth(1)
+        pen.setColor(self.foreground_color(alpha))
         pen.setStyle(Qt.PenStyle.CustomDashLine)
         pen.setDashPattern([4, 6])
         return pen
 
-    def dash_dot_line_pen(self):
+    def dash_dot_line_pen(self, alpha=1.0):
         pen = QPen()
         pen.setWidth(1)
-        pen.setColor(self.foreground_color(self.lower_alpha))
+        pen.setColor(self.foreground_color(alpha))
         pen.setStyle(Qt.PenStyle.CustomDashLine)
         pen.setDashPattern([15, 6, 0.5, 6])
         return pen
@@ -185,7 +186,7 @@ class Diagram(QWidget):
         self.painter.setFont(font)
 
         pen = QPen()
-        pen.setColor(self.foreground_color(self.lower_alpha))
+        pen.setColor(self.foreground_color(self.muted_alpha))
         self.painter.setPen(pen)
 
         opt = QTextOption()
@@ -206,7 +207,7 @@ class Diagram(QWidget):
         arrow_size: float = 15,
         arrow_angle: float = 30,
     ):
-        color = self.foreground_color(self.lower_alpha)
+        color = self.foreground_color(self.muted_alpha)
 
         a = math.degrees(angle_from_coordinates(x2 - x1, y2 - y1))
         shorten_ends = arrow_size
@@ -268,6 +269,6 @@ class Diagram(QWidget):
     ):
         pen = QPen()
         pen.setWidth(1)
-        pen.setColor(self.foreground_color(self.lower_alpha))
+        pen.setColor(self.foreground_color(self.muted_alpha))
         self.painter.setPen(pen)
         self.painter.drawLine(x1, y1, x2, y2)

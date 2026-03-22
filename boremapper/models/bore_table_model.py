@@ -80,7 +80,10 @@ class BoreTableModel(QAbstractTableModel):
                 point = self.parent().bore.points[row]
                 cd = self.column_detail(column)
                 
-                if any(w['part'] == cd['part'] for w in point.warnings):
+                if any((
+                    ('feature' in w and w['feature'] == cd['feature']) or
+                    ('part' in w and w['part'] == cd['part'])
+                ) for w in point.warnings):
                     return QBrush(Qt.GlobalColor.red)
 
                 if cd['feature'] in ('cutter', 'diameter'):

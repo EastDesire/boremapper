@@ -2,13 +2,15 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QVBoxLayout, QWidget, QLabel, QHBoxLayout, QScrollArea, QSizePolicy
 
 from boremapper.bunch import Bunch
+from boremapper.enums import DiagramAlign
 from boremapper.profile_detail_diagram import ProfileDetailDiagram
 
 
 class ProfileDetailWidget(QWidget):
     
-    MIN_SIZE = 350
-    MAX_SIZE = 650
+    MIN_WIDTH = 350
+    MAX_WIDTH = 650
+    MIN_HEIGHT = 500
     SPACING = 8 # TODO: somewhere global?
     
     def __init__(self, parent: 'DocumentWindow', model: 'BoreModel'):
@@ -23,8 +25,8 @@ class ProfileDetailWidget(QWidget):
             property = None,
         )
 
-        self.setMinimumWidth(self.MIN_SIZE)
-        self.setMaximumWidth(self.MAX_SIZE)
+        self.setMinimumWidth(self.MIN_WIDTH)
+        self.setMaximumWidth(self.MAX_WIDTH)
 
         self.layout = QVBoxLayout()
         self.layout.setContentsMargins(0, self.SPACING, 0, 0)
@@ -56,22 +58,50 @@ class ProfileDetailWidget(QWidget):
         self.layout.addWidget(self.content_scroll)
 
         self.diagram = ProfileDetailDiagram(self, parent.app)
-        # TODO: needed? Here and in other classes
-        #self.diagram.setMinimumHeight(PointDetailWidget.MIN_SIZE)
-        #self.diagram.setMaximumHeight(PointDetailWidget.MAX_SIZE)
-
+        # TODO: put somewhere better? Here as well as in other classes
+        self.diagram.setMinimumHeight(self.MIN_HEIGHT)
         self.content_layout.addWidget(self.diagram, stretch=100)
 
     def update_content(self):
         self.target_label.setText(self.target_name())
         self.diagram.update()
 
-    def set_target(self, point_index_range: tuple, feature: str|None, part: str|None, prop: str|None):
+    def set_target(self, point_index_range: tuple|None, feature: str|None, part: str|None, prop: str|None):
         self.target.point_index_range = point_index_range
         self.target.feature = feature
         self.target.part = part
         self.target.property = prop
+        
+        self.diagram.set_data(
+            profile=self.diagram_profile_data(),
+            selection_range=self.diagram_selection_range(),
+            align=self.diagram_align(),
+        )
+        
         self.update_content()
+        
+    def diagram_profile_data(self):
+        match self.target.feature:
+            case 'groove' | 'cutter':
+                param = self.target.part + '_resolved_' + self.target.feature + '_' + self.target.property
+            case 'diameter':
+                param = 'diameter'
+            case _:
+                raise Exception('Cannot resolve target parameter')
+            
+        # We pass all positions, so that the diagram knows about them and offsets the shape correctly,
+        # leaving empty space where the values are missing
+        return [(p.position, getattr(p, param)) for p in self.model.points]
+    
+    def diagram_selection_range(self):
+        if self.target.point_index_range is None:
+            return None
+        return [self.model.points[index].position for index in self.target.point_index_range]
+
+    def diagram_align(self):
+        if self.target.property == 'height':
+            return DiagramAlign.RIGHT
+        return DiagramAlign.CENTER
 
     def target_name(self) -> str:
         loc = ''

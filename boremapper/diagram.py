@@ -87,6 +87,12 @@ class Diagram(QWidget):
         color = QPalette().color(QPalette.ColorRole.Text)
         color.setAlphaF(alpha)
         return color
+
+    def solid_line_pen(self):
+        pen = QPen()
+        pen.setWidth(1)
+        pen.setColor(self.foreground_color())
+        return pen
     
     def bold_line_pen(self):
         pen = QPen()

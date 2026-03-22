@@ -102,7 +102,7 @@ class PointDetailWidget(QWidget):
         point = self.target_point()
         if self.target.part is not None:
             # Only messages related to given part
-            return [w['text'] for w in point.warnings if w['part'] == self.target.part]
+            return [w['text'] for w in point.warnings if 'part' in w and w['part'] == self.target.part]
         else:
             # All messages, with part-related messages prefixed with part name
             return [BorePointModel.format_warning(w) for w in point.warnings]

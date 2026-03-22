@@ -233,10 +233,7 @@ class BorePointModel(Model):
                         c[p + '_resolved_cutter_height'],
                     )
                 except ValueError as e:
-                    warnings.append({
-                        'part': p,
-                        'text': str(e),
-                    })
+                    warnings.append(self.create_warning(str(e), part=p))
                     c[p + '_area'] = None
 
         areas = list(c[p + '_area'] for p in const.BORE_PARTS)
@@ -246,21 +243,25 @@ class BorePointModel(Model):
             2 * circle_radius_from_area(c['area'])
 
         # Resolve final diameter at given point
-        try:
-            if d['custom_diameter'] is not None:
-                if d['custom_diameter'] < 0:
-                    raise ValueError('Invalid custom diameter')
-                c['diameter'] = d['custom_diameter']
-            elif c['equivalent_diameter'] is not None:
-                c['diameter'] = c['equivalent_diameter']
-            else:
-                c['diameter'] = None
-                
-        except ValueError as e:
-            warnings.append({'text': str(e)})
+        if d['custom_diameter'] is not None:
+            if d['custom_diameter'] < 0:
+                warnings.append(self.create_warning('Invalid custom diameter', feature='diameter'))
+            c['diameter'] = d['custom_diameter']
+        elif c['equivalent_diameter'] is not None:
+            c['diameter'] = c['equivalent_diameter']
+        else:
             c['diameter'] = None
 
         c['warnings'] = warnings
+
+    @staticmethod
+    def create_warning(text: str, feature: str|None = None, part: str|None = None) -> dict:
+        out = { 'text': text }
+        if feature is not None:
+            out['feature'] = feature
+        if part is not None:
+            out['part'] = part
+        return out
 
     @staticmethod
     def format_warning(warning: dict) -> str:

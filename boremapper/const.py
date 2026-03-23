@@ -21,7 +21,10 @@ LENGTH_DISPLAY_DECIMALS = 2 # TODO: remove after UNITS are implemented
 # (<mm_conversion_factor>, <display_decimals>)
 UNITS = {
     'mm': (1, 2),
+    'cm': (10, 3),
+    'm': (1000, 5),
     'in': (25.4, 3),
+    'ft': (304.8, 4),
 }
 
 BORE_PARTS = ('bottom', 'top')

@@ -524,6 +524,12 @@ class DocumentWindow(QMainWindow):
         self.undo_stack.resetClean()
 
     def save_document_as(self, file: str):
+        # Cannot overwrite a file that is already open in another window
+        dw = self.app.find_document_window_by_file(file)
+        if dw is not None and dw != self:
+            self.app.error_file_already_open_in_another_window()
+            return
+        
         try:
             e_root = self.model.to_xml()
             tree = ET.ElementTree(e_root)
@@ -534,6 +540,7 @@ class DocumentWindow(QMainWindow):
 
             self.undo_stack.setClean()
             self.model.file = file
+            
         except OSError:
             self.app.error_writing_file(file)
             return

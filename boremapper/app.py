@@ -103,14 +103,20 @@ class App(QApplication):
         dialog.fileSelected.connect(self.on_document_open_dialog_file_selected)
         return dialog
 
+    def find_document_window_by_file(self, file):
+        for dw in self.document_windows:
+            if dw.model.file == file:
+                return dw
+        return None
+
     def bring_document_into_view(self, file):
         """
         # If the document is opened in any window, bring it into view.
         """
-        for dw in self.document_windows:
-            if dw.model.file == file:
-                dw.bring_into_view()
-                return True
+        dw = self.find_document_window_by_file(file)
+        if dw is not None:
+            dw.bring_into_view()
+            return True
         return False
 
     def on_document_open_dialog_file_selected(self, file):
@@ -154,6 +160,9 @@ class App(QApplication):
 
     def error_writing_file(self, file):
         self.show_error('Could not write file: %s' % file)
+
+    def error_file_already_open_in_another_window(self):
+        self.show_error('File is already open in another window')
 
     def error_invalid_file_data(self):
         self.show_error('Invalid file data')

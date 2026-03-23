@@ -23,21 +23,21 @@ class InsertPositionsRangeWindow(QWidget):
         self.spinbox_start = QDoubleSpinBox(self)
         self.spinbox_start.setRange(const.INSERT_POSITIONS_RANGE_MIN, const.INSERT_POSITIONS_RANGE_MAX)
         self.spinbox_start.setSingleStep(10)
-        self.spinbox_start.setValue(0) # TODO
+        self.spinbox_start.setValue(0) # TODO: save in settings
         self.spinbox_start.setDecimals(const.LENGTH_DISPLAY_DECIMALS)
         self.spinbox_start.returnPressed.connect(self.on_submit)
 
         self.spinbox_end = QDoubleSpinBox(self)
         self.spinbox_end.setRange(const.INSERT_POSITIONS_RANGE_MIN, const.INSERT_POSITIONS_RANGE_MAX)
         self.spinbox_end.setSingleStep(10)
-        self.spinbox_end.setValue(500) # TODO
+        self.spinbox_end.setValue(500) # TODO: save in settings
         self.spinbox_end.setDecimals(const.LENGTH_DISPLAY_DECIMALS)
         self.spinbox_end.returnPressed.connect(self.on_submit)
 
         self.spinbox_step = QDoubleSpinBox(self)
         self.spinbox_step.setRange(const.INSERT_POSITIONS_RANGE_MIN, const.INSERT_POSITIONS_RANGE_MAX)
         self.spinbox_step.setSingleStep(1)
-        self.spinbox_step.setValue(10) # TODO
+        self.spinbox_step.setValue(20) # TODO: save in settings
         self.spinbox_step.setDecimals(const.LENGTH_DISPLAY_DECIMALS)
         self.spinbox_step.returnPressed.connect(self.on_submit)
 

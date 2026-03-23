@@ -68,8 +68,12 @@ class Diagram(QWidget):
         # This is to make lines sharper, because painter's origin is "between" the pixels
         self.painter.translate(0.5, 0.5)
         self.painter.setRenderHints(QPainter.RenderHint.Antialiasing, True)
-        self.draw()
-        self.painter.end()
+        try:
+            self.draw()
+        finally:
+            # This is to do a proper cleanup even if an error occurs during painting.
+            # Otherwise, the app might crash with 'Painter already active' error.
+            self.painter.end()
 
     def draw(self):
         # To be implemented in a child class

@@ -49,7 +49,7 @@ class App(QApplication):
                 'top_groove_height': (float, 0),
             },
             'audio': {
-                'beep_hints': (bool, False),
+                'beep_hints': (bool, True),
                 'voice_hints': (bool, False),
             },
         })

@@ -106,7 +106,7 @@ class BoreTableView(QTableView):
         if self.validate_cells_data(data):
             self.dw.do_command(commands.EditCells(self.dw, data))
 
-    def on_data_committed(self, using_return: bool):
+    def on_data_committed(self, data: str, using_return: bool):
         if using_return:
             self.dw.app.try_beep()
             self.move_to_next_entry()
@@ -236,7 +236,7 @@ class BoreTableVerticalHeader(QHeaderView):
 
 class BoreTableItemDelegate(QItemDelegate):
     
-    data_committed = Signal(bool)
+    data_committed = Signal(str, bool)
 
     def __init__(self, parent):
         super().__init__(parent)
@@ -258,5 +258,6 @@ class BoreTableItemDelegate(QItemDelegate):
     def on_return_pressed(self):
         self._return_pressed_for_commit = True
 
-    def on_commit_data(self):
-        self.data_committed.emit(self._return_pressed_for_commit)
+    def on_commit_data(self, editor: 'QWidget'):
+        data = editor.text()
+        self.data_committed.emit(data, self._return_pressed_for_commit)

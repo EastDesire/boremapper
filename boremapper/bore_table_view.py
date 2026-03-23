@@ -78,7 +78,7 @@ class BoreTableView(QTableView):
                 QItemSelectionModel.SelectionFlag.Deselect
             )
 
-    def select_rows_by_indexes(self, indexes: list|tuple):
+    def select_rows_by_indexes(self, indexes: list):
         self.clearSelection()
         
         last_column_index = self.model().columnCount() - 1

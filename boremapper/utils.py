@@ -36,7 +36,7 @@ def format_length(val: float, decimals=const.LENGTH_DISPLAY_DECIMALS) -> str:
         return ''
     return ('{0:.%df}' % decimals).format(val).rstrip('0').rstrip('.')
 
-def has_same_values_in_columns(data: list|tuple) -> bool:
+def has_same_values_in_columns(data: list) -> bool:
     """
     Takes two-dimensional data in format [row][column] and returns True if each column contains identical values in it,
     and each row has the same number of columns.

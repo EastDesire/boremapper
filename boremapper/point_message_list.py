@@ -9,7 +9,7 @@ class PointMessageList(QListWidget):
         super().__init__(parent)
         self.setSelectionMode(QAbstractItemView.SelectionMode.NoSelection)
         
-    def set_data(self, data: list|tuple):
+    def set_data(self, data: list):
         self.clear()
         for i, text in enumerate(data):
             item = QListWidgetItem(text)

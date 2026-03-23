@@ -65,12 +65,12 @@ class BorePointsModel(Model):
         return insert_at
 
     # TODO: test
-    def add(self, mixed: 'BorePointModel|list|tuple') -> list:
+    def add(self, mixed: 'BorePointModel|list') -> list:
         """
         :param mixed: Bore point or multiple bore points
         :return: List of inserted indexes
         """
-        points = mixed if type(mixed) in (list, tuple) else (mixed,)
+        points = mixed if type(mixed) == list else (mixed,)
         inserted_indexes = []
 
         # We need to insert the points sorted by position to ensure the indexes will be also inserted from the lowest to the highest.
@@ -86,11 +86,11 @@ class BorePointsModel(Model):
         return inserted_indexes
 
     # TODO: test
-    def delete(self, mixed: int|list|tuple):
+    def delete(self, mixed: int|list):
         """
         :param mixed: Index or indexes to be deleted
         """
-        indexes = mixed if type(mixed) in (list, tuple) else (mixed,)
+        indexes = mixed if type(mixed) == list else (mixed,)
         if not indexes:
             return
 

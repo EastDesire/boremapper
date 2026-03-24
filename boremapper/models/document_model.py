@@ -95,6 +95,8 @@ class DocumentModel(Model):
                     app.settings.load('default_corrections', p + '_groove_' + dim)
                 )
 
+        doc.wid_export.length_type = app.settings.load('general', 'length_units')
+
         return doc
 
     # TODO test

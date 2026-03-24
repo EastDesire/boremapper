@@ -102,7 +102,6 @@ class WidExportWindow(QMainWindow):
             self.dw.model.wid_export.bore_origin = bore_origin
             
         self.update_xml_snippet()
-        # TODO: handle non-stacked model change (maybe the model will do this automatically)
 
     def on_copy_click(self):
         clipboard = QGuiApplication.clipboard()

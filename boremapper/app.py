@@ -65,6 +65,10 @@ class App(QApplication):
     def init_speech(self):
         # Initialize the speech engine, so that the speech starts promptly when first used
         pyttsx3.init()
+        
+    def update_all_windows(self):
+        for dw in self.document_windows:
+            dw.update_all()
 
     def create_document_window(self, model: 'DocumentModel') -> 'DocumentWindow':
         dw = DocumentWindow(self, model)

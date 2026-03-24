@@ -13,6 +13,7 @@ class SettingsWindow(QWidget):
 
         self.dw = document_window
 
+        self.units_combobox = None
         self.correction_spinboxes = {}
         self.checkbox_beep_hints = None
         self.checkbox_voice_hints = None
@@ -51,12 +52,13 @@ class SettingsWindow(QWidget):
 
         # Group
 
-        units_combobox = QComboBox(self)
+        self.units_combobox = cb = QComboBox(self)
         for units_symbol, units_def in const.UNITS.items():
-            units_combobox.addItem(units_symbol)
+            cb.addItem(units_symbol)
+        cb.setCurrentText(self.dw.app.length_units_symbol())
 
         form = QFormLayout()
-        form.addRow('Length Units:', units_combobox)
+        form.addRow('Length Units:', self.units_combobox)
 
         group = QGroupBox(self)
         #group.setFlat(True) # TODO
@@ -126,6 +128,9 @@ class SettingsWindow(QWidget):
 
     def apply(self):
         settings = {
+            'general': {
+                'length_units': self.units_combobox.currentText(),
+            },
             'default_corrections': {},
             'audio': {
                 'beep_hints': self.checkbox_beep_hints.isChecked(),
@@ -139,6 +144,8 @@ class SettingsWindow(QWidget):
                     round(self.correction_spinboxes[p]['groove_' + dim].value(), const.LENGTH_DISPLAY_DECIMALS)
 
         self.dw.app.settings.write(settings)
+        # TODO: test
+        self.dw.app.update_all_windows()
 
     def keyPressEvent(self, event: QKeyEvent):
         super().keyPressEvent(event)

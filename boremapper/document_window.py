@@ -277,7 +277,7 @@ class DocumentWindow(QMainWindow):
         c = self.model.bore.corrections
 
         self.status_bar_units.setText(
-            'Units: mm'
+            'Units: %s' % self.app.length_units_symbol()
         )
 
         self.status_bar_corrections.setText(

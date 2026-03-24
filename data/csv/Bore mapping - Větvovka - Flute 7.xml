@@ -26,5 +26,5 @@
       <point position="357" top-groove-width="12" top-groove-height="7.6" top-cutter-width="" top-cutter-height="" bottom-groove-width="12" bottom-groove-height="5" bottom-cutter-width="" bottom-cutter-height="" />
     </points>
   </bore>
-  <wid-export bore-origin="0" />
+  <wid-export length-type="mm" bore-origin="0" />
 </boremapper-document>

@@ -1,6 +1,7 @@
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QKeyEvent
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QFormLayout, QDoubleSpinBox, QPushButton, QTabWidget, QGroupBox, QCheckBox
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QFormLayout, QDoubleSpinBox, QPushButton, QTabWidget, \
+    QGroupBox, QCheckBox, QComboBox
 
 from boremapper import const
 
@@ -47,6 +48,21 @@ class SettingsWindow(QWidget):
     def create_general_tab(self):
         widget = QWidget(self)
         layout = QVBoxLayout()
+
+        # Group
+
+        units_combobox = QComboBox(self)
+        for units_symbol, units_def in const.UNITS.items():
+            units_combobox.addItem(units_symbol)
+
+        form = QFormLayout()
+        form.addRow('Length Units:', units_combobox)
+
+        group = QGroupBox(self)
+        #group.setFlat(True) # TODO
+        group.setTitle('Basic')
+        group.setLayout(form)
+        layout.addWidget(group)
 
         # Group
 

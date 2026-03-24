@@ -11,6 +11,7 @@ class WidExportModel(Model):
         super().__init__(parent)
 
         self.__dict__['_data'] = {
+            'length_type': 'mm',
             'bore_origin': 0,
         }
 

@@ -11,7 +11,7 @@ from boremapper import exceptions
 from boremapper.document_window import DocumentWindow
 from boremapper.models.document_model import DocumentModel
 from boremapper.models.settings_model import SettingsModel
-from boremapper.utils import format_length
+from boremapper.utils import format_length, units_def, length_from_mm, str_to_number, length_to_mm
 
 
 class App(QApplication):
@@ -39,6 +39,9 @@ class App(QApplication):
 
     def init_settings(self):
         self.settings = SettingsModel(self, {
+            'general': {
+                'length_units': (str, 'mm'),
+            },
             'document_window': {
                 'geometry': (QByteArray, None),
             },
@@ -53,6 +56,15 @@ class App(QApplication):
                 'voice_hints': (bool, False),
             },
         })
+
+    def init_sounds(self):
+        self.sounds = {
+            'entry_beep': QSoundEffect(source=QUrl.fromLocalFile(const.APP_DIR + '/resources/beep3.wav')),
+        }
+
+    def init_speech(self):
+        # Initialize the speech engine, so that the speech starts promptly when first used
+        pyttsx3.init()
 
     def create_document_window(self, model: 'DocumentModel') -> 'DocumentWindow':
         dw = DocumentWindow(self, model)
@@ -122,15 +134,37 @@ class App(QApplication):
     def on_document_open_dialog_file_selected(self, file):
         if file:
             self.open_document(file)
+        
+    def parse_length_input(self, value: str, units_symbol: str|None = None) -> float|None:
+        """
+        Parses length input and returns the value converted from the specified units to mm. TODO: OK?
+        """
+        float_value = str_to_number(value, float, allow_empty=True)
+        if float_value is None:
+            return None
+        
+        if units_symbol is None:
+            units_symbol = self.settings.load('general', 'length_units')
 
-    def init_sounds(self):
-        self.sounds = {
-            'entry_beep': QSoundEffect(source=QUrl.fromLocalFile(const.APP_DIR + '/resources/beep3.wav')),
-        }
+        return length_to_mm(float_value, units_symbol)
 
-    def init_speech(self):
-        # Initialize the speech engine, so that the speech starts promptly when first used
-        pyttsx3.init()
+    def build_length_output(self, value: float|None, units_symbol: str|None = None) -> str:
+        """
+        Returns a string representing the value (in mm) converted to given units and rounded to
+        the number of decimal places associated with these units. TODO: OK?
+        """
+        if value is None:
+            return ''
+        
+        if units_symbol is None:
+            units_symbol = self.settings.load('general', 'length_units')
+
+        units = units_def(units_symbol)
+        
+        return format_length(length_from_mm(value, units_symbol), units['display_decimals'])
+
+    def length_units_symbol(self) -> str:
+        return self.settings.load('general', 'length_units')
 
     def play_sound(self, name):
         self.sounds[name].play()

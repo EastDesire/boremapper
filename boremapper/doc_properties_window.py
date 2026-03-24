@@ -82,6 +82,7 @@ class DocPropertiesWindow(QWidget):
 
         return widget
 
+    # TODO: remove this tab?
     def create_export_tab(self):
         widget = QWidget(self)
         layout = QVBoxLayout()

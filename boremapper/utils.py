@@ -31,10 +31,38 @@ def str_to_number(
             out = value_if_invalid
     return out
 
-def format_length(val: float, decimals=const.LENGTH_DISPLAY_DECIMALS) -> str:
-    if val is None:
+# TODO: remove? or just remove the default value from 'decimals' parameter
+def format_length(value: float, decimals=const.LENGTH_DISPLAY_DECIMALS) -> str:
+    if value is None:
         return ''
-    return ('{0:.%df}' % decimals).format(val).rstrip('0').rstrip('.')
+    return ('{0:.%df}' % decimals).format(value).rstrip('0').rstrip('.')
+
+def units_def(symbol):
+    u = const.UNITS[symbol]
+    return {
+        'mm_factor': u[0],
+        'display_decimals': u[1],
+    }
+
+def length_from_mm(value, units_symbol) -> float:
+    return value / units_def(units_symbol)['mm_factor']
+
+def length_to_mm(value, units_symbol) -> float:
+    return value * units_def(units_symbol)['mm_factor']
+
+# TODO rem
+#def convert_length(value, value_units, to_units):
+#    ud_val = units_def(value_units)
+#    ud_to = units_def(to_units)
+#    return (value * ud_val['mm']) / ud_to['mm']
+
+""" TODO: use?
+def from_mm(value, to_units):
+    return convert_length(value, 'mm', to_units)
+
+def to_mm(value, from_units):
+    return convert_length(value, from_units, 'mm')
+"""
 
 def has_same_values_in_columns(data: list) -> bool:
     """

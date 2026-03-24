@@ -50,6 +50,7 @@ def main():
             e_point.set(p + '-cutter-height', cutter_height_str)
 
     e_wid_export = ET.SubElement(e_root, 'wid-export')
+    e_wid_export.set('length-type', 'mm')
     e_wid_export.set('bore-origin', str(0))
 
     tree = ET.ElementTree(e_root)

@@ -2,7 +2,7 @@ from xml.etree import ElementTree as ET
 from PySide6.QtCore import Signal
 
 from boremapper import const, exceptions
-from boremapper.utils import xml_build_float, xml_find_mandatory, xml_parse_float
+from boremapper.utils import xml_build_float, xml_find_mandatory, xml_parse_float, length_from_mm
 from boremapper.models.model import Model
 from boremapper.models.bore_model import BoreModel, BorePointModel
 from boremapper.models.wid_export_model import WidExportModel
@@ -54,6 +54,7 @@ class DocumentModel(Model):
             e_corrections.set(p + '-groove-height', xml_build_float(getattr(self.bore.corrections, p + '_groove_height')))
 
         e_wid_export = ET.SubElement(e_root, 'wid-export')
+        e_wid_export.set('length-type', self.wid_export.length_type)
         e_wid_export.set('bore-origin', xml_build_float(self.wid_export.bore_origin))
 
         return e_root
@@ -65,17 +66,18 @@ class DocumentModel(Model):
                 incomplete_positions.append(point.position)
         return incomplete_positions
 
-    def to_wid_bore_points(self):
+    def to_wid_bore_points(self, length_type: str, bore_origin: float):
         out_elements = []
 
         for point in self.bore.points:
             if point.diameter is not None:
-                position_adjusted = -self.wid_export.bore_origin + point.position
+                position = length_from_mm(bore_origin + point.position, length_type)
+                diameter = length_from_mm(point.diameter, length_type)
                 e_point = ET.Element('borePoint')
                 e_position = ET.SubElement(e_point, 'borePosition')
-                e_position.text = xml_build_float(position_adjusted)
+                e_position.text = xml_build_float(position)
                 e_diameter = ET.SubElement(e_point, 'boreDiameter')
-                e_diameter.text = xml_build_float(point.diameter)
+                e_diameter.text = xml_build_float(diameter)
                 out_elements.append(e_point)
 
         return out_elements
@@ -140,6 +142,7 @@ class DocumentModel(Model):
         # Load WID export properties
 
         e_wid_export = xml_find_mandatory(e_root, 'wid-export')
+        doc.wid_export.length_type = str(e_wid_export.attrib['length-type']).lower()
         doc.wid_export.bore_origin = xml_parse_float(e_wid_export.attrib['bore-origin'])
 
         return doc

@@ -94,6 +94,11 @@ class BoreTableModel(QAbstractTableModel):
                         return QBrush(color)
                         
                 return QBrush(QPalette().color(QPalette.ColorRole.Text))
+
+            case Qt.ItemDataRole.BackgroundRole:
+                cd = self.column_detail(column)
+                if cd['feature'] in ('cutter'):
+                    return QBrush(self.alternate_base(QPalette().color(QPalette.ColorRole.Base)))
             
         return None
 
@@ -190,3 +195,7 @@ class BoreTableModel(QAbstractTableModel):
 
     def on_points_layout_change(self):
         self.layoutChanged.emit()
+        
+    @staticmethod
+    def alternate_base(color):
+        return color.lighter(120) if color.lightnessF() < 0.5 else color.darker(106)

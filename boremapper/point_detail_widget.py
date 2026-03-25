@@ -100,6 +100,9 @@ class PointDetailWidget(QWidget):
 
     def messages(self) -> list:
         point = self.target_point()
+        if point is None:
+            return []
+        
         if self.target.part is not None:
             # Only messages related to given part
             return [w['text'] for w in point.warnings if 'part' in w and w['part'] == self.target.part]

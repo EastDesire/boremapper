@@ -93,10 +93,18 @@ class ProfileDetailWidget(QWidget):
         # leaving empty space where the values are missing
         return [(p.position, getattr(p, param)) for p in self.model.points]
     
-    def diagram_selection_range(self):
+    def diagram_selection_range(self) -> tuple|None:
         if self.target.point_index_range is None:
             return None
-        return [self.model.points[index].position for index in self.target.point_index_range]
+        
+        index_from, index_to = self.target.point_index_range
+        if not self.model.points.has(index_from) or not self.model.points.has(index_to):
+            return None
+        
+        return (
+            self.model.points[index_from].position,
+            self.model.points[index_to].position,
+        )
 
     def diagram_align(self):
         if self.target.property == 'height':

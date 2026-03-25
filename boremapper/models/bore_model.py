@@ -47,7 +47,7 @@ class BorePointsModel(Model):
         self._points[index] = point
         self.point_changed.emit(index)
 
-    def __delitem__(self, index):
+    def __delitem__(self, index: int):
         # TODO: also need destroy()?
         del self._points[index]
         self.layout_changed.emit()
@@ -63,6 +63,9 @@ class BorePointsModel(Model):
 
         self._points.insert(insert_at, point)
         return insert_at
+    
+    def has(self, index):
+        return 0 <= index < len(self._points)
 
     # TODO: test
     def add(self, mixed: 'BorePointModel|list') -> list:

@@ -7,7 +7,6 @@ from boremapper.bunch import Bunch
 from boremapper.calculations import cutter_used_dimensions
 from boremapper.diagram import ShortDimensionLineStyle
 from boremapper.point_detail_diagram import PointDetailDiagram
-from boremapper.utils import format_length
 
 
 class JoinedDetailDiagram(PointDetailDiagram):
@@ -139,7 +138,7 @@ class JoinedDetailDiagram(PointDetailDiagram):
         x0 = joint_wall
         y0 = sp.groove_h + self.min_wall + self.dim_space - self.dim_line_pos
 
-        text = format_length(point.bottom_resolved_groove_width)
+        text = self.app.build_length_output(point.bottom_resolved_groove_width)
         self.draw_dimension(x0, y0, x0 + sp.groove_w, y0, text)
         self.draw_extension_line(x0, 0, x0, y0 + self.ext_line_overrun)
         self.draw_extension_line(x0 + sp.groove_w, 0, x0 + sp.groove_w, y0 + self.ext_line_overrun)
@@ -147,7 +146,7 @@ class JoinedDetailDiagram(PointDetailDiagram):
         # Bottom part - Groove height dimension
 
         x0 = -self.dim_line_pos
-        text = format_length(point.bottom_resolved_groove_height)
+        text = self.app.build_length_output(point.bottom_resolved_groove_height)
         self.draw_dimension(x0, sp.groove_h, x0, 0, text, ShortDimensionLineStyle.EXTEND_START)
 
         # Bottom part - Cutter ellipse X center marks
@@ -188,7 +187,7 @@ class JoinedDetailDiagram(PointDetailDiagram):
         x0 = joint_wall
         y0 = -sp.groove_h - self.min_wall - self.dim_line_pos
 
-        text = format_length(point.top_resolved_groove_width)
+        text = self.app.build_length_output(point.top_resolved_groove_width)
         self.draw_dimension(x0, y0, x0 + sp.groove_w, y0, text)
         self.draw_extension_line(
             x0, 0,
@@ -202,7 +201,7 @@ class JoinedDetailDiagram(PointDetailDiagram):
         # Top part - Groove height dimension
 
         x0 = -self.dim_line_pos
-        text = format_length(point.top_resolved_groove_height)
+        text = self.app.build_length_output(point.top_resolved_groove_height)
         self.draw_dimension(x0, 0, x0, -sp.groove_h, text, ShortDimensionLineStyle.EXTEND_END)
 
         # Top part - Cutter ellipse X center marks
@@ -236,7 +235,7 @@ class JoinedDetailDiagram(PointDetailDiagram):
         # Bore height dimension
 
         x0 = width - 2 * self.dim_space + self.dim_line_pos
-        text = format_length(bore_height)
+        text = self.app.build_length_output(bore_height)
         self.draw_dimension(
             x0, scaled.bottom.groove_h,
             x0, -scaled.top.groove_h,

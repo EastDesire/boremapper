@@ -5,7 +5,6 @@ from PySide6.QtWidgets import QWidget
 from boremapper.bunch import Bunch
 from boremapper.diagram import ShortDimensionLineStyle
 from boremapper.point_detail_diagram import PointDetailDiagram
-from boremapper.utils import format_length
 
 
 class CutterDetailDiagram(PointDetailDiagram):
@@ -135,7 +134,7 @@ class CutterDetailDiagram(PointDetailDiagram):
         x0 = -sp.cutter_w / 2
         y0 = sp.cutter_h + self.bottom_dim_offset + self.dim_space - self.dim_line_pos
 
-        text = 'CW = ' + format_length(getattr(point, p + '_resolved_cutter_width'))
+        text = 'CW = ' + self.app.build_length_output(getattr(point, p + '_resolved_cutter_width'))
         self.draw_dimension(x0, y0, x0 + sp.cutter_w, y0, text)
         self.draw_extension_line(x0, 0, x0, y0 + self.ext_line_overrun)
         self.draw_extension_line(x0 + sp.cutter_w, 0, x0 + sp.cutter_w, y0 + self.ext_line_overrun)
@@ -144,6 +143,6 @@ class CutterDetailDiagram(PointDetailDiagram):
 
         x0 = -sp.cutter_w / 2 - self.dim_line_pos
         
-        text = 'CH = ' + format_length(getattr(point, p + '_resolved_cutter_height'))
+        text = 'CH = ' + self.app.build_length_output(getattr(point, p + '_resolved_cutter_height'))
         self.draw_dimension(x0, sp.cutter_h, x0, 0, text, ShortDimensionLineStyle.EXTEND_START)
         self.draw_extension_line(x0 - self.ext_line_overrun, sp.cutter_h, 0, sp.cutter_h)

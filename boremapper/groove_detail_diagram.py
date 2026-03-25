@@ -6,7 +6,6 @@ from boremapper.bunch import Bunch
 from boremapper.calculations import cutter_used_dimensions
 from boremapper.diagram import ShortDimensionLineStyle
 from boremapper.point_detail_diagram import PointDetailDiagram
-from boremapper.utils import format_length
 
 
 class GrooveDetailDiagram(PointDetailDiagram):
@@ -111,7 +110,7 @@ class GrooveDetailDiagram(PointDetailDiagram):
         x0 = joint_wall
         y0 = sp.groove_h + self.min_wall + self.dim_space - self.dim_line_pos
 
-        text = 'W = ' + format_length(getattr(point, p + '_resolved_groove_width'))
+        text = 'W = ' + self.app.build_length_output(getattr(point, p + '_resolved_groove_width'))
         self.draw_dimension(x0, y0, x0 + sp.groove_w, y0, text)
         self.draw_extension_line(x0, 0, x0, y0 + self.ext_line_overrun)
         self.draw_extension_line(x0 + sp.groove_w, 0, x0 + sp.groove_w, y0 + self.ext_line_overrun)
@@ -121,7 +120,7 @@ class GrooveDetailDiagram(PointDetailDiagram):
         x0 = -self.dim_line_pos
         x1 = joint_wall + sp.cutter_used_w / 2
         
-        text = 'H = ' + format_length(getattr(point, p + '_resolved_groove_height'))
+        text = 'H = ' + self.app.build_length_output(getattr(point, p + '_resolved_groove_height'))
         self.draw_dimension(x0, sp.groove_h, x0, 0, text, ShortDimensionLineStyle.EXTEND_START)
         self.draw_extension_line(x0 - self.ext_line_overrun, 0, 0, 0)
         self.draw_extension_line(x0 - self.ext_line_overrun, sp.groove_h, x1, sp.groove_h)

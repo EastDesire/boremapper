@@ -7,7 +7,6 @@ from PySide6.QtWidgets import QWidget
 from boremapper.bunch import Bunch
 from boremapper.diagram import Diagram
 from boremapper.enums import DiagramAlign
-from boremapper.utils import format_length
 
 
 class ProfileDetailDiagram(Diagram):
@@ -124,7 +123,7 @@ class ProfileDetailDiagram(Diagram):
                         self.pos_label_box_width,
                         self.pos_label_height
                     ),
-                    format_length(pos),
+                    self.app.build_length_output(pos),
                     label_opt
                 )
         

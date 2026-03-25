@@ -282,10 +282,10 @@ class DocumentWindow(QMainWindow):
 
         self.status_bar_corrections.setText(
             'Corrections: W %s,%s | H %s,%s' % (
-                format_length(c.bottom_groove_width),
-                format_length(c.top_groove_width),
-                format_length(c.bottom_groove_height),
-                format_length(c.top_groove_height),
+                self.app.build_length_output(c.bottom_groove_width),
+                self.app.build_length_output(c.top_groove_width),
+                self.app.build_length_output(c.bottom_groove_height),
+                self.app.build_length_output(c.top_groove_height),
             )
         )
 

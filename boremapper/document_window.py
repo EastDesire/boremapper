@@ -337,7 +337,9 @@ class DocumentWindow(QMainWindow):
     def try_say_current_position(self):
         point = self.current_point()
         if point is not None:
-            say_text = format_position_for_speech(format_length(point.position))
+            say_text = format_position_for_speech(
+                self.app.build_length_output(point.position)
+            )
             threading.Thread(
                 target=self.app.try_say,
                 args=[say_text],

@@ -75,10 +75,11 @@ class SettingsWindow(QWidget):
         for p in const.BORE_PARTS:
             self.correction_spinboxes[p] = {}
             for dim in ('width', 'height'):
+                val = self.dw.app.settings.load('default_corrections', p + '_groove_' + dim)
                 sb = self.correction_spinboxes[p]['groove_' + dim] = QDoubleSpinBox(self)
                 sb.setRange(correction_range_min, correction_range_max)
                 sb.setSingleStep(0.1)
-                sb.setValue(self.dw.app.settings.load('default_corrections', p + '_groove_' + dim))
+                sb.setValue(float(self.dw.app.build_length_output(val)))
                 sb.setDecimals(const.LENGTH_DISPLAY_DECIMALS)
 
         form = QFormLayout()

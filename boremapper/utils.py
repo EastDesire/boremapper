@@ -1,7 +1,8 @@
 import re
 from xml.etree import ElementTree as ET
 
-from PySide6.QtGui import QColor
+from PySide6.QtGui import QColor, QScreen
+from PySide6.QtWidgets import QApplication, QWidget
 
 import const
 from boremapper import exceptions
@@ -124,6 +125,12 @@ def lengths_range(range_start: float, range_end: float, step: float) -> list:
     ):
         values.append(round(pos_scaled / scale, const.LENGTH_DISPLAY_DECIMALS))
     return values
+
+def center_window(widget: QWidget):
+    center = QScreen.availableGeometry(QApplication.primaryScreen()).center()
+    fg = widget.frameGeometry()
+    fg.moveCenter(center)
+    widget.move(fg.topLeft())
 
 def text_color_to_red(color):
     return QColor.fromRgb(224, 0, 0) if color.lightnessF() < 0.5 else QColor.fromRgb(255, 96, 96)

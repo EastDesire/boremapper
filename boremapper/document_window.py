@@ -8,19 +8,19 @@ from PySide6.QtWidgets import QFileDialog, QFrame, QHBoxLayout, QLabel, QMainWin
     QStatusBar, QVBoxLayout, QWidget
 
 from boremapper import commands, const
-from boremapper.profile_detail_widget import ProfileDetailWidget
-from boremapper.utils import format_length, format_position_for_speech
 from boremapper.bore_table_view import BoreTableView
-from boremapper.joined_detail_widget import JoinedDetailWidget
 from boremapper.cutter_detail_widget import CutterDetailWidget
 from boremapper.doc_properties_window import DocPropertiesWindow
 from boremapper.groove_detail_widget import GrooveDetailWidget
 from boremapper.insert_position_window import InsertPositionWindow
 from boremapper.insert_positions_range_window import InsertPositionsRangeWindow
+from boremapper.joined_detail_widget import JoinedDetailWidget
 from boremapper.models.bore_model import BorePointModel
 from boremapper.models.bore_table_model import BoreTableModel
 from boremapper.models.document_model import DocumentModel
+from boremapper.profile_detail_widget import ProfileDetailWidget
 from boremapper.settings_window import SettingsWindow
+from boremapper.utils import format_length, format_position_for_speech, center_window
 from boremapper.wid_export_window import WidExportWindow
 
 
@@ -563,6 +563,7 @@ class DocumentWindow(QMainWindow):
             self.restoreGeometry(geometry)
         else:
             self.resize(const.DOCUMENT_WINDOW_WIDTH, const.DOCUMENT_WINDOW_HEIGHT)
+            center_window(self)
 
     def save_gui(self):
         """

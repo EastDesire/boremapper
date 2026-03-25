@@ -360,14 +360,11 @@ class DocumentWindow(QMainWindow):
         )
 
     def on_point_data_change(self, index: int):
-        if index == self.current_point_index():
-            self.on_current_point_data_change()
+        # FIXME: When changing many points at once, this is unnecessarily called multiple times too
+        self.update_detail()
 
     def on_points_layout_change(self):
-        # Changing the points layout might also result in different data in current point
-        self.on_current_point_data_change()
-
-    def on_current_point_data_change(self):
+        # FIXME: When doing many layout changes at once, this is unnecessarily called multiple times too
         self.update_detail()
 
     def on_bore_corrections_change(self):

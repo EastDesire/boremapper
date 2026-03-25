@@ -44,7 +44,9 @@ class DocPropertiesWindow(QWidget):
 
     def create_general_tab(self):
         widget = QWidget(self)
+        
         layout = QVBoxLayout()
+        layout.setSpacing(const.GROUPS_SPACING)
 
         # Group
 
@@ -69,7 +71,6 @@ class DocPropertiesWindow(QWidget):
                 )
 
         group = QGroupBox(self)
-        #group.setFlat(True) # TODO
         group.setTitle('Groove Corrections')
         group.setLayout(form)
         layout.addWidget(group)

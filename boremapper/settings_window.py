@@ -48,7 +48,9 @@ class SettingsWindow(QWidget):
 
     def create_general_tab(self):
         widget = QWidget(self)
+        
         layout = QVBoxLayout()
+        layout.setSpacing(const.GROUPS_SPACING)
 
         # Group
 
@@ -61,7 +63,6 @@ class SettingsWindow(QWidget):
         form.addRow('Length Units:', self.units_combobox)
 
         group = QGroupBox(self)
-        #group.setFlat(True) # TODO
         group.setTitle('Basic')
         group.setLayout(form)
         layout.addWidget(group)
@@ -89,7 +90,6 @@ class SettingsWindow(QWidget):
                 )
 
         group = QGroupBox(self)
-        #group.setFlat(True) # TODO
         group.setTitle('Default Groove Corrections')
         group.setLayout(form)
         layout.addWidget(group)
@@ -106,7 +106,6 @@ class SettingsWindow(QWidget):
         form.addRow(self.checkbox_voice_hints)
 
         group = QGroupBox(self)
-        #group.setFlat(True) # TODO
         group.setTitle('Audio')
         group.setLayout(form)
         layout.addWidget(group)

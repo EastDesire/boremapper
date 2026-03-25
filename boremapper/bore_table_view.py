@@ -148,7 +148,7 @@ class BoreTableView(QTableView):
             line = []
             for column in range(sel_range.left(), sel_range.right() + 1):
                 value = self.model().value_for_cell(row, column, DataVariant.DISPLAYED)
-                line.append(self.dw.app.build_length_output(value, extra_decimals=8))
+                line.append(self.dw.app.build_length_output(value, extra_decimals=3))
             lines.append(line)
 
         text = '\n'.join(['\t'.join(line) for line in lines])

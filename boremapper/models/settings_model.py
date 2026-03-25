@@ -70,7 +70,7 @@ class SettingsModel(Model):
                 for param, value in params.items():
                     self._clear_cache(group, param)
                     qs.setValue(param, value)
-                    changes.append((group, param, value))
+                    changes.append(SettingsModelChange(group, param, value))
                 qs.endGroup()
                 
         if changes:
@@ -99,3 +99,11 @@ class SettingsModel(Model):
             del self._cache[group][param]
         except KeyError:
             pass
+
+
+class SettingsModelChange:
+    
+    def __init__(self, group: str, param: str, value):
+        self.group = group
+        self.param = param
+        self.value = value

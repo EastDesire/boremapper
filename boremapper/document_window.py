@@ -247,6 +247,7 @@ class DocumentWindow(QMainWindow):
         self.update_menu()
         self.update_title()
         self.update_status_bar()
+        self.update_table()
         self.update_detail()
 
     def update_menu(self):
@@ -288,6 +289,10 @@ class DocumentWindow(QMainWindow):
                 self.app.build_length_output(c.top_groove_height),
             )
         )
+        
+    def update_table(self):
+        # Note: This is for example to update vertical header geometry in case the units change and labels change their width
+        self.table_model.layoutChanged.emit()
 
     def update_detail(self):
         cd = self.current_column_detail()

@@ -56,6 +56,7 @@ class App(QApplication):
                 'voice_hints': (bool, False),
             },
         })
+        self.settings.changed.connect(self.on_settings_change)
 
     def init_sounds(self):
         self.sounds = {
@@ -81,6 +82,9 @@ class App(QApplication):
 
     def on_document_window_destroyed(self, window: 'DocumentWindow'):
         self.document_windows.remove(window)
+        
+    def on_settings_change(self):
+        self.update_all_windows()
 
     def new_document(self, show_init: bool = False):
         model = DocumentModel.from_defaults(self)

@@ -142,8 +142,6 @@ class SettingsWindow(QWidget):
                 settings['default_corrections'][p + '_groove_' + dim] = self.correction_spinboxes[p]['groove_' + dim].value()
 
         self.dw.app.settings.write(settings)
-        # TODO: test
-        self.dw.app.update_all_windows()
 
     def keyPressEvent(self, event: QKeyEvent):
         super().keyPressEvent(event)

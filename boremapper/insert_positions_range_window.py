@@ -22,22 +22,22 @@ class InsertPositionsRangeWindow(QWidget):
         self.spinbox_start = sb = QDoubleSpinBox(self)
         sb.setRange(const.INSERT_POSITIONS_RANGE_MIN, const.INSERT_POSITIONS_RANGE_MAX)
         sb.setSingleStep(self.dw.app.length_step() * 10)
-        sb.setValue(float(self.dw.app.build_length_output(0))) # TODO: save in settings
         sb.setDecimals(self.dw.app.length_display_decimals())
+        sb.setValue(float(self.dw.app.build_length_output(0))) # TODO: save in settings
         sb.returnPressed.connect(self.on_submit)
 
         self.spinbox_end = sb = QDoubleSpinBox(self)
         sb.setRange(const.INSERT_POSITIONS_RANGE_MIN, const.INSERT_POSITIONS_RANGE_MAX)
         sb.setSingleStep(self.dw.app.length_step() * 10)
-        sb.setValue(float(self.dw.app.build_length_output(500))) # TODO: save in settings
         sb.setDecimals(self.dw.app.length_display_decimals())
+        sb.setValue(float(self.dw.app.build_length_output(500))) # TODO: save in settings
         sb.returnPressed.connect(self.on_submit)
 
         self.spinbox_step = sb = QDoubleSpinBox(self)
         sb.setRange(const.INSERT_POSITIONS_RANGE_MIN, const.INSERT_POSITIONS_RANGE_MAX)
         sb.setSingleStep(self.dw.app.length_step())
-        sb.setValue(float(self.dw.app.build_length_output(20))) # TODO: save in settings
         sb.setDecimals(self.dw.app.length_display_decimals())
+        sb.setValue(float(self.dw.app.build_length_output(20))) # TODO: save in settings
         sb.returnPressed.connect(self.on_submit)
 
         form = QFormLayout()

@@ -20,7 +20,7 @@ from boremapper.models.bore_table_model import BoreTableModel
 from boremapper.models.document_model import DocumentModel
 from boremapper.profile_detail_widget import ProfileDetailWidget
 from boremapper.settings_window import SettingsWindow
-from boremapper.utils import format_length, format_position_for_speech, center_window
+from boremapper.utils import format_position_for_speech, center_window
 from boremapper.wid_export_window import WidExportWindow
 
 

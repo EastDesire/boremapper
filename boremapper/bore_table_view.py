@@ -9,7 +9,7 @@ from PySide6.QtWidgets import QStyleOptionViewItem, QTableView, QItemDelegate, Q
 from boremapper import validators, const, commands
 from boremapper.enums import DataVariant
 from boremapper.models.bore_table_model import BoreTableModel
-from boremapper.utils import str_to_number, format_length, has_same_values_in_columns
+from boremapper.utils import str_to_number, has_same_values_in_columns
 
 
 class BoreTableView(QTableView):
@@ -95,8 +95,10 @@ class BoreTableView(QTableView):
         self.selection_changed.emit()
         
     def on_data_set(self, index: 'QModelIndex|QPersistentModelIndex', value: str):
+        # TODO?
         parsed_val = str_to_number(value, float, allow_empty=True)
 
+        # TODO?
         if parsed_val is not None:
             # TODO: how to approchach rounding when converting from different units?
             # We round the value so that we store only decimals that are visible
@@ -146,7 +148,7 @@ class BoreTableView(QTableView):
             line = []
             for column in range(sel_range.left(), sel_range.right() + 1):
                 value = self.model().value_for_cell(row, column, DataVariant.DISPLAYED)
-                line.append(format_length(value, decimals=10))
+                line.append(self.dw.app.build_length_output(value, extra_decimals=8))
             lines.append(line)
 
         text = '\n'.join(['\t'.join(line) for line in lines])

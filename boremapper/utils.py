@@ -34,8 +34,7 @@ def str_to_number(
             out = value_if_invalid
     return out
 
-# TODO: remove? or just remove the default value from 'decimals' parameter
-def format_length(value: float, decimals=const.LENGTH_DISPLAY_DECIMALS) -> str:
+def format_length(value: float, decimals: int) -> str:
     if value is None:
         return ''
     return ('{0:.%df}' % decimals).format(value).rstrip('0').rstrip('.')

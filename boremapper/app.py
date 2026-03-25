@@ -139,7 +139,7 @@ class App(QApplication):
         if file:
             self.open_document(file)
 
-    def build_length_output(self, value_mm: float|None, units_symbol: str|None = None) -> str:
+    def build_length_output(self, value_mm: float|None, units_symbol: str|None = None, extra_decimals: int = 0) -> str:
         """
         Returns a string representing the value (in mm) converted to given units and rounded to
         the number of decimal places associated with these units. TODO: OK?
@@ -152,7 +152,10 @@ class App(QApplication):
 
         units = units_def(units_symbol)
         
-        return format_length(length_from_mm(value_mm, units_symbol), units['display_decimals'])
+        return format_length(
+            length_from_mm(value_mm, units_symbol),
+            units['display_decimals'] + extra_decimals
+        )
         
     def parse_length_input(self, value: str, units_symbol: str|None = None) -> float|None:
         """

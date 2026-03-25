@@ -210,7 +210,7 @@ class App(QApplication):
 
     def msg_incomplete_data_for_export(self, incomplete_positions: list):
         max_items = 3
-        show_positions = [format_length(p) for p in incomplete_positions[:max_items]]
+        show_positions = [self.build_length_output(p) for p in incomplete_positions[:max_items]]
         if len(incomplete_positions) > max_items:
             show_positions.append('etc.')
 

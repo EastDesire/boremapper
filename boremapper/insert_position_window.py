@@ -21,9 +21,9 @@ class InsertPositionWindow(QWidget):
 
         self.spinbox_at = QDoubleSpinBox(self)
         self.spinbox_at.setRange(const.INSERT_POSITIONS_RANGE_MIN, const.INSERT_POSITIONS_RANGE_MAX)
-        self.spinbox_at.setSingleStep(10)
+        self.spinbox_at.setSingleStep(self.dw.app.length_step())
         self.spinbox_at.setValue(0)
-        self.spinbox_at.setDecimals(const.LENGTH_DISPLAY_DECIMALS)
+        self.spinbox_at.setDecimals(self.dw.app.length_display_decimals())
         self.spinbox_at.returnPressed.connect(self.on_submit)
 
         form = QFormLayout()

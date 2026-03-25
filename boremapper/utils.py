@@ -44,6 +44,7 @@ def units_def(symbol):
     return {
         'mm_factor': u[0],
         'display_decimals': u[1],
+        'step': u[2],
     }
 
 def length_from_mm(value, units_symbol) -> float:
@@ -112,18 +113,6 @@ def xml_find_mandatory(e: ET.Element, path: str) -> ET.Element:
     if found is None:
         raise exceptions.XmlException('Element not found: %s' % path)
     return found
-
-def lengths_range(range_start: float, range_end: float, step: float) -> list:
-    values = []
-    scale = pow(10, const.LENGTH_DISPLAY_DECIMALS)
-
-    for pos_scaled in range(
-        round(scale * range_start),
-        round(scale * range_end) + 1,
-        round(scale * step),
-    ):
-        values.append(round(pos_scaled / scale, const.LENGTH_DISPLAY_DECIMALS))
-    return values
 
 def center_window(widget: QWidget):
     center = QScreen.availableGeometry(QApplication.primaryScreen()).center()

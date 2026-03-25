@@ -14,17 +14,13 @@ FLOAT_SAFE_DECIMALS = 10
 
 MAX_INPUT_VALUE = pow(2, 24)
 
-LENGTH_UNITS = 'mm' # TODO: remove after UNITS are implemented
-LENGTH_DISPLAY_DECIMALS = 2 # TODO: remove after UNITS are implemented
-
-# TODO: use
-# (<mm_conversion_factor>, <display_decimals>)
+# (<mm_conversion_factor>, <display_decimals>, <step>)
 UNITS = {
-    'mm': (1, 2),
-    'cm': (10, 3),
-    'm': (1000, 5),
-    'in': (25.4, 3),
-    'ft': (304.8, 4),
+    'mm': (1, 2, 1),
+    'cm': (10, 3, 0.1),
+    'm': (1000, 5, 0.001),
+    'in': (25.4, 3, 0.05),
+    'ft': (304.8, 4, 0.005),
 }
 
 BORE_PARTS = ('bottom', 'top')

@@ -41,8 +41,8 @@ class WidExportWindow(QMainWindow):
         
         self.origin_spinbox = sb = QDoubleSpinBox(self)
         sb.setRange(-1000, 1000) # TODO: into const
-        sb.setSingleStep(1)
-        sb.setDecimals(const.LENGTH_DISPLAY_DECIMALS)
+        sb.setSingleStep(self.dw.app.length_step())
+        sb.setDecimals(self.dw.app.length_display_decimals())
         toolbar.addWidget(sb)
 
         self.origin_units_label = label = QLabel(self)

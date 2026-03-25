@@ -7,10 +7,12 @@ from boremapper.models.model import Model
 
 class BoreModel(Model):
 
-    def __init__(self, parent: 'DocumentModel'):
+    def __init__(self, parent: 'DocumentModel', app: 'App'):
         super().__init__(parent)
 
-        self.points = BorePointsModel(self)
+        self.app = app
+
+        self.points = BorePointsModel(self, app)
 
         self.corrections = BoreCorrectionsModel(self)
         self.corrections.changed.connect(self.on_corrections_change)
@@ -30,8 +32,10 @@ class BorePointsModel(Model):
     # Emitted when the points layout changes (reordering, adding, deleting)
     layout_changed = Signal()
 
-    def __init__(self, parent: 'BoreModel'):
+    def __init__(self, parent: 'BoreModel', app: 'App'):
         super().__init__(parent)
+
+        self.app = app
         self._points = []
 
     def __len__(self):
@@ -112,10 +116,11 @@ class BorePointsModel(Model):
 
     def find_position(self, position: float) -> int|None:
         """
-        Note that rounding to displayed decimal places is used during lookup.
+        Note that the lookup precision is defined by visible decimals.
         """
+        decimals = self.app.length_display_decimals()
         for index, point in enumerate(self._points):
-            if round(point.position, const.LENGTH_DISPLAY_DECIMALS) == round(position, const.LENGTH_DISPLAY_DECIMALS):
+            if round(point.position, decimals) == round(position, decimals):
                 return index
         return None
 

@@ -98,11 +98,11 @@ class BoreTableView(QTableView):
         # TODO?
         parsed_val = str_to_number(value, float, allow_empty=True)
 
-        # TODO?
-        if parsed_val is not None:
-            # TODO: how to approchach rounding when converting from different units?
-            # We round the value so that we store only decimals that are visible
-            parsed_val = round(parsed_val, const.LENGTH_DISPLAY_DECIMALS)
+        # TODO round at all?
+        #if parsed_val is not None:
+        #    # TODO: how to approchach rounding when converting from different units?
+        #    # We round the value so that we store only decimals that are visible
+        #    parsed_val = round(parsed_val, const.LENGTH_DISPLAY_DECIMALS)
 
         data = [{'row': index.row(), 'column': index.column(), 'value': parsed_val}]
         if self.validate_cells_data(data):

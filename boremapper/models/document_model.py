@@ -18,7 +18,7 @@ class DocumentModel(Model):
         super().__init__(app)
 
         self.app = app
-        self.bore = BoreModel(self)
+        self.bore = BoreModel(self, app)
         self.wid_export = WidExportModel(self)
         self._file = None
 

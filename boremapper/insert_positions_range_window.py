@@ -3,7 +3,6 @@ from PySide6.QtGui import QKeyEvent
 from PySide6.QtWidgets import QDoubleSpinBox, QFormLayout, QHBoxLayout, QPushButton, QVBoxLayout, QWidget
 
 from boremapper import commands, const
-from boremapper.utils import lengths_range
 
 
 class InsertPositionsRangeWindow(QWidget):
@@ -20,26 +19,26 @@ class InsertPositionsRangeWindow(QWidget):
 
         self.layout = QVBoxLayout()
 
-        self.spinbox_start = QDoubleSpinBox(self)
-        self.spinbox_start.setRange(const.INSERT_POSITIONS_RANGE_MIN, const.INSERT_POSITIONS_RANGE_MAX)
-        self.spinbox_start.setSingleStep(10)
-        self.spinbox_start.setValue(float(self.dw.app.build_length_output(0))) # TODO: save in settings
-        self.spinbox_start.setDecimals(const.LENGTH_DISPLAY_DECIMALS)
-        self.spinbox_start.returnPressed.connect(self.on_submit)
+        self.spinbox_start = sb = QDoubleSpinBox(self)
+        sb.setRange(const.INSERT_POSITIONS_RANGE_MIN, const.INSERT_POSITIONS_RANGE_MAX)
+        sb.setSingleStep(self.dw.app.length_step() * 10)
+        sb.setValue(float(self.dw.app.build_length_output(0))) # TODO: save in settings
+        sb.setDecimals(self.dw.app.length_display_decimals())
+        sb.returnPressed.connect(self.on_submit)
 
-        self.spinbox_end = QDoubleSpinBox(self)
-        self.spinbox_end.setRange(const.INSERT_POSITIONS_RANGE_MIN, const.INSERT_POSITIONS_RANGE_MAX)
-        self.spinbox_end.setSingleStep(10)
-        self.spinbox_end.setValue(float(self.dw.app.build_length_output(500))) # TODO: save in settings
-        self.spinbox_end.setDecimals(const.LENGTH_DISPLAY_DECIMALS)
-        self.spinbox_end.returnPressed.connect(self.on_submit)
+        self.spinbox_end = sb = QDoubleSpinBox(self)
+        sb.setRange(const.INSERT_POSITIONS_RANGE_MIN, const.INSERT_POSITIONS_RANGE_MAX)
+        sb.setSingleStep(self.dw.app.length_step() * 10)
+        sb.setValue(float(self.dw.app.build_length_output(500))) # TODO: save in settings
+        sb.setDecimals(self.dw.app.length_display_decimals())
+        sb.returnPressed.connect(self.on_submit)
 
-        self.spinbox_step = QDoubleSpinBox(self)
-        self.spinbox_step.setRange(const.INSERT_POSITIONS_RANGE_MIN, const.INSERT_POSITIONS_RANGE_MAX)
-        self.spinbox_step.setSingleStep(1)
-        self.spinbox_step.setValue(float(self.dw.app.build_length_output(20))) # TODO: save in settings
-        self.spinbox_step.setDecimals(const.LENGTH_DISPLAY_DECIMALS)
-        self.spinbox_step.returnPressed.connect(self.on_submit)
+        self.spinbox_step = sb = QDoubleSpinBox(self)
+        sb.setRange(const.INSERT_POSITIONS_RANGE_MIN, const.INSERT_POSITIONS_RANGE_MAX)
+        sb.setSingleStep(self.dw.app.length_step())
+        sb.setValue(float(self.dw.app.build_length_output(20))) # TODO: save in settings
+        sb.setDecimals(self.dw.app.length_display_decimals())
+        sb.returnPressed.connect(self.on_submit)
 
         form = QFormLayout()
         form.addRow('Start:', self.spinbox_start)
@@ -66,7 +65,7 @@ class InsertPositionsRangeWindow(QWidget):
         self.close()
 
     def on_submit(self):
-        positions = lengths_range(
+        positions = self.dw.app.lengths_range(
             self.spinbox_start.value(),
             self.spinbox_end.value(),
             self.spinbox_step.value()

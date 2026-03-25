@@ -139,6 +139,32 @@ class App(QApplication):
         if file:
             self.open_document(file)
 
+    def length_units_symbol(self) -> str:
+        return self.settings.load('general', 'length_units')
+
+    def length_display_decimals(self, units_symbol: str|None = None) -> int:
+        if units_symbol is None:
+            units_symbol = self.length_units_symbol()
+        return units_def(units_symbol)['display_decimals']
+
+    def length_step(self, units_symbol: str|None = None) -> float:
+        if units_symbol is None:
+            units_symbol = self.length_units_symbol()
+        return units_def(units_symbol)['step']
+
+    def lengths_range(self, range_start: float, range_end: float, step: float) -> list:
+        values = []
+        decimals = self.length_display_decimals()
+        scale = pow(10, decimals)
+
+        for pos_scaled in range(
+            round(scale * range_start),
+            round(scale * range_end) + 1,
+            round(scale * step),
+        ):
+            values.append(round(pos_scaled / scale, decimals))
+        return values
+
     def build_length_output(self, value_mm: float|None, units_symbol: str|None = None, extra_decimals: int = 0) -> str:
         """
         Returns a string representing the value (in mm) converted to given units and rounded to
@@ -148,7 +174,7 @@ class App(QApplication):
             return ''
         
         if units_symbol is None:
-            units_symbol = self.settings.load('general', 'length_units')
+            units_symbol = self.length_units_symbol()
 
         units = units_def(units_symbol)
         
@@ -166,12 +192,9 @@ class App(QApplication):
             return None
         
         if units_symbol is None:
-            units_symbol = self.settings.load('general', 'length_units')
+            units_symbol = self.length_units_symbol()
 
         return length_to_mm(float_value, units_symbol)
-
-    def length_units_symbol(self) -> str:
-        return self.settings.load('general', 'length_units')
 
     def play_sound(self, name):
         self.sounds[name].play()

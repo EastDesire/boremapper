@@ -60,9 +60,9 @@ class DocPropertiesWindow(QWidget):
                 val = getattr(self.dw.model.bore.corrections, p + '_groove_' + dim)
                 sb = self.correction_spinboxes[p]['groove_' + dim] = QDoubleSpinBox(self)
                 sb.setRange(correction_range_min, correction_range_max)
-                sb.setSingleStep(0.1)
+                sb.setSingleStep(self.dw.app.length_step() / 10)
                 sb.setValue(float(self.dw.app.build_length_output(val)))
-                sb.setDecimals(const.LENGTH_DISPLAY_DECIMALS)
+                sb.setDecimals(self.dw.app.length_display_decimals())
 
         form = QFormLayout()
         for dim in ('width', 'height'):
@@ -95,7 +95,8 @@ class DocPropertiesWindow(QWidget):
         corrections = {}
         for p in const.BORE_PARTS:
             for dim in ('width', 'height'):
-                corrections[p + '_groove_' + dim] = round(self.correction_spinboxes[p]['groove_' + dim].value(), const.LENGTH_DISPLAY_DECIMALS)
+                # TODO: convert from units to mm
+                corrections[p + '_groove_' + dim] = self.correction_spinboxes[p]['groove_' + dim].value()
 
         self.dw.model.bore.corrections.set_many(corrections)
 

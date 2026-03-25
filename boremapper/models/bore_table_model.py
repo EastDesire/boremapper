@@ -6,7 +6,7 @@ from PySide6.QtGui import QBrush, QPalette
 from boremapper import const
 from boremapper.enums import DataVariant
 from boremapper.models.document_model import DocumentModel
-from boremapper.utils import format_length
+from boremapper.utils import format_length, text_color_to_red, base_color_to_alternate
 
 
 class BoreTableModel(QAbstractTableModel):
@@ -84,7 +84,7 @@ class BoreTableModel(QAbstractTableModel):
                     ('feature' in w and w['feature'] == cd['feature']) or
                     ('part' in w and w['part'] == cd['part'])
                 ) for w in point.warnings):
-                    return QBrush(Qt.GlobalColor.red)
+                    return QBrush(text_color_to_red(QPalette().color(QPalette.ColorRole.Text)))
 
                 if cd['feature'] in ('cutter', 'diameter'):
                     val = self.value_for_cell(row, column, DataVariant.RAW)
@@ -98,7 +98,7 @@ class BoreTableModel(QAbstractTableModel):
             case Qt.ItemDataRole.BackgroundRole:
                 cd = self.column_detail(column)
                 if cd['feature'] in ('cutter'):
-                    return QBrush(self.alternate_base(QPalette().color(QPalette.ColorRole.Base)))
+                    return QBrush(base_color_to_alternate(QPalette().color(QPalette.ColorRole.Base)))
             
         return None
 
@@ -195,7 +195,3 @@ class BoreTableModel(QAbstractTableModel):
 
     def on_points_layout_change(self):
         self.layoutChanged.emit()
-        
-    @staticmethod
-    def alternate_base(color):
-        return color.lighter(120) if color.lightnessF() < 0.5 else color.darker(106)

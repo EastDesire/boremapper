@@ -1,6 +1,8 @@
 import re
 from xml.etree import ElementTree as ET
 
+from PySide6.QtGui import QColor
+
 import const
 from boremapper import exceptions
 
@@ -122,3 +124,9 @@ def lengths_range(range_start: float, range_end: float, step: float) -> list:
     ):
         values.append(round(pos_scaled / scale, const.LENGTH_DISPLAY_DECIMALS))
     return values
+
+def text_color_to_red(color):
+    return QColor.fromRgb(224, 0, 0) if color.lightnessF() < 0.5 else QColor.fromRgb(255, 96, 96)
+    
+def base_color_to_alternate(color):
+    return color.lighter(124) if color.lightnessF() < 0.5 else color.darker(108)

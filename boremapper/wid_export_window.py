@@ -74,7 +74,7 @@ class WidExportWindow(QMainWindow):
         self.copy_button.clicked.connect(self.on_copy_click)
 
     def update_all(self):
-        self.origin_spinbox.setValue(self.dw.model.wid_export.bore_origin) # TODO convert
+        self.origin_spinbox.setValue(float(self.dw.app.build_length_output(self.dw.model.wid_export.bore_origin)))
         self.origin_units_label.setText(self.dw.app.length_units_symbol())
         self.length_type_combobox.setCurrentText(self.dw.model.wid_export.length_type) # TODO test
         self.update_xml_snippet()

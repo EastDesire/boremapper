@@ -15,8 +15,8 @@ class ProfileDetailDiagram(Diagram):
     margin_x = 30
     margin_y = 30
 
-    pos_label_font_size = 14
-    pos_label_height = 16
+    pos_label_font_size = 16
+    pos_label_height = 20
     pos_label_width = 30
     pos_label_box_width = 200
     

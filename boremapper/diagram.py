@@ -29,7 +29,7 @@ class Diagram(QWidget):
     dim_line_arrow_angle = 30
     dim_line_extend = 50
     dim_text_box_height = 24 # Height of the dimension text (including space)
-    dim_font_size = 14
+    dim_font_size = 16
 
     # Extension line, mark
     ext_line_overrun = 7

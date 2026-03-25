@@ -38,9 +38,11 @@ class WidExportWindow(QMainWindow):
         label = QLabel(self)
         label.setText('Bore Origin:')
         toolbar.addWidget(label)
+
+        range_max = float(self.dw.app.build_length_output(const.SPINBOX_MAX_RANGE_MM))
         
         self.origin_spinbox = sb = QDoubleSpinBox(self)
-        sb.setRange(-1000, 1000) # TODO: into const
+        sb.setRange(-range_max, range_max)
         sb.setSingleStep(self.dw.app.length_step())
         sb.setDecimals(self.dw.app.length_display_decimals())
         toolbar.addWidget(sb)

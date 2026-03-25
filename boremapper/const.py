@@ -14,6 +14,10 @@ FLOAT_SAFE_DECIMALS = 10
 
 MAX_INPUT_VALUE = pow(2, 24)
 
+SPINBOX_MAX_RANGE_MM = 10000
+
+BORE_PARTS = ('bottom', 'top')
+
 # (<mm_conversion_factor>, <display_decimals>, <step>)
 UNITS = {
     'mm': (1, 2, 1),
@@ -22,8 +26,6 @@ UNITS = {
     'in': (25.4, 3, 0.05),
     'ft': (304.8, 4, 0.005),
 }
-
-BORE_PARTS = ('bottom', 'top')
 
 # (<label>, <editable>, <description>)
 BORE_TABLE_COLUMNS = [
@@ -38,15 +40,11 @@ BORE_TABLE_COLUMNS = [
     ('D', True, 'Diameter'),
 ]
 
-BORE_TABLE_MIN_COLUMN_WIDTH = 70
-BORE_TABLE_MAX_COLUMN_WIDTH = 150
-
 DOCUMENT_WINDOW_WIDTH = 1280
 DOCUMENT_WINDOW_HEIGHT = 720
 
-# TODO: This should be unit-specific (or converted from mm)
-INSERT_POSITIONS_RANGE_MIN = -10000
-INSERT_POSITIONS_RANGE_MAX = 10000
+BORE_TABLE_MIN_COLUMN_WIDTH = 70
+BORE_TABLE_MAX_COLUMN_WIDTH = 150
 
 GROUPS_SPACING = 30
 

@@ -50,16 +50,14 @@ class DocPropertiesWindow(QWidget):
 
         # Group
 
-        # TODO
-        correction_range_min = -1000
-        correction_range_max = 1000
+        range_max = float(self.dw.app.build_length_output(const.SPINBOX_MAX_RANGE_MM))
 
         for p in const.BORE_PARTS:
             self.correction_spinboxes[p] = {}
             for dim in ('width', 'height'):
                 val = getattr(self.dw.model.bore.corrections, p + '_groove_' + dim)
                 sb = self.correction_spinboxes[p]['groove_' + dim] = QDoubleSpinBox(self)
-                sb.setRange(correction_range_min, correction_range_max)
+                sb.setRange(-range_max, range_max)
                 sb.setSingleStep(self.dw.app.length_step() / 10)
                 sb.setDecimals(self.dw.app.length_display_decimals())
                 sb.setValue(float(self.dw.app.build_length_output(val)))

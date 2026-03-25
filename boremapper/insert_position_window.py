@@ -19,12 +19,14 @@ class InsertPositionWindow(QWidget):
 
         self.layout = QVBoxLayout()
 
-        self.spinbox_at = QDoubleSpinBox(self)
-        self.spinbox_at.setRange(const.INSERT_POSITIONS_RANGE_MIN, const.INSERT_POSITIONS_RANGE_MAX)
-        self.spinbox_at.setSingleStep(self.dw.app.length_step())
-        self.spinbox_at.setDecimals(self.dw.app.length_display_decimals())
-        self.spinbox_at.setValue(0)
-        self.spinbox_at.returnPressed.connect(self.on_submit)
+        range_max = float(self.dw.app.build_length_output(const.SPINBOX_MAX_RANGE_MM))
+
+        self.spinbox_at = sb = QDoubleSpinBox(self)
+        sb.setRange(-range_max, range_max)
+        sb.setSingleStep(self.dw.app.length_step())
+        sb.setDecimals(self.dw.app.length_display_decimals())
+        sb.setValue(0)
+        sb.returnPressed.connect(self.on_submit)
 
         form = QFormLayout()
         form.addRow('At:', self.spinbox_at)

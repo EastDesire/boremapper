@@ -13,7 +13,6 @@ class DocPropertiesWindow(QWidget):
         self.dw = document_window
 
         self.correction_spinboxes = {}
-        self.wid_export_bore_origin_spinbox = None
 
         self.setWindowTitle('Document Properties')
         self.setWindowModality(Qt.WindowModality.WindowModal)
@@ -23,11 +22,9 @@ class DocPropertiesWindow(QWidget):
         self.layout = QVBoxLayout()
 
         self.general_tab = self.create_general_tab()
-        self.export_tab = self.create_export_tab()
 
         self.tabs = QTabWidget(self)
         self.tabs.addTab(self.general_tab, 'General')
-        self.tabs.addTab(self.export_tab, 'Export')
         self.layout.addWidget(self.tabs)
 
         buttons = QHBoxLayout()
@@ -62,7 +59,6 @@ class DocPropertiesWindow(QWidget):
                 sb.setSingleStep(0.1)
                 sb.setValue(getattr(self.dw.model.bore.corrections, p + '_groove_' + dim))
                 sb.setDecimals(const.LENGTH_DISPLAY_DECIMALS)
-                sb.returnPressed.connect(self.on_submit)
 
         form = QFormLayout()
         for dim in ('width', 'height'):
@@ -75,36 +71,6 @@ class DocPropertiesWindow(QWidget):
         group = QGroupBox(self)
         #group.setFlat(True) # TODO
         group.setTitle('Groove Corrections')
-        group.setLayout(form)
-        layout.addWidget(group)
-
-        widget.setLayout(layout)
-
-        return widget
-
-    # TODO: remove this tab?
-    def create_export_tab(self):
-        widget = QWidget(self)
-        layout = QVBoxLayout()
-
-        # Group
-
-        sb = self.wid_export_bore_origin_spinbox = QDoubleSpinBox(self)
-        sb.setRange(-1000, 1000)
-        sb.setSingleStep(1)
-        sb.setValue(self.dw.model.wid_export.bore_origin)
-        sb.setDecimals(const.LENGTH_DISPLAY_DECIMALS)
-        sb.returnPressed.connect(self.on_submit)
-
-        form = QFormLayout()
-        form.addRow(
-            'Bore Origin:',
-            self.wid_export_bore_origin_spinbox
-        )
-
-        group = QGroupBox(self)
-        #group.setFlat(True) # TODO
-        group.setTitle('WIDesigner')
         group.setLayout(form)
         layout.addWidget(group)
 
@@ -129,7 +95,6 @@ class DocPropertiesWindow(QWidget):
                 corrections[p + '_groove_' + dim] = round(self.correction_spinboxes[p]['groove_' + dim].value(), const.LENGTH_DISPLAY_DECIMALS)
 
         self.dw.model.bore.corrections.set_many(corrections)
-        self.dw.model.wid_export.bore_origin = round(self.wid_export_bore_origin_spinbox.value(), const.LENGTH_DISPLAY_DECIMALS)
 
     def keyPressEvent(self, event: QKeyEvent):
         super().keyPressEvent(event)

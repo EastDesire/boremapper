@@ -79,7 +79,6 @@ class SettingsWindow(QWidget):
                 sb.setSingleStep(0.1)
                 sb.setValue(self.dw.app.settings.load('default_corrections', p + '_groove_' + dim))
                 sb.setDecimals(const.LENGTH_DISPLAY_DECIMALS)
-                sb.returnPressed.connect(self.on_submit)
 
         form = QFormLayout()
         for dim in ('width', 'height'):

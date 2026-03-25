@@ -162,6 +162,10 @@ class DocumentWindow(QMainWindow):
 
         menu.addSeparator()
 
+        a = self.actions['delete_positions'] = QAction('-', self)
+        a.triggered.connect(self.on_action_delete_positions_trigger)
+        menu.addAction(a)
+
         a = self.actions['insert_position'] = QAction('Insert Position...', self)
         a.setShortcut(QKeySequence(Qt.Modifier.CTRL | Qt.Key.Key_I))
         a.triggered.connect(self.on_action_insert_position_trigger)
@@ -170,10 +174,6 @@ class DocumentWindow(QMainWindow):
         a = self.actions['insert_positions_range'] = QAction('Insert Positions Range...', self)
         a.setShortcut(QKeySequence(Qt.Modifier.CTRL | Qt.Modifier.SHIFT | Qt.Key.Key_I))
         a.triggered.connect(self.on_action_insert_positions_range_trigger)
-        menu.addAction(a)
-
-        a = self.actions['delete_positions'] = QAction('-', self)
-        a.triggered.connect(self.on_action_delete_positions_trigger)
         menu.addAction(a)
 
         menu = QMenu('&Options', self)
@@ -261,7 +261,7 @@ class DocumentWindow(QMainWindow):
         self.actions['paste'].setEnabled(selected_one_range)
         self.actions['delete'].setEnabled(selected_anything)
 
-        self.actions['delete_positions'].setText('Delete Positions (%d)' % selected_rows)
+        self.actions['delete_positions'].setText('Delete Rows (%d)' % selected_rows)
         self.actions['delete_positions'].setVisible(selected_rows != 0)
 
         self.actions['beep_hints'].setChecked(self.app.settings.load('audio', 'beep_hints'))
@@ -440,17 +440,17 @@ class DocumentWindow(QMainWindow):
     def on_action_select_all_trigger(self):
         self.table_view.selectAll()
 
-    def on_action_insert_position_trigger(self):
-        self.show_insert_position_window()
-
-    def on_action_insert_positions_range_trigger(self):
-        self.show_insert_positions_range_window()
-
     def on_action_delete_positions_trigger(self):
         selected_rows = self.table_view.fully_selected_rows()
         if not selected_rows:
             return
         self.do_command(commands.DeletePositions(self, selected_rows))
+
+    def on_action_insert_position_trigger(self):
+        self.show_insert_position_window()
+
+    def on_action_insert_positions_range_trigger(self):
+        self.show_insert_positions_range_window()
 
     def on_action_beep_hints_trigger(self):
         self.app.settings.toggle('audio', 'beep_hints')

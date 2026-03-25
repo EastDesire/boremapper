@@ -1,14 +1,15 @@
 from boremapper.groove_detail_diagram import GrooveDetailDiagram
 from boremapper.point_detail_widget import PointDetailWidget
-from boremapper.utils import format_length
 
 
 class GrooveDetailWidget(PointDetailWidget):
     
-    def __init__(self, parent: 'DocumentWindow', model: 'BoreModel'):
-        super().__init__(parent, model)
+    def __init__(self, document_window: 'DocumentWindow', model: 'BoreModel'):
+        super().__init__(document_window, model)
 
-        self.diagram = GrooveDetailDiagram(self, parent.app)
+        self.dw = document_window
+
+        self.diagram = GrooveDetailDiagram(self, document_window.app)
         self.diagram.setMinimumHeight(PointDetailWidget.MIN_SIZE)
 
         self.content_layout.addWidget(self.property_table, stretch=0)
@@ -41,17 +42,17 @@ class GrooveDetailWidget(PointDetailWidget):
         return [
             (
                 'Groove Width (W)',
-                format_length(groove_w),
+                self.dw.app.build_length_output(groove_w),
                 correction_text if is_groove_w_corrected else '',
             ),
             (
                 'Groove Height (H)',
-                format_length(groove_h),
+                self.dw.app.build_length_output(groove_h),
                 correction_text if is_groove_h_corrected else '',
             ),
             (
                 'Area',
-                format_length(area),
+                self.dw.app.build_length_output(area),
                 '',
             ),
         ]

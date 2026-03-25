@@ -72,7 +72,7 @@ class DocumentWindow(QMainWindow):
         self.model.bore.corrections.changed.connect(self.on_bore_corrections_change)
         self.model.wid_export.changed.connect(self.on_wid_export_change)
         
-        self.table_model = BoreTableModel(self.model)
+        self.table_model = BoreTableModel(self.model, self.app)
 
     def init_undo_stack(self):
         # Note that the parent should be specified, or the undo_stack might be deleted too soon during exit

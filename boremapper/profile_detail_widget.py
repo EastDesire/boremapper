@@ -13,9 +13,10 @@ class ProfileDetailWidget(QWidget):
     MIN_HEIGHT = 500
     SPACING = 8 # TODO: somewhere global?
     
-    def __init__(self, parent: 'DocumentWindow', model: 'BoreModel'):
-        super().__init__(parent)
+    def __init__(self, document_window: 'DocumentWindow', model: 'BoreModel'):
+        super().__init__(document_window)
 
+        self.dw = document_window
         self.model = model
         
         self.target = Bunch(
@@ -57,7 +58,7 @@ class ProfileDetailWidget(QWidget):
         self.content_scroll.setWidgetResizable(True)
         self.layout.addWidget(self.content_scroll)
 
-        self.diagram = ProfileDetailDiagram(self, parent.app)
+        self.diagram = ProfileDetailDiagram(self, self.dw.app)
         # TODO: put somewhere better? Here as well as in other classes
         self.diagram.setMinimumHeight(self.MIN_HEIGHT)
         self.content_layout.addWidget(self.diagram, stretch=100)

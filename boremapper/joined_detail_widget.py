@@ -1,14 +1,13 @@
 from boremapper.joined_detail_diagram import JoinedDetailDiagram
 from boremapper.point_detail_widget import PointDetailWidget
-from boremapper.utils import format_length
 
 
 class JoinedDetailWidget(PointDetailWidget):
     
-    def __init__(self, parent: 'DocumentWindow', model: 'BoreModel'):
-        super().__init__(parent, model)
+    def __init__(self, document_window: 'DocumentWindow', model: 'BoreModel'):
+        super().__init__(document_window, model)
 
-        self.diagram = JoinedDetailDiagram(self, parent.app)
+        self.diagram = JoinedDetailDiagram(self, document_window.app)
         self.diagram.setMinimumHeight(PointDetailWidget.MIN_SIZE)
 
         self.content_layout.addWidget(self.property_table, stretch=0)
@@ -34,12 +33,12 @@ class JoinedDetailWidget(PointDetailWidget):
         props = [
             (
                 'Area',
-                format_length(point.area),
+                self.dw.app.build_length_output(point.area),
                 '',
             ),
             (
                 'Equivalent Diameter',
-                format_length(point.equivalent_diameter),
+                self.dw.app.build_length_output(point.equivalent_diameter),
                 '',
             ),
         ]
@@ -47,7 +46,7 @@ class JoinedDetailWidget(PointDetailWidget):
         if point.custom_diameter is not None:
             props.append((
                 'Custom Diameter',
-                format_length(point.custom_diameter),
+                self.dw.app.build_length_output(point.custom_diameter),
                 '',
             ))
 

@@ -6,7 +6,7 @@ from PySide6.QtGui import QBrush, QPalette
 from boremapper import const
 from boremapper.enums import DataVariant
 from boremapper.models.document_model import DocumentModel
-from boremapper.utils import format_length, text_color_to_red, base_color_to_alternate
+from boremapper.utils import text_color_to_red, base_color_to_alternate
 
 
 class BoreTableModel(QAbstractTableModel):
@@ -18,8 +18,10 @@ class BoreTableModel(QAbstractTableModel):
     
     muted_text_alpha = 0.3
 
-    def __init__(self, parent: 'DocumentModel'):
+    def __init__(self, parent: 'DocumentModel', app: 'App'):
         super().__init__(parent)
+        
+        self.app = app
 
         self.parent().bore.points.point_changed.connect(self.on_point_data_change)
         self.parent().bore.points.layout_changed.connect(self.on_points_layout_change)
@@ -52,7 +54,7 @@ class BoreTableModel(QAbstractTableModel):
         match role:
             case Qt.ItemDataRole.DisplayRole:
                 point = self.parent().bore.points[section]
-                return format_length(point.position)
+                return self.app.build_length_output(point.position)
             case Qt.ItemDataRole.TextAlignmentRole:
                 return Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter
         return None
@@ -67,11 +69,11 @@ class BoreTableModel(QAbstractTableModel):
         match role:
             case Qt.ItemDataRole.DisplayRole:
                 val = self.value_for_cell(row, column, DataVariant.DISPLAYED)
-                return format_length(val)
+                return self.app.build_length_output(val)
 
             case Qt.ItemDataRole.EditRole:
                 val = self.value_for_cell(row, column, DataVariant.RAW)
-                return format_length(val)
+                return self.app.build_length_output(val)
 
             case Qt.ItemDataRole.TextAlignmentRole:
                 return Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter

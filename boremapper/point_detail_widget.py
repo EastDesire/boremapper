@@ -5,7 +5,6 @@ from boremapper.bunch import Bunch
 from boremapper.models.bore_model import BorePointModel
 from boremapper.point_message_list import PointMessageList
 from boremapper.point_property_table import PointPropertyTable
-from boremapper.utils import format_length
 
 
 class PointDetailWidget(QWidget):
@@ -14,9 +13,10 @@ class PointDetailWidget(QWidget):
     MAX_SIZE = 650
     SPACING = 8
     
-    def __init__(self, parent: 'DocumentWindow', model: 'BoreModel'):
-        super().__init__(parent)
+    def __init__(self, document_window: 'DocumentWindow', model: 'BoreModel'):
+        super().__init__(document_window)
 
+        self.dw = document_window
         self.model = model
         
         self.target = Bunch(
@@ -92,7 +92,7 @@ class PointDetailWidget(QWidget):
 
     def _position_text(self) -> str:
         point = self.target_point()
-        return '' if point is None else 'Bore at: %s' % format_length(point.position)
+        return '' if point is None else 'Bore at: %s' % self.dw.app.build_length_output(point.position)
 
     def properties(self) -> list:
         # To be implemented in a child class

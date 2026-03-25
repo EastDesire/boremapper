@@ -1,14 +1,13 @@
 from boremapper.cutter_detail_diagram import CutterDetailDiagram
 from boremapper.point_detail_widget import PointDetailWidget
-from boremapper.utils import format_length
 
 
 class CutterDetailWidget(PointDetailWidget):
     
-    def __init__(self, parent: 'DocumentWindow', model: 'BoreModel'):
-        super().__init__(parent, model)
+    def __init__(self, document_window: 'DocumentWindow', model: 'BoreModel'):
+        super().__init__(document_window, model)
 
-        self.diagram = CutterDetailDiagram(self, parent.app)
+        self.diagram = CutterDetailDiagram(self, document_window.app)
         self.diagram.setMinimumHeight(PointDetailWidget.MIN_SIZE)
 
         self.content_layout.addWidget(self.property_table, stretch=0)
@@ -37,12 +36,12 @@ class CutterDetailWidget(PointDetailWidget):
         return [
             (
                 'Cutter Width (CW)',
-                format_length(cutter_w),
+                self.dw.app.build_length_output(cutter_w),
                 'I.e. cutting diameter',
             ),
             (
                 'Cutter Height (CH)',
-                format_length(cutter_h),
+                self.dw.app.build_length_output(cutter_h),
                 'Measured from ellipse center',
             ),
         ]

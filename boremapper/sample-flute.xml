@@ -2,13 +2,13 @@
   <bore>
     <points>
       <point position="0" custom-diameter="50" bottom-groove-width="" bottom-groove-height="20" bottom-cutter-width="22" bottom-cutter-height="11" top-groove-width="25" top-groove-height="" top-cutter-width="" top-cutter-height="" />
-      <point position="2" custom-diameter="50" bottom-groove-width="" bottom-groove-height="" bottom-cutter-width="10252.13234" bottom-cutter-height="" top-groove-width="" top-groove-height="" top-cutter-width="" top-cutter-height="" />
+      <point position="2" custom-diameter="50" bottom-groove-width="" bottom-groove-height="" bottom-cutter-width="2000" bottom-cutter-height="" top-groove-width="" top-groove-height="" top-cutter-width="" top-cutter-height="" />
       <point position="5" custom-diameter="50" bottom-groove-width="" bottom-groove-height="" bottom-cutter-width="" bottom-cutter-height="" top-groove-width="" top-groove-height="" top-cutter-width="" top-cutter-height="" />
-      <point position="8" custom-diameter="50" bottom-groove-width="" bottom-groove-height="" bottom-cutter-width="" bottom-cutter-height="" top-groove-width="" top-groove-height="" top-cutter-width="" top-cutter-height="" />
+      <point position="8" custom-diameter="50" bottom-groove-width="" bottom-groove-height="" bottom-cutter-width="" bottom-cutter-height="2335.34" top-groove-width="" top-groove-height="" top-cutter-width="" top-cutter-height="" />
       <point position="10" custom-diameter="50" bottom-groove-width="" bottom-groove-height="" bottom-cutter-width="" bottom-cutter-height="" top-groove-width="" top-groove-height="" top-cutter-width="" top-cutter-height="" />
-      <point position="12" custom-diameter="50" bottom-groove-width="" bottom-groove-height="" bottom-cutter-width="" bottom-cutter-height="" top-groove-width="" top-groove-height="" top-cutter-width="" top-cutter-height="" />
+      <point position="12" custom-diameter="50" bottom-groove-width="" bottom-groove-height="" bottom-cutter-width="" bottom-cutter-height="2335.34" top-groove-width="" top-groove-height="" top-cutter-width="" top-cutter-height="" />
       <point position="15" custom-diameter="50" bottom-groove-width="" bottom-groove-height="" bottom-cutter-width="" bottom-cutter-height="2335.34" top-groove-width="" top-groove-height="" top-cutter-width="" top-cutter-height="" />
-      <point position="20" custom-diameter="50" bottom-groove-width="50" bottom-groove-height="40" bottom-cutter-width="25" bottom-cutter-height="12" top-groove-width="25" top-groove-height="20" top-cutter-width="" top-cutter-height="" />
+      <point position="20" custom-diameter="50" bottom-groove-width="50" bottom-groove-height="40" bottom-cutter-width="25" bottom-cutter-height="25" top-groove-width="25" top-groove-height="20" top-cutter-width="" top-cutter-height="" />
       <point position="25" custom-diameter="" bottom-groove-width="" bottom-groove-height="" bottom-cutter-width="" bottom-cutter-height="" top-groove-width="" top-groove-height="" top-cutter-width="" top-cutter-height="" />
       <point position="40" custom-diameter="50" bottom-groove-width="25" bottom-groove-height="20" bottom-cutter-width="" bottom-cutter-height="" top-groove-width="25" top-groove-height="20" top-cutter-width="" top-cutter-height="" />
       <point position="45" custom-diameter="" bottom-groove-width="" bottom-groove-height="" bottom-cutter-width="" bottom-cutter-height="" top-groove-width="" top-groove-height="" top-cutter-width="" top-cutter-height="" />

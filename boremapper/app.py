@@ -179,26 +179,32 @@ class App(QApplication):
         
         if units_symbol is None:
             units_symbol = self.length_units_symbol()
-
         units = units_def(units_symbol)
         
         return format_length(
-            length_from_mm(value_mm, units_symbol),
+            value_mm / units['mm_factor'],
             units['display_decimals'] + extra_decimals
         )
         
-    def parse_length_input(self, value: str, units_symbol: str|None = None) -> float|None:
+    def parse_length_input(self, value: str, units_symbol: str|None = None, pre_round = True) -> float|None:
         """
         Parses length input and returns the value converted from the specified units to mm. TODO: OK?
         """
         float_value = str_to_number(value, float, allow_empty=True)
+        
         if float_value is None:
             return None
         
         if units_symbol is None:
             units_symbol = self.length_units_symbol()
+        units = units_def(units_symbol)
 
-        return length_to_mm(float_value, units_symbol)
+        # Even if the input number has more decimal places than what is displayed, we round it to the displayed number of decimals,
+        # so that the remaining decimals don't change the internal representation of the value
+        if pre_round:
+            float_value = round(float_value, units['display_decimals'])
+
+        return float_value * units['mm_factor']
 
     def play_sound(self, name):
         self.sounds[name].play()
@@ -235,6 +241,10 @@ class App(QApplication):
     def error_invalid_file_data(self):
         self.show_error('Invalid file data')
 
+    # TODO: use?
+    def error_invalid_numeric_value(self):
+        self.show_error('Invalid numeric value')
+        
     def error_value_overflow(self):
         self.show_error('Value is out of available range')
 

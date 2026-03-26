@@ -95,17 +95,10 @@ class BoreTableView(QTableView):
         self.selection_changed.emit()
         
     def on_data_set(self, index: 'QModelIndex|QPersistentModelIndex', value: str):
-        # TODO?
-        parsed_val = str_to_number(value, float, allow_empty=True)
-
-        # TODO round at all?
-        #if parsed_val is not None:
-        #    # TODO: how to approchach rounding when converting from different units?
-        #    # We round the value so that we store only decimals that are visible
-        #    parsed_val = round(parsed_val, const.LENGTH_DISPLAY_DECIMALS)
-
-        data = [{'row': index.row(), 'column': index.column(), 'value': parsed_val}]
-        if self.validate_cells_data(data):
+        data = self.process_cells_input([
+            {'row': index.row(), 'column': index.column(), 'input': value},
+        ])
+        if data:
             self.dw.do_command(commands.EditCells(self.dw, data))
 
     def on_data_committed(self, data: str, using_return: bool):
@@ -176,7 +169,7 @@ class BoreTableView(QTableView):
             lines if not stretch_mode else \
             itertools.repeat(lines[0], sel_range.height())
 
-        data = []
+        input_data = []
         for line_index, line in enumerate(paste_lines):
             row = origin_row + line_index
             if row >= self.model().rowCount():
@@ -189,25 +182,28 @@ class BoreTableView(QTableView):
 
                 index = self.model().index(row, column)
                 if index.flags() & Qt.ItemFlag.ItemIsEditable:
-                    value = str_to_number(value, float, allow_empty=True)
-                    data.append({'row': row, 'column': column, 'value': value})
+                    input_data.append({'row': row, 'column': column, 'input': value})
                     
-        if data and self.validate_cells_data(data):
+        data = self.process_cells_input(input_data)
+        if data:
             self.dw.do_command(commands.EditCells(self.dw, data))
             
-    def validate_cells_data(self, data: list):
+    def process_cells_input(self, input_data: list) -> list|None:
+        data = []
+        
         try:
-            for d in data:
-                if d['value'] is None:
-                    continue
-                if abs(d['value']) > const.MAX_INPUT_VALUE:
-                    raise OverflowError()
-                
+            for d in input_data:
+                value = self.dw.app.parse_length_input(d['input'])
+                if value is not None:
+                    if abs(value) > const.MAX_INTERNAL_FLOAT:
+                        raise OverflowError()
+                data.append({'row': d['row'], 'column': d['column'], 'value': value})
+
         except OverflowError:
             self.dw.app.error_value_overflow()
-            return False
-        
-        return True
+            return None
+
+        return data
 
 
 class BoreTableHorizontalHeader(QHeaderView):

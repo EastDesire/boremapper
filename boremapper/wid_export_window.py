@@ -79,7 +79,7 @@ class WidExportWindow(QMainWindow):
     def update_all(self):
         self.origin_spinbox.setValue(float(self.dw.app.build_length_output(self.dw.model.wid_export.bore_origin)))
         self.origin_units_label.setText(self.dw.app.current_length_units().symbol)
-        self.length_type_combobox.setCurrentText(self.dw.model.wid_export.length_type) # TODO test
+        self.length_type_combobox.setCurrentText(self.dw.model.wid_export.length_type)
         self.update_xml_snippet()
 
     def update_xml_snippet(self):

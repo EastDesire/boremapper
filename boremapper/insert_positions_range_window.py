@@ -2,7 +2,8 @@ from PySide6.QtCore import Qt
 from PySide6.QtGui import QKeyEvent
 from PySide6.QtWidgets import QDoubleSpinBox, QFormLayout, QHBoxLayout, QPushButton, QVBoxLayout, QWidget
 
-from boremapper import commands, const
+from boremapper import const
+from boremapper.utils import lengths_range
 
 
 class InsertPositionsRangeWindow(QWidget):
@@ -67,13 +68,13 @@ class InsertPositionsRangeWindow(QWidget):
         self.close()
 
     def on_submit(self):
-        positions = self.dw.app.lengths_range(
+        positions = lengths_range(
             self.spinbox_start.value(),
             self.spinbox_end.value(),
-            self.spinbox_step.value()
+            self.spinbox_step.value(),
+            self.dw.app.current_length_units().display_decimals
         )
-        # TODO: do this only if there is any position that doesn't yet exist
-        self.dw.do_command(commands.InsertPositions(self.dw, positions))
+        self.dw.try_insert_positions_command(positions)
         self.close()
 
     def keyPressEvent(self, event: QKeyEvent):

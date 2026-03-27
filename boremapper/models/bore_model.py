@@ -68,7 +68,7 @@ class BorePointsModel(Model):
         self._points.insert(insert_at, point)
         return insert_at
     
-    def has(self, index):
+    def has(self, index: int) -> bool:
         return 0 <= index < len(self._points)
 
     # TODO: test
@@ -114,13 +114,9 @@ class BorePointsModel(Model):
                 return index
         return None
 
-    def find_position(self, position: float) -> int|None:
-        """
-        Note that the lookup precision is defined by visible decimals.
-        """
-        decimals = self.app.current_length_units().display_decimals
+    def find_position(self, position: float, consider_decimals: int = const.FLOAT_SAFE_DECIMALS) -> int|None:
         for index, point in enumerate(self._points):
-            if round(point.position, decimals) == round(position, decimals):
+            if round(point.position, consider_decimals) == round(position, consider_decimals):
                 return index
         return None
 

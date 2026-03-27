@@ -43,6 +43,18 @@ def format_length(value: float, decimals: int) -> str:
 def length_units(symbol: str) -> 'LengthUnits':
     return LengthUnits.get(symbol)
 
+def lengths_range(range_start: float, range_end: float, step: float, decimals: int = 0) -> list:
+    values = []
+    scale = pow(10, decimals)
+
+    for pos_scaled in range(
+        round(scale * range_start),
+        round(scale * range_end) + 1,
+        round(scale * step),
+    ):
+        values.append(round(pos_scaled / scale, decimals))
+    return values
+
 def has_same_values_in_columns(data: list) -> bool:
     """
     Takes two-dimensional data in format [row][column] and returns True if each column contains identical values in it,

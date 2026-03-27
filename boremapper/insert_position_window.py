@@ -53,8 +53,7 @@ class InsertPositionWindow(QWidget):
         self.close()
 
     def on_submit(self):
-        # TODO: do this only if the position doesn't yet exist
-        self.dw.do_command(commands.InsertPositions(self.dw, [self.spinbox_at.value()]))
+        self.dw.try_insert_positions_command([self.spinbox_at.value()])
 
     def keyPressEvent(self, event: QKeyEvent):
         super().keyPressEvent(event)

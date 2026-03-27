@@ -103,19 +103,6 @@ class App(QApplication):
             float_value = round(float_value, units.display_decimals)
 
         return units.to_mm(float_value)
-        
-    def lengths_range(self, range_start: float, range_end: float, step: float) -> list:
-        values = []
-        decimals = self.current_length_units().display_decimals
-        scale = pow(10, decimals)
-
-        for pos_scaled in range(
-            round(scale * range_start),
-            round(scale * range_end) + 1,
-            round(scale * step),
-        ):
-            values.append(round(pos_scaled / scale, decimals))
-        return values
 
     def update_all_windows(self):
         for dw in self.document_windows:

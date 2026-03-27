@@ -366,6 +366,13 @@ class DocumentWindow(QMainWindow):
             self.model.file is not None
         )
 
+    def document_name(self):
+        if self.model.file is None:
+            return 'Untitled'
+        else:
+            path = Path(self.model.file)
+            return path.name
+
     def on_point_data_change(self, index: int):
         # FIXME: When changing many points at once, this is unnecessarily called multiple times too
         self.update_detail()
@@ -481,13 +488,18 @@ class DocumentWindow(QMainWindow):
     def show_insert_positions_range_window(self):
         self.insert_positions_range_window = InsertPositionsRangeWindow(self)
         self.insert_positions_range_window.show()
+    
+    def try_insert_positions_command(self, position_inputs: list):
+        insert_positions = []
+        
+        # Pick only positions that do not yet exist in the model
+        for pos_input in position_inputs:
+            pos = self.app.parse_length_input(str(pos_input))
+            if self.model.bore.points.find_position(pos) is None:
+                insert_positions.append(pos)
 
-    def document_name(self):
-        if self.model.file is None:
-            return 'Untitled'
-        else:
-            path = Path(self.model.file)
-            return path.name
+        if insert_positions:
+            self.do_command(commands.InsertPositions(self, insert_positions))
 
     def try_ask_save_before_proceed(self):
         """

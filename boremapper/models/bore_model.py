@@ -118,7 +118,7 @@ class BorePointsModel(Model):
         """
         Note that the lookup precision is defined by visible decimals.
         """
-        decimals = self.app.length_display_decimals()
+        decimals = self.app.current_length_units().display_decimals
         for index, point in enumerate(self._points):
             if round(point.position, decimals) == round(position, decimals):
                 return index

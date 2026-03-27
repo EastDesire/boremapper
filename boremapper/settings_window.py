@@ -4,6 +4,7 @@ from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QFormLayout, QD
     QGroupBox, QCheckBox, QComboBox
 
 from boremapper import const
+from boremapper.length_units import LengthUnits
 
 
 class SettingsWindow(QWidget):
@@ -55,9 +56,9 @@ class SettingsWindow(QWidget):
         # Group
 
         self.units_combobox = cb = QComboBox(self)
-        for units_symbol, units_def in const.UNITS.items():
-            cb.addItem(units_symbol)
-        cb.setCurrentText(self.dw.app.length_units_symbol())
+        for symbol in LengthUnits.symbols():
+            cb.addItem(symbol)
+        cb.setCurrentText(self.dw.app.current_length_units().symbol)
 
         form = QFormLayout()
         form.addRow('Length Units:', self.units_combobox)
@@ -77,8 +78,8 @@ class SettingsWindow(QWidget):
                 val = self.dw.app.settings.load('default_corrections', p + '_groove_' + dim)
                 sb = self.correction_spinboxes[p]['groove_' + dim] = QDoubleSpinBox(self)
                 sb.setRange(-range_max, range_max)
-                sb.setSingleStep(self.dw.app.length_step() / 10)
-                sb.setDecimals(self.dw.app.length_display_decimals())
+                sb.setSingleStep(self.dw.app.current_length_units().step / 10)
+                sb.setDecimals(self.dw.app.current_length_units().display_decimals)
                 sb.setValue(float(self.dw.app.build_length_output(val)))
 
         form = QFormLayout()

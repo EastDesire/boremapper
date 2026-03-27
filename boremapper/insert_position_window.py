@@ -23,8 +23,8 @@ class InsertPositionWindow(QWidget):
 
         self.spinbox_at = sb = QDoubleSpinBox(self)
         sb.setRange(-range_max, range_max)
-        sb.setSingleStep(self.dw.app.length_step())
-        sb.setDecimals(self.dw.app.length_display_decimals())
+        sb.setSingleStep(self.dw.app.current_length_units().step)
+        sb.setDecimals(self.dw.app.current_length_units().display_decimals)
         sb.setValue(0)
         sb.returnPressed.connect(self.on_submit)
 

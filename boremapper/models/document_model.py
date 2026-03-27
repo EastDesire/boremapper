@@ -2,7 +2,7 @@ from xml.etree import ElementTree as ET
 from PySide6.QtCore import Signal
 
 from boremapper import const, exceptions
-from boremapper.utils import xml_build_float, xml_find_mandatory, xml_parse_float, length_from_mm
+from boremapper.utils import xml_build_float, xml_find_mandatory, xml_parse_float, length_units
 from boremapper.models.model import Model
 from boremapper.models.bore_model import BoreModel, BorePointModel
 from boremapper.models.wid_export_model import WidExportModel
@@ -67,12 +67,14 @@ class DocumentModel(Model):
         return incomplete_positions
 
     def to_wid_bore_points(self, length_type: str, bore_origin: float):
+        length_type_units = length_units(length_type)
+        
         out_elements = []
-
+        
         for point in self.bore.points:
             if point.diameter is not None:
-                position = length_from_mm(bore_origin + point.position, length_type)
-                diameter = length_from_mm(point.diameter, length_type)
+                position = length_type_units.from_mm(bore_origin + point.position)
+                diameter = length_type_units.from_mm(point.diameter)
                 e_point = ET.Element('borePoint')
                 e_position = ET.SubElement(e_point, 'borePosition')
                 e_position.text = xml_build_float(position)

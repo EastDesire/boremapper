@@ -23,22 +23,22 @@ class InsertPositionsRangeWindow(QWidget):
 
         self.spinbox_start = sb = QDoubleSpinBox(self)
         sb.setRange(-range_max, range_max)
-        sb.setSingleStep(self.dw.app.length_step() * 10)
-        sb.setDecimals(self.dw.app.length_display_decimals())
+        sb.setSingleStep(self.dw.app.current_length_units().step * 10)
+        sb.setDecimals(self.dw.app.current_length_units().display_decimals)
         sb.setValue(float(self.dw.app.build_length_output(0))) # TODO: save in settings
         sb.returnPressed.connect(self.on_submit)
 
         self.spinbox_end = sb = QDoubleSpinBox(self)
         sb.setRange(-range_max, range_max)
-        sb.setSingleStep(self.dw.app.length_step() * 10)
-        sb.setDecimals(self.dw.app.length_display_decimals())
+        sb.setSingleStep(self.dw.app.current_length_units().step * 10)
+        sb.setDecimals(self.dw.app.current_length_units().display_decimals)
         sb.setValue(float(self.dw.app.build_length_output(500))) # TODO: save in settings
         sb.returnPressed.connect(self.on_submit)
 
         self.spinbox_step = sb = QDoubleSpinBox(self)
         sb.setRange(-range_max, range_max)
-        sb.setSingleStep(self.dw.app.length_step())
-        sb.setDecimals(self.dw.app.length_display_decimals())
+        sb.setSingleStep(self.dw.app.current_length_units().step)
+        sb.setDecimals(self.dw.app.current_length_units().display_decimals)
         sb.setValue(float(self.dw.app.build_length_output(20))) # TODO: save in settings
         sb.returnPressed.connect(self.on_submit)
 

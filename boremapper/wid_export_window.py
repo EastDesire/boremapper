@@ -5,6 +5,7 @@ from PySide6.QtGui import QFont, QKeyEvent, QGuiApplication
 from PySide6.QtWidgets import QLabel, QMainWindow, QPlainTextEdit, QToolBar, QComboBox, QDoubleSpinBox, QPushButton
 
 from boremapper import const
+from boremapper.length_units import LengthUnits
 
 
 class WidExportWindow(QMainWindow):
@@ -43,8 +44,8 @@ class WidExportWindow(QMainWindow):
         
         self.origin_spinbox = sb = QDoubleSpinBox(self)
         sb.setRange(-range_max, range_max)
-        sb.setSingleStep(self.dw.app.length_step())
-        sb.setDecimals(self.dw.app.length_display_decimals())
+        sb.setSingleStep(self.dw.app.current_length_units().step)
+        sb.setDecimals(self.dw.app.current_length_units().display_decimals)
         toolbar.addWidget(sb)
 
         self.origin_units_label = label = QLabel(self)
@@ -57,8 +58,8 @@ class WidExportWindow(QMainWindow):
         toolbar.addWidget(label)
         
         self.length_type_combobox = cb = QComboBox(self)
-        for units_symbol, units_def in const.UNITS.items():
-            cb.addItem(units_symbol)
+        for symbol in LengthUnits.symbols():
+            cb.addItem(symbol)
         toolbar.addWidget(cb)
 
         toolbar.addSeparator()
@@ -77,7 +78,7 @@ class WidExportWindow(QMainWindow):
 
     def update_all(self):
         self.origin_spinbox.setValue(float(self.dw.app.build_length_output(self.dw.model.wid_export.bore_origin)))
-        self.origin_units_label.setText(self.dw.app.length_units_symbol())
+        self.origin_units_label.setText(self.dw.app.current_length_units().symbol)
         self.length_type_combobox.setCurrentText(self.dw.model.wid_export.length_type) # TODO test
         self.update_xml_snippet()
 

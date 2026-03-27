@@ -19,15 +19,6 @@ SPINBOX_MAX_RANGE_MM = 10000
 
 BORE_PARTS = ('bottom', 'top')
 
-# (<mm_conversion_factor>, <display_decimals>, <step>)
-UNITS = {
-    'mm': (1, 2, 1),
-    'cm': (10, 3, 0.1),
-    'm': (1000, 5, 0.001),
-    'in': (25.4, 3, 0.05),
-    'ft': (304.8, 4, 0.005),
-}
-
 # (<label>, <editable>, <description>)
 BORE_TABLE_COLUMNS = [
     ('b W', True, 'Bottom: Groove Width'),

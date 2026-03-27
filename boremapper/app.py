@@ -9,9 +9,10 @@ from PySide6.QtWidgets import QApplication, QFileDialog, QMessageBox
 import const
 from boremapper import exceptions
 from boremapper.document_window import DocumentWindow
+from boremapper.length_units import LengthUnits
 from boremapper.models.document_model import DocumentModel
 from boremapper.models.settings_model import SettingsModel
-from boremapper.utils import format_length, units_def, length_from_mm, str_to_number, length_to_mm
+from boremapper.utils import format_length, str_to_number, length_units
 
 
 class App(QApplication):
@@ -66,7 +67,56 @@ class App(QApplication):
     def init_speech(self):
         # Initialize the speech engine, so that the speech starts promptly when first used
         pyttsx3.init()
+
+    def current_length_units(self) -> 'LengthUnits':
+        return length_units(self.settings.load('general', 'length_units'))
+
+    def build_length_output(self, value_mm: float|None, units_symbol: str|None = None, extra_decimals: int = 0) -> str:
+        """
+        Returns a string representing the value (in mm) converted to given units and rounded to
+        the number of decimal places associated with these units. TODO: OK?
+        """
+        if value_mm is None:
+            return ''
         
+        units = length_units(units_symbol) if units_symbol else self.current_length_units()
+        
+        return format_length(
+            units.from_mm(value_mm),
+            units.display_decimals + extra_decimals
+        )
+        
+    def parse_length_input(self, value: str, units_symbol: str|None = None, pre_round = True) -> float|None:
+        """
+        Parses length input and returns the value converted from the specified units to mm. TODO: OK?
+        """
+        float_value = str_to_number(value, float, allow_empty=True)
+        
+        if float_value is None:
+            return None
+
+        units = length_units(units_symbol) if units_symbol else self.current_length_units()
+
+        # Even if the input number has more decimal places than what is displayed, we round it to the displayed number of decimals,
+        # so that the remaining decimals don't change the internal representation of the value
+        if pre_round:
+            float_value = round(float_value, units.display_decimals)
+
+        return units.to_mm(float_value)
+        
+    def lengths_range(self, range_start: float, range_end: float, step: float) -> list:
+        values = []
+        decimals = self.current_length_units().display_decimals
+        scale = pow(10, decimals)
+
+        for pos_scaled in range(
+            round(scale * range_start),
+            round(scale * range_end) + 1,
+            round(scale * step),
+        ):
+            values.append(round(pos_scaled / scale, decimals))
+        return values
+
     def update_all_windows(self):
         for dw in self.document_windows:
             dw.update_all()
@@ -142,69 +192,6 @@ class App(QApplication):
     def on_document_open_dialog_file_selected(self, file):
         if file:
             self.open_document(file)
-
-    def length_units_symbol(self) -> str:
-        return self.settings.load('general', 'length_units')
-
-    def length_display_decimals(self, units_symbol: str|None = None) -> int:
-        if units_symbol is None:
-            units_symbol = self.length_units_symbol()
-        return units_def(units_symbol)['display_decimals']
-
-    def length_step(self, units_symbol: str|None = None) -> float:
-        if units_symbol is None:
-            units_symbol = self.length_units_symbol()
-        return units_def(units_symbol)['step']
-
-    def lengths_range(self, range_start: float, range_end: float, step: float) -> list:
-        values = []
-        decimals = self.length_display_decimals()
-        scale = pow(10, decimals)
-
-        for pos_scaled in range(
-            round(scale * range_start),
-            round(scale * range_end) + 1,
-            round(scale * step),
-        ):
-            values.append(round(pos_scaled / scale, decimals))
-        return values
-
-    def build_length_output(self, value_mm: float|None, units_symbol: str|None = None, extra_decimals: int = 0) -> str:
-        """
-        Returns a string representing the value (in mm) converted to given units and rounded to
-        the number of decimal places associated with these units. TODO: OK?
-        """
-        if value_mm is None:
-            return ''
-        
-        if units_symbol is None:
-            units_symbol = self.length_units_symbol()
-        units = units_def(units_symbol)
-        
-        return format_length(
-            value_mm / units['mm_factor'],
-            units['display_decimals'] + extra_decimals
-        )
-        
-    def parse_length_input(self, value: str, units_symbol: str|None = None, pre_round = True) -> float|None:
-        """
-        Parses length input and returns the value converted from the specified units to mm. TODO: OK?
-        """
-        float_value = str_to_number(value, float, allow_empty=True)
-        
-        if float_value is None:
-            return None
-        
-        if units_symbol is None:
-            units_symbol = self.length_units_symbol()
-        units = units_def(units_symbol)
-
-        # Even if the input number has more decimal places than what is displayed, we round it to the displayed number of decimals,
-        # so that the remaining decimals don't change the internal representation of the value
-        if pre_round:
-            float_value = round(float_value, units['display_decimals'])
-
-        return float_value * units['mm_factor']
 
     def play_sound(self, name):
         self.sounds[name].play()

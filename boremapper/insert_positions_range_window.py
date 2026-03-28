@@ -27,21 +27,24 @@ class InsertPositionsRangeWindow(QWidget):
         sb.setSingleStep(self.dw.app.current_length_units().step * 10)
         sb.setDecimals(self.dw.app.current_length_units().display_decimals)
         sb.setValue(float(self.dw.app.build_length_output(0))) # TODO: save in settings
-        sb.returnPressed.connect(self.on_submit)
+        sb.valueChanged.connect(self.on_form_change)
+        sb.returnPressed.connect(self.on_form_return)
 
         self.spinbox_end = sb = QDoubleSpinBox(self)
         sb.setRange(-range_max, range_max)
         sb.setSingleStep(self.dw.app.current_length_units().step * 10)
         sb.setDecimals(self.dw.app.current_length_units().display_decimals)
         sb.setValue(float(self.dw.app.build_length_output(500))) # TODO: save in settings
-        sb.returnPressed.connect(self.on_submit)
+        sb.valueChanged.connect(self.on_form_change)
+        sb.returnPressed.connect(self.on_form_return)
 
         self.spinbox_step = sb = QDoubleSpinBox(self)
         sb.setRange(-range_max, range_max)
         sb.setSingleStep(self.dw.app.current_length_units().step)
         sb.setDecimals(self.dw.app.current_length_units().display_decimals)
         sb.setValue(float(self.dw.app.build_length_output(20))) # TODO: save in settings
-        sb.returnPressed.connect(self.on_submit)
+        sb.valueChanged.connect(self.on_form_change)
+        sb.returnPressed.connect(self.on_form_return)
 
         form = QFormLayout()
         form.addRow('Start:', self.spinbox_start)
@@ -64,14 +67,40 @@ class InsertPositionsRangeWindow(QWidget):
 
         self.setLayout(self.layout)
 
+        self.update_buttons()
+
+    def form_value_start(self):
+        return round(self.spinbox_start.value(), self.dw.app.current_length_units().display_decimals)
+
+    def form_value_end(self):
+        return round(self.spinbox_end.value(), self.dw.app.current_length_units().display_decimals)
+
+    def form_value_step(self):
+        return round(self.spinbox_step.value(), self.dw.app.current_length_units().display_decimals)
+    
+    def update_buttons(self):
+        self.button_submit.setEnabled(self.is_form_valid())
+        
+    def is_form_valid(self):
+        return (
+            (self.form_value_start() <= self.form_value_end() and self.form_value_step() > 0) or
+            (self.form_value_start() > self.form_value_end() and self.form_value_step() < 0)
+        )
+
     def on_close_click(self):
         self.close()
+    
+    def on_form_change(self):
+        self.update_buttons()
+
+    def on_form_return(self):
+        self.button_submit.click()
 
     def on_submit(self):
         positions = lengths_range(
-            self.spinbox_start.value(),
-            self.spinbox_end.value(),
-            self.spinbox_step.value(),
+            self.form_value_start(),
+            self.form_value_end(),
+            self.form_value_step(),
             self.dw.app.current_length_units().display_decimals
         )
         self.dw.try_insert_positions_command(positions)

@@ -26,7 +26,7 @@ class InsertPositionWindow(QWidget):
         sb.setSingleStep(self.dw.app.current_length_units().step)
         sb.setDecimals(self.dw.app.current_length_units().display_decimals)
         sb.setValue(0)
-        sb.returnPressed.connect(self.on_submit)
+        sb.returnPressed.connect(self.on_form_return)
 
         form = QFormLayout()
         form.addRow('At:', self.spinbox_at)
@@ -51,6 +51,9 @@ class InsertPositionWindow(QWidget):
 
     def on_close_click(self):
         self.close()
+
+    def on_form_return(self):
+        self.button_submit.click()
 
     def on_submit(self):
         self.dw.try_insert_positions_command([self.spinbox_at.value()])

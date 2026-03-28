@@ -15,6 +15,9 @@ class WidExportWindow(QMainWindow):
 
         self.dw = document_window
         
+        # As long as the window is open, we work with settings that was in place when the window has loaded
+        self.length_units = self.dw.app.current_length_units()
+        
         self.xml_snippet = None
 
         self.setWindowTitle('WIDesigner Export')
@@ -40,16 +43,18 @@ class WidExportWindow(QMainWindow):
         label.setText('Bore Origin:')
         toolbar.addWidget(label)
 
-        range_max = float(self.dw.app.build_length_output(const.SPINBOX_MAX_RANGE_MM))
+        range_max = float(self.dw.app.build_length_output(const.SPINBOX_MAX_RANGE_MM, self.length_units.symbol))
         
         self.origin_spinbox = sb = QDoubleSpinBox(self)
         sb.setRange(-range_max, range_max)
-        sb.setSingleStep(self.dw.app.current_length_units().step)
-        sb.setDecimals(self.dw.app.current_length_units().display_decimals)
+        sb.setSingleStep(self.length_units.step)
+        sb.setDecimals(self.length_units.display_decimals)
+        sb.setValue(float(self.dw.app.build_length_output(self.dw.model.wid_export.bore_origin, self.length_units.symbol)))
         toolbar.addWidget(sb)
 
-        self.origin_units_label = label = QLabel(self)
-        toolbar.addWidget(label)
+        self.origin_units_label = lbl = QLabel(self)
+        lbl.setText(self.length_units.symbol)
+        toolbar.addWidget(lbl)
 
         toolbar.addSeparator()
         
@@ -60,6 +65,7 @@ class WidExportWindow(QMainWindow):
         self.length_type_combobox = cb = QComboBox(self)
         for symbol in LengthUnits.symbols():
             cb.addItem(symbol)
+        cb.setCurrentText(self.dw.model.wid_export.length_type)
         toolbar.addWidget(cb)
 
         toolbar.addSeparator()
@@ -69,17 +75,12 @@ class WidExportWindow(QMainWindow):
         toolbar.addWidget(b)
 
         self.setCentralWidget(self.xml_textbox)
-        self.update_all()
         
         # Note: We connect the change signals after setting values to the controls, otherwise they would be emitted too early
         self.origin_spinbox.valueChanged.connect(self.on_param_change)
         self.length_type_combobox.currentIndexChanged.connect(self.on_param_change)
         self.copy_button.clicked.connect(self.on_copy_click)
 
-    def update_all(self):
-        self.origin_spinbox.setValue(float(self.dw.app.build_length_output(self.dw.model.wid_export.bore_origin)))
-        self.origin_units_label.setText(self.dw.app.current_length_units().symbol)
-        self.length_type_combobox.setCurrentText(self.dw.model.wid_export.length_type)
         self.update_xml_snippet()
 
     def update_xml_snippet(self):
@@ -100,7 +101,7 @@ class WidExportWindow(QMainWindow):
     def on_param_change(self):
         self.dw.model.wid_export.length_type = self.length_type_combobox.currentText()
         
-        bore_origin = self.dw.app.parse_length_input(str(self.origin_spinbox.value()))
+        bore_origin = self.dw.app.parse_length_input(str(self.origin_spinbox.value()), self.length_units.symbol)
         if bore_origin is not None:
             self.dw.model.wid_export.bore_origin = bore_origin
             

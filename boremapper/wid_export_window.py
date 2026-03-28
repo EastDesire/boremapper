@@ -45,7 +45,7 @@ class WidExportWindow(QMainWindow):
 
         range_max = float(self.dw.app.build_length_output(const.SPINBOX_MAX_RANGE_MM, self.length_units.symbol))
         
-        self.origin_spinbox = sb = QDoubleSpinBox(self)
+        self.bore_origin_spinbox = sb = QDoubleSpinBox(self)
         sb.setRange(-range_max, range_max)
         sb.setSingleStep(self.length_units.step)
         sb.setDecimals(self.length_units.display_decimals)
@@ -77,7 +77,7 @@ class WidExportWindow(QMainWindow):
         self.setCentralWidget(self.xml_textbox)
         
         # Note: We connect the change signals after setting values to the controls, otherwise they would be emitted too early
-        self.origin_spinbox.valueChanged.connect(self.on_param_change)
+        self.bore_origin_spinbox.valueChanged.connect(self.on_param_change)
         self.length_type_combobox.currentIndexChanged.connect(self.on_param_change)
         self.copy_button.clicked.connect(self.on_copy_click)
 
@@ -101,7 +101,7 @@ class WidExportWindow(QMainWindow):
     def on_param_change(self):
         self.dw.model.wid_export.length_type = self.length_type_combobox.currentText()
         
-        bore_origin = self.dw.app.parse_length_input(str(self.origin_spinbox.value()), self.length_units.symbol)
+        bore_origin = self.dw.app.parse_length_input(str(self.bore_origin_spinbox.value()), self.length_units.symbol)
         if bore_origin is not None:
             self.dw.model.wid_export.bore_origin = bore_origin
             

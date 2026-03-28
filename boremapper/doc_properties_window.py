@@ -1,8 +1,10 @@
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QKeyEvent
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QFormLayout, QDoubleSpinBox, QPushButton, QTabWidget, QGroupBox
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QFormLayout, QDoubleSpinBox, QPushButton, QTabWidget, \
+    QGroupBox, QComboBox
 
 from boremapper import const
+from boremapper.length_units import LengthUnits
 
 
 class DocPropertiesWindow(QWidget):
@@ -12,7 +14,10 @@ class DocPropertiesWindow(QWidget):
 
         self.dw = document_window
 
-        self.correction_spinboxes = {}
+        self.length_units = self.dw.app.current_length_units()
+        
+        self.bore_origin_spinbox = None
+        self.length_type_combobox = None
 
         self.setWindowTitle('Document Properties')
         self.setWindowModality(Qt.WindowModality.WindowModal)
@@ -21,10 +26,10 @@ class DocPropertiesWindow(QWidget):
 
         self.layout = QVBoxLayout()
 
-        self.general_tab = self.create_general_tab()
+        self.export_tab = self.create_export_tab()
 
         self.tabs = QTabWidget(self)
-        self.tabs.addTab(self.general_tab, 'General')
+        self.tabs.addTab(self.export_tab, 'Export')
         self.layout.addWidget(self.tabs)
 
         buttons = QHBoxLayout()
@@ -42,7 +47,7 @@ class DocPropertiesWindow(QWidget):
 
         self.setLayout(self.layout)
 
-    def create_general_tab(self):
+    def create_export_tab(self):
         widget = QWidget(self)
         
         layout = QVBoxLayout()
@@ -50,28 +55,25 @@ class DocPropertiesWindow(QWidget):
 
         # Group
 
-        range_max = float(self.dw.app.build_length_output(const.SPINBOX_MAX_RANGE_MM))
+        range_max = float(self.dw.app.build_length_output(const.SPINBOX_MAX_RANGE_MM, self.length_units.symbol))
 
-        for p in const.BORE_PARTS:
-            self.correction_spinboxes[p] = {}
-            for dim in ('width', 'height'):
-                val = getattr(self.dw.model.bore.corrections, p + '_groove_' + dim)
-                sb = self.correction_spinboxes[p]['groove_' + dim] = QDoubleSpinBox(self)
-                sb.setRange(-range_max, range_max)
-                sb.setSingleStep(self.dw.app.current_length_units().step / 10)
-                sb.setDecimals(self.dw.app.current_length_units().display_decimals)
-                sb.setValue(float(self.dw.app.build_length_output(val)))
+        self.bore_origin_spinbox = sb = QDoubleSpinBox(self)
+        sb.setRange(-range_max, range_max)
+        sb.setSingleStep(self.length_units.step)
+        sb.setDecimals(self.length_units.display_decimals)
+        sb.setValue(float(self.dw.app.build_length_output(self.dw.model.wid_export.bore_origin, self.length_units.symbol)))
+
+        self.length_type_combobox = cb = QComboBox(self)
+        for symbol in LengthUnits.symbols():
+            cb.addItem(symbol)
+        cb.setCurrentText(self.dw.model.wid_export.length_type)
 
         form = QFormLayout()
-        for dim in ('width', 'height'):
-            for p in const.BORE_PARTS:
-                form.addRow(
-                    p.capitalize() + ' ' + dim.capitalize() + ':',
-                    self.correction_spinboxes[p]['groove_' + dim]
-                )
+        form.addRow('Bore Origin (%s):' % self.length_units.symbol, self.bore_origin_spinbox)
+        form.addRow('WIDesigner Length Type:', self.length_type_combobox)
 
         group = QGroupBox(self)
-        group.setTitle('Groove Corrections')
+        group.setTitle('WIDesigner')
         group.setLayout(form)
         layout.addWidget(group)
 
@@ -90,14 +92,11 @@ class DocPropertiesWindow(QWidget):
         self.close()
 
     def apply(self):
-        corrections = {}
-        for p in const.BORE_PARTS:
-            for dim in ('width', 'height'):
-                corrections[p + '_groove_' + dim] = self.dw.app.parse_length_input(
-                    str(self.correction_spinboxes[p]['groove_' + dim].value())
-                )
+        self.dw.model.wid_export.length_type = self.length_type_combobox.currentText()
 
-        self.dw.model.bore.corrections.set_many(corrections)
+        bore_origin = self.dw.app.parse_length_input(str(self.bore_origin_spinbox.value()), self.length_units.symbol)
+        if bore_origin is not None:
+            self.dw.model.wid_export.bore_origin = bore_origin
 
     def keyPressEvent(self, event: QKeyEvent):
         super().keyPressEvent(event)

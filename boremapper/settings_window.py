@@ -14,7 +14,7 @@ class SettingsWindow(QWidget):
 
         self.dw = document_window
 
-        self.units_combobox = None
+        self.length_units_combobox = None
         self.correction_spinboxes = {}
         self.checkbox_beep_hints = None
         self.checkbox_voice_hints = None
@@ -55,13 +55,13 @@ class SettingsWindow(QWidget):
 
         # Group
 
-        self.units_combobox = cb = QComboBox(self)
+        self.length_units_combobox = cb = QComboBox(self)
         for symbol in LengthUnits.symbols():
             cb.addItem(symbol)
         cb.setCurrentText(self.dw.app.current_length_units().symbol)
 
         form = QFormLayout()
-        form.addRow('Length Units:', self.units_combobox)
+        form.addRow('Length Units:', self.length_units_combobox)
 
         group = QGroupBox(self)
         group.setTitle('Basic')
@@ -128,7 +128,7 @@ class SettingsWindow(QWidget):
     def apply(self):
         settings = {
             'general': {
-                'length_units': self.units_combobox.currentText(),
+                'length_units': self.length_units_combobox.currentText(),
             },
             'default_corrections': {},
             'audio': {

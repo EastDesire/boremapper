@@ -41,12 +41,12 @@ class GrooveDetailWidget(PointDetailWidget):
         
         return [
             (
-                'Groove Width (W)',
+                'Width (W)',
                 self.dw.app.build_length_output(groove_w),
                 correction_text if is_groove_w_corrected else '',
             ),
             (
-                'Groove Height (H)',
+                'Height (H)',
                 self.dw.app.build_length_output(groove_h),
                 correction_text if is_groove_h_corrected else '',
             ),

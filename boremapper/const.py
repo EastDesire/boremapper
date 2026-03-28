@@ -23,14 +23,14 @@ BORE_PARTS = ('bottom', 'top')
 
 # (<label>, <editable>, <description>)
 BORE_TABLE_COLUMNS = [
-    ('b W', True, 'Bottom: Groove Width'),
-    ('b H', True, 'Bottom: Groove Height'),
-    ('b CW', True, 'Bottom: Cutter Width'),
-    ('b CH', True, 'Bottom: Cutter Height'),
-    ('t W', True, 'Top: Groove Width'),
-    ('t H', True, 'Top: Groove Height'),
-    ('t CW', True, 'Top: Cutter Width'),
-    ('t CH', True, 'Top: Cutter Height'),
+    ('W b', True, 'Width of the Groove (bottom)'),
+    ('H b', True, 'Height of the Groove (bottom)'),
+    ('CW b', True, 'Cutter Width (bottom)'),
+    ('CH b', True, 'Cutter Height (bottom)'),
+    ('W t', True, 'Width of the Groove (top)'),
+    ('H t', True, 'Height of the Groove (top)'),
+    ('CW t', True, 'Cutter Width (top)'),
+    ('CH t', True, 'Cutter Height (top)'),
     ('D', True, 'Diameter'),
 ]
 

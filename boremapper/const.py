@@ -17,6 +17,8 @@ MAX_INTERNAL_FLOAT = pow(2, 24)
 
 SPINBOX_MAX_RANGE_MM = 10000
 
+MAX_POSITIONS_TO_INSERT = 1000
+
 BORE_PARTS = ('bottom', 'top')
 
 # (<label>, <editable>, <description>)

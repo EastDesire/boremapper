@@ -103,6 +103,11 @@ class InsertPositionsRangeWindow(QWidget):
             self.form_value_step(),
             self.dw.app.current_length_units().display_decimals
         )
+        
+        if len(positions) > const.MAX_POSITIONS_TO_INSERT:
+            self.dw.app.show_error('This range and step would create too many positions')
+            return
+            
         self.dw.try_insert_positions_command(positions)
         self.close()
 

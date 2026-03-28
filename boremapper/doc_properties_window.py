@@ -93,8 +93,9 @@ class DocPropertiesWindow(QWidget):
         corrections = {}
         for p in const.BORE_PARTS:
             for dim in ('width', 'height'):
-                # TODO: convert from units to mm
-                corrections[p + '_groove_' + dim] = self.correction_spinboxes[p]['groove_' + dim].value()
+                corrections[p + '_groove_' + dim] = self.dw.app.parse_length_input(
+                    str(self.correction_spinboxes[p]['groove_' + dim].value())
+                )
 
         self.dw.model.bore.corrections.set_many(corrections)
 

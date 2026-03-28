@@ -139,8 +139,9 @@ class SettingsWindow(QWidget):
 
         for p in const.BORE_PARTS:
             for dim in ('width', 'height'):
-                # TODO: convert from units to mm
-                settings['default_corrections'][p + '_groove_' + dim] = self.correction_spinboxes[p]['groove_' + dim].value()
+                settings['default_corrections'][p + '_groove_' + dim] = self.dw.app.parse_length_input(
+                    str(self.correction_spinboxes[p]['groove_' + dim].value())
+                )
 
         self.dw.app.settings.write(settings)
 

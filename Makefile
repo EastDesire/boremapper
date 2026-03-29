@@ -15,7 +15,10 @@ test-unit:
 
 .PHONY: test-static
 test-static:
-	python3 -m pylint "${APP_DIR}/" --errors-only --init-hook='import sys; sys.path.insert(0, "./")' --extension-pkg-whitelist=PySide6
+	python3 -m pylint "${APP_DIR}/" \
+		--errors-only \
+		--init-hook='import sys; sys.path.insert(0, "./")' \
+		--extension-pkg-whitelist=PySide6
 	
 .PHONY: dist
 dist:

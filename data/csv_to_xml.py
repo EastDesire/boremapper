@@ -32,11 +32,6 @@ def main():
 
     e_bore = ET.SubElement(e_root, 'bore')
 
-    e_corrections = ET.SubElement(e_bore, 'corrections')
-    for p in PARTS:
-        e_corrections.set(p + '-groove-width', str(0))
-        e_corrections.set(p + '-groove-height', str(0))
-
     e_points = ET.SubElement(e_bore, 'points')
     for record in records:
         e_point = ET.SubElement(e_points, 'point')

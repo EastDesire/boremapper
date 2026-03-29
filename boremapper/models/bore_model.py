@@ -11,17 +11,7 @@ class BoreModel(Model):
         super().__init__(parent)
 
         self.app = app
-
         self.points = BorePointsModel(self, app)
-
-        self.corrections = BoreCorrectionsModel(self)
-        self.corrections.changed.connect(self.on_corrections_change)
-
-    # TODO test
-    def on_corrections_change(self):
-        for index, point in enumerate(self.points):
-            point.invalidate() # Cached calculations are dependent on corrections -> invalidate cache
-            self.points.point_changed.emit(index)
 
 
 class BorePointsModel(Model):
@@ -125,7 +115,7 @@ class BorePointModel(Model):
     """
     To make sure the derived parameters are always up-to-date when accessed from outside, the class automatically
     invalidates its cache upon changing its input parameters.
-    However, when the external parameters used in the calculations (e.g. corrections) are being changed, it is necessary
+    However, when the external parameters used in the calculations are changed, it is necessary
     to explicitly invalidate the cache to let the class calculate fresh values.
     """
 
@@ -206,15 +196,14 @@ class BorePointModel(Model):
         """
 
         warnings = []
-        corr = self.parent().parent().corrections
         
         d = self.__dict__['_data']
         c = self.__dict__['_cache'] = {}
 
         for p in const.BORE_PARTS:
             # Resolve groove width and height
-            c[p + '_resolved_groove_width'] = None if d[p + '_groove_width'] is None else d[p + '_groove_width'] + getattr(corr, p + '_groove_width')
-            c[p + '_resolved_groove_height'] = None if d[p + '_groove_height'] is None else d[p + '_groove_height'] + getattr(corr, p + '_groove_height')
+            c[p + '_resolved_groove_width'] = d[p + '_groove_width']
+            c[p + '_resolved_groove_height'] = d[p + '_groove_height']
 
             # Resolve part's cutter width and height to be used in calculations
             c[p + '_resolved_cutter_width'] = d[p + '_cutter_width'] if d[p + '_cutter_width'] is not None else c[p + '_resolved_groove_width']
@@ -273,40 +262,3 @@ class BorePointModel(Model):
             (warning['part'].capitalize() + ' part: ' if 'part' in warning else '') +
             warning['text']
         )
-
-
-class BoreCorrectionsModel(Model):
-
-    changed = Signal()
-
-    def __init__(self, parent: 'BoreModel'):
-        super().__init__(parent)
-
-        self.__dict__['_data'] = {}
-
-        for p in const.BORE_PARTS:
-            self.__dict__['_data'][p + '_groove_width'] = 0
-            self.__dict__['_data'][p + '_groove_height'] = 0
-
-    # TODO test
-    def __getattr__(self, name):
-        try:
-            return self.__dict__['_data'][name]
-        except KeyError:
-            raise AttributeError(name)
-
-    # TODO test
-    def __setattr__(self, name, value):
-        self.set_many({ name: value })
-
-    def set_many(self, values: dict):
-        if values:
-            for name, value in values.items():
-                try:
-                    self.__dict__['_data'][name] = value
-                except KeyError:
-                    raise AttributeError(name)
-            self.on_change()
-
-    def on_change(self):
-        self.changed.emit()

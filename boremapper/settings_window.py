@@ -15,14 +15,13 @@ class SettingsWindow(QWidget):
         self.dw = document_window
 
         self.length_units_combobox = None
-        self.correction_spinboxes = {}
         self.checkbox_beep_hints = None
         self.checkbox_voice_hints = None
 
         self.setWindowTitle('Settings')
         self.setWindowModality(Qt.WindowModality.ApplicationModal)
         self.setWindowFlags(Qt.WindowType.Dialog)
-        self.setFixedSize(400, 500)
+        self.setFixedSize(400, 350)
 
         self.layout = QVBoxLayout()
 
@@ -70,33 +69,6 @@ class SettingsWindow(QWidget):
 
         # Group
 
-        range_max = float(self.dw.app.build_length_output(const.SPINBOX_MAX_RANGE_MM))
-
-        for p in const.BORE_PARTS:
-            self.correction_spinboxes[p] = {}
-            for dim in ('width', 'height'):
-                val = self.dw.app.settings.load('default_corrections', p + '_groove_' + dim)
-                sb = self.correction_spinboxes[p]['groove_' + dim] = QDoubleSpinBox(self)
-                sb.setRange(-range_max, range_max)
-                sb.setSingleStep(self.dw.app.current_length_units().step / 10)
-                sb.setDecimals(self.dw.app.current_length_units().display_decimals)
-                sb.setValue(float(self.dw.app.build_length_output(val)))
-
-        form = QFormLayout()
-        for dim in ('width', 'height'):
-            for p in const.BORE_PARTS:
-                form.addRow(
-                    p.capitalize() + ' ' + dim.capitalize() + ':',
-                    self.correction_spinboxes[p]['groove_' + dim]
-                )
-
-        group = QGroupBox(self)
-        group.setTitle('Default Groove Corrections')
-        group.setLayout(form)
-        layout.addWidget(group)
-
-        # Group
-
         self.checkbox_beep_hints = QCheckBox('Beep', self)
         self.checkbox_beep_hints.setChecked(self.dw.app.settings.load('audio', 'beep_hints'))
         self.checkbox_voice_hints = QCheckBox('Voice Hints', self)
@@ -130,19 +102,11 @@ class SettingsWindow(QWidget):
             'general': {
                 'length_units': self.length_units_combobox.currentText(),
             },
-            'default_corrections': {},
             'audio': {
                 'beep_hints': self.checkbox_beep_hints.isChecked(),
                 'voice_hints': self.checkbox_voice_hints.isChecked(),
             },
         }
-
-        for p in const.BORE_PARTS:
-            for dim in ('width', 'height'):
-                settings['default_corrections'][p + '_groove_' + dim] = self.dw.app.parse_length_input(
-                    str(self.correction_spinboxes[p]['groove_' + dim].value())
-                )
-
         self.dw.app.settings.write(settings)
 
     def keyPressEvent(self, event: QKeyEvent):

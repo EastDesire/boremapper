@@ -34,7 +34,6 @@
       <point position="560" custom-diameter="" bottom-groove-width="12" bottom-groove-height="5.2" bottom-cutter-width="" bottom-cutter-height="" top-groove-width="12" top-groove-height="7.4" top-cutter-width="" top-cutter-height="" />
       <point position="570" custom-diameter="" bottom-groove-width="11.5" bottom-groove-height="5" bottom-cutter-width="" bottom-cutter-height="" top-groove-width="12" top-groove-height="8.1" top-cutter-width="" top-cutter-height="" />
     </points>
-    <corrections bottom-groove-width="0" bottom-groove-height="0" top-groove-width="0" top-groove-height="0" />
   </bore>
   <wid-export length-type="cm" bore-origin="1.27" />
 </boremapper-document>

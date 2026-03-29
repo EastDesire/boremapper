@@ -46,12 +46,6 @@ class App(QApplication):
             'document_window': {
                 'geometry': (QByteArray, None),
             },
-            'default_corrections': {
-                'bottom_groove_width': (float, 0),
-                'bottom_groove_height': (float, 0),
-                'top_groove_width': (float, 0),
-                'top_groove_height': (float, 0),
-            },
             'audio': {
                 'beep_hints': (bool, True),
                 'voice_hints': (bool, False),

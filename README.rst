@@ -47,6 +47,5 @@ Features
 --------
 
 - Voice hints for smoother measurement flow
-- Global corrections of measured data
 - Cross-sectional diagrams
 - `WIDesigner <https://github.com/edwardkort/WWIDesigner>`_ export

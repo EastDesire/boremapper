@@ -34,21 +34,18 @@ class GrooveDetailWidget(PointDetailWidget):
 
         groove_w = getattr(point, self.target.part + '_resolved_groove_width')
         groove_h = getattr(point, self.target.part + '_resolved_groove_height')
-        is_groove_w_corrected = getattr(self.model.corrections, self.target.part + '_groove_width') != 0
-        is_groove_h_corrected = getattr(self.model.corrections, self.target.part + '_groove_height') != 0
         area = getattr(point, self.target.part + '_area')
-        correction_text = '(correction applied)'
         
         return [
             (
                 'Width (W)',
                 self.dw.app.build_length_output(groove_w),
-                correction_text if is_groove_w_corrected else '',
+                '',
             ),
             (
                 'Height (H)',
                 self.dw.app.build_length_output(groove_h),
-                correction_text if is_groove_h_corrected else '',
+                '',
             ),
             (
                 'Area',

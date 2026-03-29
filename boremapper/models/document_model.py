@@ -48,11 +48,6 @@ class DocumentModel(Model):
                 e_point.set(p + '-cutter-width', xml_build_float(getattr(point, p + '_cutter_width')))
                 e_point.set(p + '-cutter-height', xml_build_float(getattr(point, p + '_cutter_height')))
                 
-        e_corrections = ET.SubElement(e_bore, 'corrections')
-        for p in const.BORE_PARTS:
-            e_corrections.set(p + '-groove-width', xml_build_float(getattr(self.bore.corrections, p + '_groove_width')))
-            e_corrections.set(p + '-groove-height', xml_build_float(getattr(self.bore.corrections, p + '_groove_height')))
-
         e_wid_export = ET.SubElement(e_root, 'wid-export')
         e_wid_export.set('length-type', self.wid_export.length_type)
         e_wid_export.set('bore-origin', xml_build_float(self.wid_export.bore_origin))
@@ -88,17 +83,7 @@ class DocumentModel(Model):
     @staticmethod
     def from_defaults(app: 'App') -> 'DocumentModel':
         doc = DocumentModel(app)
-
-        for p in const.BORE_PARTS:
-            for dim in ('width', 'height'):
-                setattr(
-                    doc.bore.corrections,
-                    p + '_groove_' + dim,
-                    app.settings.load('default_corrections', p + '_groove_' + dim)
-                )
-
         doc.wid_export.length_type = app.settings.load('general', 'length_units')
-
         return doc
 
     # TODO test
@@ -132,17 +117,6 @@ class DocumentModel(Model):
 
             doc.bore.points.add(point)
             
-        # Load corrections
-
-        e_corrections = xml_find_mandatory(e_bore, 'corrections')
-        for p in const.BORE_PARTS:
-            for dim in ('width', 'height'):
-                setattr(
-                    doc.bore.corrections,
-                    p + '_groove_' + dim,
-                    xml_parse_float(e_corrections.attrib[p + '-groove-' + dim])
-                )
-
         # Load WID export properties
 
         e_wid_export = xml_find_mandatory(e_root, 'wid-export')

@@ -52,7 +52,6 @@ class DocumentWindow(QMainWindow):
 
         self.actions = {}
         self.status_bar_units = None
-        self.status_bar_corrections = None
 
         self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose, True)
 
@@ -69,7 +68,6 @@ class DocumentWindow(QMainWindow):
         self.model.file_changed.connect(self.on_file_change)
         self.model.bore.points.point_changed.connect(self.on_point_data_change)
         self.model.bore.points.layout_changed.connect(self.on_points_layout_change)
-        self.model.bore.corrections.changed.connect(self.on_bore_corrections_change)
         self.model.wid_export.changed.connect(self.on_wid_export_change)
         
         self.table_model = BoreTableModel(self.model, self.app)
@@ -226,12 +224,9 @@ class DocumentWindow(QMainWindow):
         status_bar = QStatusBar()
 
         self.status_bar_units = QLabel(self)
-        self.status_bar_corrections = QLabel(self)
 
         status_bar.addPermanentWidget(StatusBarSeparator())
         status_bar.addPermanentWidget(self.status_bar_units)
-        status_bar.addPermanentWidget(StatusBarSeparator())
-        status_bar.addPermanentWidget(self.status_bar_corrections)
 
         self.setStatusBar(status_bar)
 
@@ -275,19 +270,8 @@ class DocumentWindow(QMainWindow):
         self.setWindowTitle(title)
 
     def update_status_bar(self):
-        c = self.model.bore.corrections
-
         self.status_bar_units.setText(
             'Units: %s' % self.app.current_length_units().symbol
-        )
-
-        self.status_bar_corrections.setText(
-            'Corrections: W %s,%s | H %s,%s' % (
-                self.app.build_length_output(c.bottom_groove_width),
-                self.app.build_length_output(c.top_groove_width),
-                self.app.build_length_output(c.bottom_groove_height),
-                self.app.build_length_output(c.top_groove_height),
-            )
         )
         
     def update_table(self):
@@ -380,10 +364,6 @@ class DocumentWindow(QMainWindow):
     def on_points_layout_change(self):
         # FIXME: When doing many layout changes at once, this is unnecessarily called multiple times too
         self.update_detail()
-
-    def on_bore_corrections_change(self):
-        self.on_nonstacked_change()
-        self.update_status_bar()
 
     def on_wid_export_change(self):
         self.on_nonstacked_change()

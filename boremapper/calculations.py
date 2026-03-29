@@ -84,7 +84,6 @@ def ellipse_horizontal_segment_area(a: float, b: float, h: float) -> float:
     return (d*c/4) * (math.acos(1 - 2*h/d) - (1 - 2*h/d) * math.sqrt(4*h/d - 4*pow(h,2) / pow(d,2)))
 
 
-# TODO: remember that a is a half of the cutter width
 def ellipse_horizontal_chord(a: float, b: float, h: float) -> float:
     """
     Calculates the horizontal chord of an ellipse at given distance from its edge.
@@ -135,8 +134,6 @@ def cutter_used_dimensions(groove_w: float, groove_h: float, cutter_w: float, cu
 def groove_crosssectional_area(groove_w: float, groove_h: float, cutter_w: float, cutter_h: float) -> float:
     """
     Calculates cross-sectional area of the groove in flute's half part.
-    Note: We prefer multiplication to division wherever possible (e.g. when comparing values) to minimize floating point issues.
-    TODO: ^-- is multiplication really better here?
 
     :param groove_w: Groove width
     :param groove_h: Groove height

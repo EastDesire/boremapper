@@ -15,24 +15,21 @@ class WidExportModel(Model):
             'bore_origin': 0,
         }
 
-    # TODO test
     def __getattr__(self, name):
         try:
             return self.__dict__['_data'][name]
         except KeyError:
             raise AttributeError(name)
 
-    # TODO test
     def __setattr__(self, name, value):
         self.set_many({ name: value })
 
     def set_many(self, values: dict):
         if values:
             for name, value in values.items():
-                try:
-                    self.__dict__['_data'][name] = value
-                except KeyError:
+                if name not in self.__dict__['_data']:
                     raise AttributeError(name)
+                self.__dict__['_data'][name] = value
             self.on_change()
 
     def on_change(self):

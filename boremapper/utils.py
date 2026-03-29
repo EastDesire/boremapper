@@ -9,6 +9,9 @@ from boremapper import exceptions
 from boremapper.length_units import LengthUnits
 
 
+def coalesce(*args):
+    return next((a for a in args if a is not None), None)
+
 def is_float_str(string: str) -> bool:
     try:
         float(string)
@@ -86,7 +89,7 @@ def format_position_for_speech(number: str, shorten_hundreds = True) -> str:
     out = re.sub(r'^-', 'minus ', out)
     return out
 
-def xml_build_float(val: float, decimals=const.FLOAT_SAFE_DECIMALS) -> str:
+def xml_build_float(val: float, decimals = const.FLOAT_SAFE_DECIMALS) -> str:
     if val is None:
         return ''
     return ('{0:.%df}' % decimals).format(val).rstrip('0').rstrip('.')

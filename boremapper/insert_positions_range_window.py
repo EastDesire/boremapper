@@ -3,7 +3,7 @@ from PySide6.QtGui import QKeyEvent
 from PySide6.QtWidgets import QDoubleSpinBox, QFormLayout, QHBoxLayout, QPushButton, QVBoxLayout, QWidget
 
 from boremapper import const
-from boremapper.utils import lengths_range
+from boremapper.utils import lengths_range, coalesce
 
 
 class InsertPositionsRangeWindow(QWidget):
@@ -21,12 +21,18 @@ class InsertPositionsRangeWindow(QWidget):
         self.layout = QVBoxLayout()
 
         range_max = float(self.dw.app.build_length_output(const.SPINBOX_MAX_RANGE_MM))
-
+        settings_group = 'insert_positions_range_feature'
+        settings = {
+            'start': self.dw.app.settings.load(settings_group, 'start'),
+            'end': self.dw.app.settings.load(settings_group, 'end'),
+            'step': self.dw.app.settings.load(settings_group, 'step'),
+        }
+        
         self.spinbox_start = sb = QDoubleSpinBox(self)
         sb.setRange(-range_max, range_max)
         sb.setSingleStep(self.dw.app.current_length_units().step * 10)
         sb.setDecimals(self.dw.app.current_length_units().display_decimals)
-        sb.setValue(float(self.dw.app.build_length_output(0))) # TODO: save in settings
+        sb.setValue(float(self.dw.app.build_length_output(coalesce(settings['start'], 0))))
         sb.valueChanged.connect(self.on_form_change)
         sb.returnPressed.connect(self.on_form_return)
 
@@ -34,7 +40,7 @@ class InsertPositionsRangeWindow(QWidget):
         sb.setRange(-range_max, range_max)
         sb.setSingleStep(self.dw.app.current_length_units().step * 10)
         sb.setDecimals(self.dw.app.current_length_units().display_decimals)
-        sb.setValue(float(self.dw.app.build_length_output(500))) # TODO: save in settings
+        sb.setValue(float(self.dw.app.build_length_output(coalesce(settings['end'], 0))))
         sb.valueChanged.connect(self.on_form_change)
         sb.returnPressed.connect(self.on_form_return)
 
@@ -42,7 +48,7 @@ class InsertPositionsRangeWindow(QWidget):
         sb.setRange(-range_max, range_max)
         sb.setSingleStep(self.dw.app.current_length_units().step)
         sb.setDecimals(self.dw.app.current_length_units().display_decimals)
-        sb.setValue(float(self.dw.app.build_length_output(20))) # TODO: save in settings
+        sb.setValue(float(self.dw.app.build_length_output(coalesce(settings['step'], 0))))
         sb.valueChanged.connect(self.on_form_change)
         sb.returnPressed.connect(self.on_form_return)
 
@@ -97,18 +103,26 @@ class InsertPositionsRangeWindow(QWidget):
         self.button_submit.click()
 
     def on_submit(self):
-        positions = lengths_range(
-            self.form_value_start(),
-            self.form_value_end(),
-            self.form_value_step(),
-            self.dw.app.current_length_units().display_decimals
-        )
+        start = self.form_value_start()
+        end = self.form_value_end()
+        step = self.form_value_step()
+        
+        positions = lengths_range(start, end, step, self.dw.app.current_length_units().display_decimals)
         
         if len(positions) > const.MAX_POSITIONS_TO_INSERT:
             self.dw.app.show_error('This range and step would create too many positions')
             return
             
         self.dw.try_insert_positions_command(positions)
+
+        self.dw.app.settings.write({
+            'insert_positions_range_feature': {
+                'start': self.dw.app.parse_length_input(str(start)),
+                'end': self.dw.app.parse_length_input(str(end)),
+                'step': self.dw.app.parse_length_input(str(step)),
+            },
+        })
+        
         self.close()
 
     def keyPressEvent(self, event: QKeyEvent):

@@ -50,6 +50,11 @@ class App(QApplication):
                 'beep_hints': (bool, True),
                 'voice_hints': (bool, False),
             },
+            'insert_positions_range_feature': {
+                'start': (float, 0),
+                'end': (float, 500),
+                'step': (float, 20),
+            }
         })
         self.settings.changed.connect(self.on_settings_change)
 
@@ -115,6 +120,7 @@ class App(QApplication):
         self.document_windows.remove(window)
         
     def on_settings_change(self):
+        # TODO: only do this when some related setting is changed
         self.update_all_windows()
 
     def new_document(self, show_init: bool = False):

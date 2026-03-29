@@ -30,6 +30,6 @@ class LengthUnits:
     
     @staticmethod
     def get(symbol: str) -> 'LengthUnits':
-        if not symbol in LengthUnits._instances:
+        if symbol not in LengthUnits._instances:
             LengthUnits._instances[symbol] = LengthUnits(symbol)
         return LengthUnits._instances[symbol]

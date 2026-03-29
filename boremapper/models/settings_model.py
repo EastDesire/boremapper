@@ -24,7 +24,7 @@ class SettingsModel(Model):
         Defines details about settings, like a default value and value type.
         """
         for group, defs in definitions.items():
-            if not group in self._defs:
+            if group not in self._defs:
                 self._defs[group] = {}
             for param, d in defs.items():
                 value_type, default_value = d

@@ -143,7 +143,7 @@ class BorePointModel(Model):
         return self._get_derived_param(name)
 
     def __setattr__(self, name, value):
-        if not name in self.__dict__['_data']:
+        if name not in self.__dict__['_data']:
             raise AttributeError(name)
 
         if self.__dict__['_data'][name] != value:

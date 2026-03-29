@@ -79,14 +79,12 @@ class DocumentModel(Model):
 
         return out_elements
 
-    # TODO test
     @staticmethod
     def from_defaults(app: 'App') -> 'DocumentModel':
         doc = DocumentModel(app)
         doc.wid_export.length_type = app.settings.load('general', 'length_units')
         return doc
 
-    # TODO test
     @staticmethod
     def from_xml(app: 'App', e_root: ET.Element) -> 'DocumentModel':
         doc = DocumentModel(app)
@@ -125,7 +123,6 @@ class DocumentModel(Model):
 
         return doc
 
-    # TODO: test
     @staticmethod
     def from_file(app: 'App', file: str) -> 'DocumentModel':
         with open(file, 'r') as f:

@@ -18,6 +18,7 @@ class WidExportWindow(QMainWindow):
         # As long as the window is open, we work with settings that was in place when the window has loaded
         self.length_units = self.dw.app.current_length_units()
         
+        self.copy_button_text = 'Copy to Clipboard'
         self.xml_snippet = None
 
         self.setWindowTitle('WIDesigner Export')
@@ -70,7 +71,7 @@ class WidExportWindow(QMainWindow):
 
         toolbar.addSeparator()
 
-        self.copy_button = b = QPushButton('Copy to Clipboard', self)
+        self.copy_button = b = QPushButton(self.copy_button_text, self)
         b.setMinimumWidth(150)
         toolbar.addWidget(b)
 
@@ -116,10 +117,10 @@ class WidExportWindow(QMainWindow):
         timer = QTimer(self)
         timer.setSingleShot(True)
         timer.timeout.connect(self.on_copy_timer)
-        timer.start(1500)
+        timer.start(2000)
 
     def on_copy_timer(self):
-        self.copy_button.setText('Copy to Clipboard') # TODO
+        self.copy_button.setText(self.copy_button_text)
         self.copy_button.setEnabled(True)
 
     def keyPressEvent(self, event: QKeyEvent):

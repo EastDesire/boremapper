@@ -72,8 +72,8 @@ class App(QApplication):
 
     def build_length_output(self, value_mm: float|None, units_symbol: str|None = None, extra_decimals: int = 0) -> str:
         """
-        Returns a string representing the value (in mm) converted to given units and rounded to
-        the number of decimal places associated with these units. TODO: OK?
+        Returns a string representing the value converted from mm to given units and rounded to the number of decimal
+        places associated with these units.
         """
         if value_mm is None:
             return ''
@@ -87,7 +87,7 @@ class App(QApplication):
         
     def parse_length_input(self, value: str, units_symbol: str|None = None, pre_round = True) -> float|None:
         """
-        Parses length input and returns the value converted from the specified units to mm. TODO: OK?
+        Parses length input and returns the value converted from the specified units to mm.
         """
         float_value = str_to_number(value, float, allow_empty=True)
         
@@ -96,8 +96,8 @@ class App(QApplication):
 
         units = length_units(units_symbol) if units_symbol else self.current_length_units()
 
-        # Even if the input number has more decimal places than what is displayed, we round it to the displayed number of decimals,
-        # so that the remaining decimals don't change the internal representation of the value
+        # Even if the input number has more decimal places than displayed, we round it to the displayed number of decimals,
+        # so that the internal value (in mm) is not affected by these decimals.
         if pre_round:
             float_value = round(float_value, units.display_decimals)
 
@@ -215,10 +215,6 @@ class App(QApplication):
     def error_invalid_file_data(self):
         self.show_error('Invalid file data')
 
-    # TODO: use?
-    def error_invalid_numeric_value(self):
-        self.show_error('Invalid numeric value')
-        
     def error_value_overflow(self):
         self.show_error('Value is out of available range')
 

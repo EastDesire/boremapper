@@ -9,9 +9,13 @@ init:
 clean:
 	rm -r dist
 
-.PHONY: test
-test:
+.PHONY: test-unit
+test-unit:
 	tests/unit_tests.py
+
+.PHONY: test-static
+test-static:
+	python3 -m pylint "${APP_DIR}/" --errors-only --init-hook='import sys; sys.path.insert(0, "./")' --extension-pkg-whitelist=PySide6
 	
 .PHONY: dist
 dist:

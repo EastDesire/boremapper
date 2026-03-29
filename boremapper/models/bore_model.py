@@ -61,7 +61,6 @@ class BorePointsModel(Model):
     def has(self, index: int) -> bool:
         return 0 <= index < len(self._points)
 
-    # TODO: test
     def add(self, mixed: 'BorePointModel|list') -> list:
         """
         :param mixed: Bore point or multiple bore points
@@ -82,7 +81,6 @@ class BorePointsModel(Model):
 
         return inserted_indexes
 
-    # TODO: test
     def delete(self, mixed: int|list):
         """
         :param mixed: Index or indexes to be deleted
@@ -189,7 +187,6 @@ class BorePointModel(Model):
 
         return False
 
-    # TODO test
     def _build_cache(self):
         """
         Calculates derived parameters and stores them in cache.

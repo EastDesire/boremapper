@@ -59,8 +59,8 @@ class ProfileDetailWidget(QWidget):
         self.layout.addWidget(self.content_scroll)
 
         self.diagram = ProfileDetailDiagram(self, self.dw.app)
-        # TODO: put somewhere better? Here as well as in other classes
         self.diagram.setMinimumHeight(self.MIN_HEIGHT)
+        
         self.content_layout.addWidget(self.diagram, stretch=100)
 
     def update_content(self):

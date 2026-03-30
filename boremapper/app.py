@@ -119,9 +119,14 @@ class App(QApplication):
     def on_document_window_destroyed(self, window: 'DocumentWindow'):
         self.document_windows.remove(window)
         
-    def on_settings_change(self):
-        # TODO: only do this when some related setting is changed
-        self.update_all_windows()
+    def on_settings_change(self, changes: list):
+        if (
+            any((
+                (c.group == 'general' and c.param == 'length_units') or
+                c.group == 'audio'
+            ) for c in changes)
+        ):
+            self.update_all_windows()
 
     def new_document(self, show_init: bool = False):
         model = DocumentModel.from_defaults(self)

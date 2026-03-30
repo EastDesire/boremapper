@@ -47,9 +47,9 @@ class DocumentWindow(QMainWindow):
 
         self.settings_window = None
         self.doc_properties_window = None
-        self.offset_positions_window = None
         self.insert_position_window = None
         self.insert_positions_range_window = None
+        self.offset_positions_window = None
         self.wid_export_window = None
 
         self.actions = {}
@@ -166,10 +166,6 @@ class DocumentWindow(QMainWindow):
         a.triggered.connect(self.on_action_delete_positions_trigger)
         menu.addAction(a)
 
-        a = self.actions['offset_positions'] = QAction('Offset Positions...', self)
-        a.triggered.connect(self.on_action_offset_positions_trigger)
-        menu.addAction(a)
-
         a = self.actions['insert_position'] = QAction('Insert Position...', self)
         a.setShortcut(QKeySequence(Qt.Modifier.CTRL | Qt.Key.Key_I))
         a.triggered.connect(self.on_action_insert_position_trigger)
@@ -178,6 +174,10 @@ class DocumentWindow(QMainWindow):
         a = self.actions['insert_positions_range'] = QAction('Insert Positions Range...', self)
         a.setShortcut(QKeySequence(Qt.Modifier.CTRL | Qt.Modifier.SHIFT | Qt.Key.Key_I))
         a.triggered.connect(self.on_action_insert_positions_range_trigger)
+        menu.addAction(a)
+
+        a = self.actions['offset_positions'] = QAction('Offset Positions...', self)
+        a.triggered.connect(self.on_action_offset_positions_trigger)
         menu.addAction(a)
 
         menu = QMenu('&Options', self)
@@ -446,14 +446,14 @@ class DocumentWindow(QMainWindow):
             return
         self.do_command(commands.DeletePositions(self, selected_rows))
 
-    def on_action_offset_positions_trigger(self):
-        self.show_offset_positions_window()
-
     def on_action_insert_position_trigger(self):
         self.show_insert_position_window()
 
     def on_action_insert_positions_range_trigger(self):
         self.show_insert_positions_range_window()
+
+    def on_action_offset_positions_trigger(self):
+        self.show_offset_positions_window()
 
     def on_action_beep_hints_trigger(self):
         self.app.settings.toggle('audio', 'beep_hints')
@@ -470,10 +470,6 @@ class DocumentWindow(QMainWindow):
         self.wid_export_window = WidExportWindow(self)
         self.wid_export_window.show()
 
-    def show_offset_positions_window(self):
-        self.offset_positions_window = OffsetPositionsWindow(self)
-        self.offset_positions_window.show()
-
     def show_insert_position_window(self):
         self.insert_position_window = InsertPositionWindow(self)
         self.insert_position_window.show()
@@ -481,7 +477,11 @@ class DocumentWindow(QMainWindow):
     def show_insert_positions_range_window(self):
         self.insert_positions_range_window = InsertPositionsRangeWindow(self)
         self.insert_positions_range_window.show()
-    
+
+    def show_offset_positions_window(self):
+        self.offset_positions_window = OffsetPositionsWindow(self)
+        self.offset_positions_window.show()
+
     def try_insert_positions_command(self, position_inputs: list):
         insert_positions = []
         

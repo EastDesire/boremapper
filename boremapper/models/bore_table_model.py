@@ -194,6 +194,10 @@ class BoreTableModel(QAbstractTableModel):
         leftmost_index = self.index(index, 0)
         rightmost_index = self.index(index, self.columnCount() - 1)
         self.dataChanged.emit(leftmost_index, rightmost_index)
+        
+        # Note: Because dataChanged signal alone doesn't seem to update vertical header,
+        # we also emit this to accommodate for situations when position is being changed too.
+        self.layoutChanged.emit()
 
     def on_points_layout_change(self):
         self.layoutChanged.emit()

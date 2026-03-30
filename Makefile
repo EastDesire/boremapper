@@ -7,7 +7,7 @@ init:
 
 .PHONY: clean
 clean:
-	rm -r dist
+	rm -rf dist/
 
 .PHONY: test-unit
 test-unit:

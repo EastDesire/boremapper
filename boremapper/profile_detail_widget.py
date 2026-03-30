@@ -2,6 +2,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QVBoxLayout, QWidget, QLabel, QHBoxLayout, QScrollArea, QSizePolicy
 
 from boremapper.bunch import Bunch
+from boremapper.const import DETAIL_WIDGET_SPACING
 from boremapper.enums import DiagramAlign
 from boremapper.profile_detail_diagram import ProfileDetailDiagram
 
@@ -11,7 +12,6 @@ class ProfileDetailWidget(QWidget):
     MIN_WIDTH = 350
     MAX_WIDTH = 650
     MIN_HEIGHT = 500
-    SPACING = 8 # TODO: somewhere global?
     
     def __init__(self, document_window: 'DocumentWindow', model: 'BoreModel'):
         super().__init__(document_window)
@@ -30,8 +30,8 @@ class ProfileDetailWidget(QWidget):
         self.setMaximumWidth(self.MAX_WIDTH)
 
         self.layout = QVBoxLayout()
-        self.layout.setContentsMargins(0, self.SPACING, 0, 0)
-        self.layout.setSpacing(self.SPACING)
+        self.layout.setContentsMargins(0, DETAIL_WIDGET_SPACING, 0, 0)
+        self.layout.setSpacing(DETAIL_WIDGET_SPACING)
         self.setLayout(self.layout)
 
         self.target_label = QLabel(self)
@@ -45,8 +45,8 @@ class ProfileDetailWidget(QWidget):
         self.layout.addLayout(self.title_layout, stretch=0)
 
         self.content_layout = QVBoxLayout()
-        self.content_layout.setContentsMargins(self.SPACING, self.SPACING, self.SPACING, self.SPACING)
-        self.content_layout.setSpacing(self.SPACING)
+        self.content_layout.setContentsMargins(DETAIL_WIDGET_SPACING, DETAIL_WIDGET_SPACING, DETAIL_WIDGET_SPACING, DETAIL_WIDGET_SPACING)
+        self.content_layout.setSpacing(DETAIL_WIDGET_SPACING)
         self.content_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
 
         self.content_widget = QWidget()

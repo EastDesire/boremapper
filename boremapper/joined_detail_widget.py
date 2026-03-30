@@ -8,7 +8,7 @@ class JoinedDetailWidget(PointDetailWidget):
         super().__init__(document_window, model)
 
         self.diagram = JoinedDetailDiagram(self, document_window.app)
-        self.diagram.setMinimumHeight(PointDetailWidget.MIN_SIZE)
+        self.diagram.setMinimumHeight(PointDetailWidget.MIN_HEIGHT)
 
         self.content_layout.addWidget(self.property_table, stretch=0)
         self.content_layout.addWidget(self.message_list, stretch=0)

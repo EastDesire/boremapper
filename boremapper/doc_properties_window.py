@@ -51,7 +51,7 @@ class DocPropertiesWindow(QWidget):
         widget = QWidget(self)
         
         layout = QVBoxLayout()
-        layout.setSpacing(const.GROUPS_SPACING)
+        layout.setSpacing(const.LAYOUT_GROUPS_SPACING)
 
         # Group
 

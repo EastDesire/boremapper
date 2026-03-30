@@ -95,3 +95,22 @@ class DeletePositions(QUndoCommand):
         inserted_indexes = self.dw.model.bore.points.add(self.undo_data)
         self.dw.table_view.select_rows_by_indexes(inserted_indexes)
         self.undone = True
+
+
+class OffsetPositions(QUndoCommand):
+
+    def __init__(self, document_window, data):
+        super().__init__()
+        self.dw = document_window
+        self.redo_data = data
+        self.undo_data = None
+        self.setText('Offset Positions')
+
+    def redo(self):
+        self.undo_data = [p.position for p in self.dw.model.bore.points]
+        for p in self.dw.model.bore.points:
+            p.position += self.redo_data
+
+    def undo(self):
+        for index, position in enumerate(self.undo_data):
+            self.dw.model.bore.points[index].position = position

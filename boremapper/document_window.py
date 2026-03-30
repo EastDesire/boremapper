@@ -18,6 +18,7 @@ from boremapper.joined_detail_widget import JoinedDetailWidget
 from boremapper.models.bore_model import BorePointModel
 from boremapper.models.bore_table_model import BoreTableModel
 from boremapper.models.document_model import DocumentModel
+from boremapper.offset_positions_window import OffsetPositionsWindow
 from boremapper.profile_detail_widget import ProfileDetailWidget
 from boremapper.settings_window import SettingsWindow
 from boremapper.utils import format_position_for_speech, center_window
@@ -46,6 +47,7 @@ class DocumentWindow(QMainWindow):
 
         self.settings_window = None
         self.doc_properties_window = None
+        self.offset_positions_window = None
         self.insert_position_window = None
         self.insert_positions_range_window = None
         self.wid_export_window = None
@@ -162,6 +164,10 @@ class DocumentWindow(QMainWindow):
 
         a = self.actions['delete_positions'] = QAction('-', self)
         a.triggered.connect(self.on_action_delete_positions_trigger)
+        menu.addAction(a)
+
+        a = self.actions['offset_positions'] = QAction('Offset Positions...', self)
+        a.triggered.connect(self.on_action_offset_positions_trigger)
         menu.addAction(a)
 
         a = self.actions['insert_position'] = QAction('Insert Position...', self)
@@ -440,6 +446,9 @@ class DocumentWindow(QMainWindow):
             return
         self.do_command(commands.DeletePositions(self, selected_rows))
 
+    def on_action_offset_positions_trigger(self):
+        self.show_offset_positions_window()
+
     def on_action_insert_position_trigger(self):
         self.show_insert_position_window()
 
@@ -460,6 +469,10 @@ class DocumentWindow(QMainWindow):
                 return
         self.wid_export_window = WidExportWindow(self)
         self.wid_export_window.show()
+
+    def show_offset_positions_window(self):
+        self.offset_positions_window = OffsetPositionsWindow(self)
+        self.offset_positions_window.show()
 
     def show_insert_position_window(self):
         self.insert_position_window = InsertPositionWindow(self)

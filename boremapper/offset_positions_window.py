@@ -2,7 +2,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtGui import QKeyEvent
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QFormLayout, QDoubleSpinBox, QPushButton
 
-from boremapper import const
+from boremapper import const, commands
 
 
 class OffsetPositionsWindow(QWidget):
@@ -30,7 +30,7 @@ class OffsetPositionsWindow(QWidget):
         sb.returnPressed.connect(self.on_form_return)
 
         form = QFormLayout()
-        form.addRow('Offset Positions by:', self.spinbox_offset)
+        form.addRow('Offset All Positions by:', self.spinbox_offset)
         self.layout.addLayout(form)
 
         buttons = QHBoxLayout()
@@ -70,7 +70,8 @@ class OffsetPositionsWindow(QWidget):
         self.button_submit.click()
 
     def on_submit(self):
-        # TODO
+        offset = self.dw.app.parse_length_input(str(self.form_value_offset()))
+        self.dw.do_command(commands.OffsetPositions(self.dw, offset))
         self.close()
 
     def keyPressEvent(self, event: QKeyEvent):

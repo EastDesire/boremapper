@@ -39,7 +39,7 @@ Tools Needed
 Current Limitations
 -------------------
 
-- Export to WIDesigner is done by *copy & paste* of the generated XML chunk
+- Export to WIDesigner is done by *copy & paste* of a generated XML chunk
 - Bore is assumed to be split horizontally (halves are named *bottom* and *top*, and displayed in this orientation)
 
 

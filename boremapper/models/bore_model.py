@@ -42,7 +42,6 @@ class BorePointsModel(Model):
         self.point_changed.emit(index)
 
     def __delitem__(self, index: int):
-        # TODO: also need destroy()?
         del self._points[index]
         self.layout_changed.emit()
 
@@ -91,7 +90,6 @@ class BorePointsModel(Model):
 
         # We need to go from the last index to the first one, so that we don't shift the index of subsequent items
         for index in sorted(indexes, reverse=True):
-            # TODO: also need destroy()?
             del self._points[index]
 
         self.layout_changed.emit()

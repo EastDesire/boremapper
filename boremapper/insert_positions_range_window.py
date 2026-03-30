@@ -16,7 +16,7 @@ class InsertPositionsRangeWindow(QWidget):
         self.setWindowTitle('Insert Positions Range')
         self.setWindowModality(Qt.WindowModality.WindowModal)
         self.setWindowFlags(Qt.WindowType.Dialog)
-        self.setFixedSize(220, 180)
+        self.setFixedSize(300, 180)
 
         self.layout = QVBoxLayout()
 

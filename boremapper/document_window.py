@@ -9,6 +9,7 @@ from PySide6.QtWidgets import QFileDialog, QFrame, QHBoxLayout, QLabel, QMainWin
 
 from boremapper import commands, const
 from boremapper.bore_table_view import BoreTableView
+from boremapper.bunch import Bunch
 from boremapper.cutter_detail_widget import CutterDetailWidget
 from boremapper.doc_properties_window import DocPropertiesWindow
 from boremapper.groove_detail_widget import GrooveDetailWidget
@@ -54,7 +55,7 @@ class DocumentWindow(QMainWindow):
         self.offset_positions_window = None
         self.wid_export_window = None
 
-        self.actions = {}
+        self.actions = Bunch()
         self.status_bar_units = None
 
         self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose, True)
@@ -87,114 +88,114 @@ class DocumentWindow(QMainWindow):
         menu = QMenu('&File', self)
         menu_bar.addMenu(menu)
 
-        a = self.actions['file_new'] = QAction('New', self)
+        a = self.actions.file_new = QAction('New', self)
         a.setShortcut(QKeySequence.StandardKey.New)
         a.triggered.connect(self.on_action_file_new_trigger)
         menu.addAction(a)
 
-        a = self.actions['file_open'] = QAction('Open...', self)
+        a = self.actions.file_open = QAction('Open...', self)
         a.setShortcut(QKeySequence.StandardKey.Open)
         a.triggered.connect(self.on_action_file_open_trigger)
         menu.addAction(a)
 
-        a = self.actions['file_save'] = QAction('Save', self)
+        a = self.actions.file_save = QAction('Save', self)
         a.setShortcut(QKeySequence.StandardKey.Save)
         a.triggered.connect(self.on_action_file_save_trigger)
         menu.addAction(a)
 
-        a = self.actions['file_save_as'] = QAction('Save as...', self)
+        a = self.actions.file_save_as = QAction('Save as...', self)
         a.setShortcut(QKeySequence.StandardKey.SaveAs)
         a.triggered.connect(self.on_action_file_save_as_trigger)
         menu.addAction(a)
 
-        a = self.actions['file_close'] = QAction('Close', self)
+        a = self.actions.file_close = QAction('Close', self)
         a.setShortcut(QKeySequence.StandardKey.Close)
         a.triggered.connect(self.on_action_file_close_trigger)
         menu.addAction(a)
 
         menu.addSeparator()
 
-        a = self.actions['doc_properties'] = QAction('Document Properties...', self)
+        a = self.actions.doc_properties = QAction('Document Properties...', self)
         a.triggered.connect(self.on_action_doc_properties_trigger)
         menu.addAction(a)
 
         menu.addSeparator()
 
-        a = self.actions['settings'] = QAction('Settings...', self)
+        a = self.actions.settings = QAction('Settings...', self)
         a.triggered.connect(self.on_action_settings_trigger)
         menu.addAction(a)
 
         menu = QMenu('&Edit', self)
         menu_bar.addMenu(menu)
 
-        a = self.actions['undo'] = self.undo_stack.createUndoAction(self, prefix='Undo')
+        a = self.actions.undo = self.undo_stack.createUndoAction(self, prefix='Undo')
         a.setShortcut(QKeySequence.StandardKey.Undo)
         menu.addAction(a)
 
-        a = self.actions['redo'] = self.undo_stack.createRedoAction(self, prefix='Redo')
+        a = self.actions.redo = self.undo_stack.createRedoAction(self, prefix='Redo')
         a.setShortcut(QKeySequence.StandardKey.Redo)
         menu.addAction(a)
 
         menu.addSeparator()
 
-        a = self.actions['cut'] = QAction('Cut', self)
+        a = self.actions.cut = QAction('Cut', self)
         a.setShortcut(QKeySequence.StandardKey.Cut)
         a.triggered.connect(self.on_action_cut_trigger)
         menu.addAction(a)
 
-        a = self.actions['copy'] = QAction('Copy', self)
+        a = self.actions.copy = QAction('Copy', self)
         a.setShortcut(QKeySequence.StandardKey.Copy)
         a.triggered.connect(self.on_action_copy_trigger)
         menu.addAction(a)
 
-        a = self.actions['paste'] = QAction('Paste', self)
+        a = self.actions.paste = QAction('Paste', self)
         a.setShortcut(QKeySequence.StandardKey.Paste)
         a.triggered.connect(self.on_action_paste_trigger)
         menu.addAction(a)
 
-        a = self.actions['delete_values'] = QAction('Delete Values', self)
+        a = self.actions.delete_values = QAction('Delete Values', self)
         a.setShortcut(QKeySequence.StandardKey.Delete)
         a.triggered.connect(self.on_action_delete_trigger)
         menu.addAction(a)
 
-        a = self.actions['offset_values'] = QAction('Offset Values...', self)
+        a = self.actions.offset_values = QAction('Offset Values...', self)
         a.triggered.connect(self.on_action_offset_values_trigger)
         menu.addAction(a)
 
-        a = self.actions['select_all'] = QAction('Select All', self)
+        a = self.actions.select_all = QAction('Select All', self)
         a.setShortcut(QKeySequence.StandardKey.SelectAll)
         a.triggered.connect(self.on_action_select_all_trigger)
         menu.addAction(a)
 
         menu.addSeparator()
 
-        a = self.actions['delete_positions'] = QAction('-', self)
+        a = self.actions.delete_positions = QAction('-', self)
         a.triggered.connect(self.on_action_delete_positions_trigger)
         menu.addAction(a)
 
-        a = self.actions['insert_position'] = QAction('Insert Position...', self)
+        a = self.actions.insert_position = QAction('Insert Position...', self)
         a.setShortcut(QKeySequence(Qt.Modifier.CTRL | Qt.Key.Key_I))
         a.triggered.connect(self.on_action_insert_position_trigger)
         menu.addAction(a)
 
-        a = self.actions['insert_positions_range'] = QAction('Insert Positions Range...', self)
+        a = self.actions.insert_positions_range = QAction('Insert Positions Range...', self)
         a.setShortcut(QKeySequence(Qt.Modifier.CTRL | Qt.Modifier.SHIFT | Qt.Key.Key_I))
         a.triggered.connect(self.on_action_insert_positions_range_trigger)
         menu.addAction(a)
 
-        a = self.actions['offset_positions'] = QAction('Offset Positions...', self)
+        a = self.actions.offset_positions = QAction('Offset Positions...', self)
         a.triggered.connect(self.on_action_offset_positions_trigger)
         menu.addAction(a)
 
         menu = QMenu('&Options', self)
         menu_bar.addMenu(menu)
 
-        a = self.actions['beep_hints'] = QAction('Beep', self)
+        a = self.actions.beep_hints = QAction('Beep', self)
         a.setCheckable(True)
         a.triggered.connect(self.on_action_beep_hints_trigger)
         menu.addAction(a)
 
-        a = self.actions['voice_hints'] = QAction('Voice Hints', self)
+        a = self.actions.voice_hints = QAction('Voice Hints', self)
         a.setCheckable(True)
         a.triggered.connect(self.on_action_voice_hints_trigger)
         menu.addAction(a)
@@ -202,7 +203,7 @@ class DocumentWindow(QMainWindow):
         menu = QMenu('E&xport', self)
         menu_bar.addMenu(menu)
 
-        a = self.actions['wid_export'] = QAction('WIDesigner...', self)
+        a = self.actions.wid_export = QAction('WIDesigner...', self)
         a.triggered.connect(self.on_action_wid_export_trigger)
         menu.addAction(a)
 
@@ -262,19 +263,19 @@ class DocumentWindow(QMainWindow):
         selected_anything = len(self.table_view.selectedIndexes()) > 0
         selected_one_range = len(self.table_view.selected_ranges()) == 1
 
-        self.actions['file_save'].setDisabled(self.is_saved())
+        self.actions.file_save.setDisabled(self.is_saved())
 
-        self.actions['cut'].setEnabled(selected_one_range)
-        self.actions['copy'].setEnabled(selected_one_range)
-        self.actions['paste'].setEnabled(selected_one_range)
-        self.actions['delete_values'].setEnabled(selected_anything)
-        self.actions['offset_values'].setEnabled(selected_anything)
+        self.actions.cut.setEnabled(selected_one_range)
+        self.actions.copy.setEnabled(selected_one_range)
+        self.actions.paste.setEnabled(selected_one_range)
+        self.actions.delete_values.setEnabled(selected_anything)
+        self.actions.offset_values.setEnabled(selected_anything)
 
-        self.actions['delete_positions'].setText('Delete Rows (%d)' % selected_rows)
-        self.actions['delete_positions'].setVisible(selected_rows != 0)
+        self.actions.delete_positions.setText('Delete Rows (%d)' % selected_rows)
+        self.actions.delete_positions.setVisible(selected_rows != 0)
 
-        self.actions['beep_hints'].setChecked(self.app.settings.load('audio', 'beep_hints'))
-        self.actions['voice_hints'].setChecked(self.app.settings.load('audio', 'voice_hints'))
+        self.actions.beep_hints.setChecked(self.app.settings.load('audio', 'beep_hints'))
+        self.actions.voice_hints.setChecked(self.app.settings.load('audio', 'voice_hints'))
 
     def update_title(self):
         title = self.document_name()

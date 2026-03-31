@@ -268,6 +268,7 @@ class DocumentWindow(QMainWindow):
         self.update_detail()
 
     def update_menu(self):
+        has_points = len(self.model.bore.points) != 0
         selected_rows = len(self.table_view.fully_selected_rows())
         selected_anything = len(self.table_view.selectedIndexes()) > 0
         selected_one_range = len(self.table_view.selected_ranges()) == 1
@@ -282,6 +283,7 @@ class DocumentWindow(QMainWindow):
 
         self.actions.delete_positions.setText('Delete Rows (%d)' % selected_rows)
         self.actions.delete_positions.setVisible(selected_rows != 0)
+        self.actions.offset_positions.setEnabled(has_points)
 
         self.actions.beep_hints.setChecked(self.app.settings.load('audio', 'beep_hints'))
         self.actions.voice_hints.setChecked(self.app.settings.load('audio', 'voice_hints'))
@@ -386,6 +388,7 @@ class DocumentWindow(QMainWindow):
 
     def on_points_layout_change(self):
         # FIXME: When doing many layout changes at once, this is unnecessarily called multiple times too
+        self.update_menu()
         self.update_detail()
 
     def on_wid_export_change(self):

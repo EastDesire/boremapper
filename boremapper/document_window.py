@@ -46,15 +46,8 @@ class DocumentWindow(QMainWindow):
         self.detail_widgets = {}
         
         self.undo_stack = None
-
-        self.settings_window = None
-        self.doc_properties_window = None
-        self.insert_position_window = None
-        self.insert_positions_range_window = None
-        self.offset_values_window = None
-        self.offset_positions_window = None
-        self.wid_export_window = None
-
+        
+        self.windows = Bunch()
         self.actions = Bunch()
         self.status_bar_units = None
 
@@ -411,12 +404,12 @@ class DocumentWindow(QMainWindow):
         self.close()
 
     def on_action_doc_properties_trigger(self):
-        self.doc_properties_window = DocPropertiesWindow(self)
-        self.doc_properties_window.show()
+        self.windows.doc_properties = DocPropertiesWindow(self)
+        self.windows.doc_properties.show()
 
     def on_action_settings_trigger(self):
-        self.settings_window = SettingsWindow(self)
-        self.settings_window.show()
+        self.windows.settings = SettingsWindow(self)
+        self.windows.settings.show()
 
     def on_document_save_dialog_file_selected(self, file: str):
         if file:
@@ -478,24 +471,24 @@ class DocumentWindow(QMainWindow):
             reply = self.app.msg_incomplete_data_for_export(incomplete_positions)
             if not reply:
                 return
-        self.wid_export_window = WidExportWindow(self)
-        self.wid_export_window.show()
+        self.windows.wid_export = WidExportWindow(self)
+        self.windows.wid_export.show()
 
     def show_insert_position_window(self):
-        self.insert_position_window = InsertPositionWindow(self)
-        self.insert_position_window.show()
+        self.windows.insert_position = InsertPositionWindow(self)
+        self.windows.insert_position.show()
 
     def show_insert_positions_range_window(self):
-        self.insert_positions_range_window = InsertPositionsRangeWindow(self)
-        self.insert_positions_range_window.show()
+        self.windows.insert_positions_range = InsertPositionsRangeWindow(self)
+        self.windows.insert_positions_range.show()
 
     def show_offset_values_window(self):
-        self.offset_values_window = OffsetValuesWindow(self)
-        self.offset_values_window.show()
+        self.windows.offset_values = OffsetValuesWindow(self)
+        self.windows.offset_values.show()
         
     def show_offset_positions_window(self):
-        self.offset_positions_window = OffsetPositionsWindow(self)
-        self.offset_positions_window.show()
+        self.windows.offset_positions = OffsetPositionsWindow(self)
+        self.windows.offset_positions.show()
 
     def offset_selected_values(self, offset: float):
         self.table_view.offset_values_at_indexes(self.table_view.selectedIndexes(), offset)

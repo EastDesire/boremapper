@@ -9,8 +9,6 @@ from boremapper.profile_detail_diagram import ProfileDetailDiagram
 
 class ProfileDetailWidget(QWidget):
     
-    MIN_WIDTH = 350
-    MAX_WIDTH = 650
     MIN_HEIGHT = 500
     
     def __init__(self, document_window: 'DocumentWindow', model: 'BoreModel'):
@@ -25,9 +23,6 @@ class ProfileDetailWidget(QWidget):
             part = None,
             property = None,
         )
-
-        self.setMinimumWidth(self.MIN_WIDTH)
-        self.setMaximumWidth(self.MAX_WIDTH)
 
         self.layout = QVBoxLayout()
         self.layout.setContentsMargins(0, DETAIL_WIDGET_SPACING, 0, 0)

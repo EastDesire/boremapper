@@ -28,7 +28,7 @@ from boremapper.wid_export_window import WidExportWindow
 
 
 class DocumentWindow(QMainWindow):
-
+    
     def __init__(self, app: 'App', model: 'DocumentModel'):
         super().__init__()
 
@@ -42,7 +42,7 @@ class DocumentWindow(QMainWindow):
         self.layout = None
         self.content_widget = None
         self.table_view = None
-        self.detail_panel = None
+        self.detail_widget = None
         self.detail_widgets = {}
         
         self.undo_stack = None
@@ -210,8 +210,15 @@ class DocumentWindow(QMainWindow):
 
         self.table_view = BoreTableView(self, self.table_model)
         self.table_view.selection_changed.connect(self.on_table_selection_change)
+
+        detail_layout = QVBoxLayout()
+        detail_layout.setContentsMargins(0, 0, 0, 0)
+
+        self.detail_widget = QWidget(self)
+        self.detail_widget.setMinimumWidth(const.DETAIL_PANEL_MIN_WIDTH)
+        self.detail_widget.setMaximumWidth(const.DETAIL_PANEL_MAX_WIDTH)
+        self.detail_widget.setLayout(detail_layout)
         
-        self.detail_panel = QVBoxLayout()
         self.detail_widgets = {
             'groove': GrooveDetailWidget(self, self.model.bore),
             'cutter': CutterDetailWidget(self, self.model.bore),
@@ -219,10 +226,10 @@ class DocumentWindow(QMainWindow):
             'profile': ProfileDetailWidget(self, self.model.bore),
         }
         for widget in self.detail_widgets.values():
-            self.detail_panel.addWidget(widget)
+            detail_layout.addWidget(widget)
 
         self.layout.addWidget(self.table_view, stretch=60)
-        self.layout.addLayout(self.detail_panel, stretch=40)
+        self.layout.addWidget(self.detail_widget, stretch=40)
 
         self.setCentralWidget(self.content_widget)
 

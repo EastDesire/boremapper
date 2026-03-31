@@ -10,8 +10,6 @@ from boremapper.point_property_table import PointPropertyTable
 
 class PointDetailWidget(QWidget):
     
-    MIN_WIDTH = 350
-    MAX_WIDTH = 650
     MIN_HEIGHT = 350
     
     def __init__(self, document_window: 'DocumentWindow', model: 'BoreModel'):
@@ -25,9 +23,6 @@ class PointDetailWidget(QWidget):
             feature = None,
             part = None,
         )
-
-        self.setMinimumWidth(self.MIN_WIDTH)
-        self.setMaximumWidth(self.MAX_WIDTH)
 
         self.layout = QVBoxLayout()
         self.layout.setContentsMargins(0, DETAIL_WIDGET_SPACING, 0, 0)

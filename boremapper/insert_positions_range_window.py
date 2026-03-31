@@ -19,6 +19,7 @@ class InsertPositionsRangeWindow(QWidget):
         self.setFixedSize(300, 180)
 
         self.layout = QVBoxLayout()
+        self.setLayout(self.layout)
 
         range_max = float(self.dw.app.build_length_output(const.SPINBOX_MAX_RANGE_MM))
         settings_group = 'insert_positions_range_feature'
@@ -59,6 +60,7 @@ class InsertPositionsRangeWindow(QWidget):
         self.layout.addLayout(form)
 
         buttons = QHBoxLayout()
+        self.layout.addLayout(buttons)
 
         self.button_close = QPushButton('Close', self)
         self.button_close.clicked.connect(self.on_close_click)
@@ -68,10 +70,6 @@ class InsertPositionsRangeWindow(QWidget):
         self.button_submit.setDefault(True)
         self.button_submit.clicked.connect(self.on_submit)
         buttons.addWidget(self.button_submit)
-
-        self.layout.addLayout(buttons)
-
-        self.setLayout(self.layout)
 
         self.update_buttons()
 

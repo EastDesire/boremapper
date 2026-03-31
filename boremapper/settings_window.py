@@ -24,6 +24,7 @@ class SettingsWindow(QWidget):
         self.setFixedSize(400, 350)
 
         self.layout = QVBoxLayout()
+        self.setLayout(self.layout)
 
         self.general_tab = self.create_general_tab()
 
@@ -32,6 +33,7 @@ class SettingsWindow(QWidget):
         self.layout.addWidget(self.tabs)
 
         buttons = QHBoxLayout()
+        self.layout.addLayout(buttons)
 
         self.button_cancel = QPushButton('Cancel', self)
         self.button_cancel.clicked.connect(self.on_cancel_click)
@@ -42,15 +44,12 @@ class SettingsWindow(QWidget):
         self.button_ok.clicked.connect(self.on_ok_click)
         buttons.addWidget(self.button_ok)
 
-        self.layout.addLayout(buttons)
-
-        self.setLayout(self.layout)
-
     def create_general_tab(self):
         widget = QWidget(self)
         
         layout = QVBoxLayout()
         layout.setSpacing(const.LAYOUT_GROUPS_SPACING)
+        widget.setLayout(layout)
 
         # Group
 
@@ -82,8 +81,6 @@ class SettingsWindow(QWidget):
         group.setTitle('Audio')
         group.setLayout(form)
         layout.addWidget(group)
-
-        widget.setLayout(layout)
 
         return widget
 

@@ -25,6 +25,7 @@ class DocPropertiesWindow(QWidget):
         self.setFixedSize(400, 300)
 
         self.layout = QVBoxLayout()
+        self.setLayout(self.layout)
 
         self.export_tab = self.create_export_tab()
 
@@ -33,6 +34,7 @@ class DocPropertiesWindow(QWidget):
         self.layout.addWidget(self.tabs)
 
         buttons = QHBoxLayout()
+        self.layout.addLayout(buttons)
 
         self.button_cancel = QPushButton('Cancel', self)
         self.button_cancel.clicked.connect(self.on_cancel_click)
@@ -43,15 +45,12 @@ class DocPropertiesWindow(QWidget):
         self.button_ok.clicked.connect(self.on_ok_click)
         buttons.addWidget(self.button_ok)
 
-        self.layout.addLayout(buttons)
-
-        self.setLayout(self.layout)
-
     def create_export_tab(self):
         widget = QWidget(self)
         
         layout = QVBoxLayout()
         layout.setSpacing(const.LAYOUT_GROUPS_SPACING)
+        widget.setLayout(layout)
 
         # Group
 
@@ -76,8 +75,6 @@ class DocPropertiesWindow(QWidget):
         group.setTitle('WIDesigner')
         group.setLayout(form)
         layout.addWidget(group)
-
-        widget.setLayout(layout)
 
         return widget
 

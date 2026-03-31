@@ -60,7 +60,7 @@ class App(QApplication):
 
     def init_sounds(self):
         self.sounds = {
-            'entry_beep': QSoundEffect(source=QUrl.fromLocalFile(const.APP_DIR + '/resources/beep3.wav')),
+            'entry_beep': QSoundEffect(source=QUrl.fromLocalFile(const.RESOURCES_DIR + '/beep3.wav')),
         }
 
     def init_speech(self):

@@ -12,7 +12,7 @@ class SettingsModel(Model):
     def __init__(self, parent: QObject, definitions: dict = None):
         super().__init__(parent)
 
-        self._qsettings = QSettings(const.ORGANIZATION_HANDLE, const.APP_HANDLE)
+        self._qsettings = QSettings(const.APP_ORG_HANDLE, const.APP_HANDLE)
         self._defs = {}
         self._cache = {}
 

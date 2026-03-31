@@ -8,6 +8,7 @@ from PySide6.QtWidgets import QFileDialog, QFrame, QHBoxLayout, QLabel, QMainWin
     QStatusBar, QVBoxLayout, QWidget
 
 from boremapper import commands, const
+from boremapper.about_window import AboutWindow
 from boremapper.bore_table_view import BoreTableView
 from boremapper.bunch import Bunch
 from boremapper.cutter_detail_widget import CutterDetailWidget
@@ -77,6 +78,7 @@ class DocumentWindow(QMainWindow):
 
     def init_menu(self):
         menu_bar = QMenuBar(self)
+        self.setMenuBar(menu_bar)
 
         menu = QMenu('&File', self)
         menu_bar.addMenu(menu)
@@ -201,6 +203,13 @@ class DocumentWindow(QMainWindow):
         menu.addAction(a)
 
         self.setMenuBar(menu_bar)
+
+        menu = QMenu('&Help', self)
+        menu_bar.addMenu(menu)
+
+        a = self.actions.about = QAction('About...', self)
+        a.triggered.connect(self.on_action_about_trigger)
+        menu.addAction(a)
 
     def init_content(self):
         self.layout = QHBoxLayout()
@@ -480,6 +489,10 @@ class DocumentWindow(QMainWindow):
                 return
         self.windows.wid_export = WidExportWindow(self)
         self.windows.wid_export.show()
+
+    def on_action_about_trigger(self):
+        self.windows.about = AboutWindow(self)
+        self.windows.about.show()
 
     def show_insert_position_window(self):
         self.windows.insert_position = InsertPositionWindow(self)

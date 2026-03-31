@@ -3,9 +3,12 @@ import os
 
 APP_NAME = 'BoreMapper'
 APP_HANDLE = 'BoreMapper'
+APP_ORG_HANDLE = 'EastDesire'
 APP_VERSION = '0.1.0'
-
-ORGANIZATION_HANDLE = 'JanOdvarko'
+APP_AUTHOR = 'Jan Odvárko'
+APP_AUTHOR_EMAIL = 'jan@odvarko.cz'
+APP_DESCRIPTION = 'A tool for mapping the bore profile of woodwind instruments with a split bore.'
+APP_REPO_URL = 'https://github.com/EastDesire/boremapper'
 
 DOCUMENT_XML_VERSION = '0.1'
 
@@ -47,3 +50,4 @@ DETAIL_WIDGET_SPACING = 8
 LAYOUT_GROUPS_SPACING = 30
 
 APP_DIR = os.path.dirname(os.path.realpath(__file__))
+RESOURCES_DIR = APP_DIR + '/resources'

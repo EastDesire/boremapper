@@ -9,7 +9,7 @@ from PySide6.QtWidgets import QStyleOptionViewItem, QTableView, QItemDelegate, Q
 from boremapper import validators, const, commands
 from boremapper.enums import DataVariant
 from boremapper.models.bore_table_model import BoreTableModel
-from boremapper.utils import str_to_number, has_same_values_in_columns
+from boremapper.utils import has_same_values_in_columns
 
 
 class BoreTableView(QTableView):
@@ -158,7 +158,7 @@ class BoreTableView(QTableView):
 
         lines = [line.split('\t') for line in text.split('\n')]
 
-        # When pasting less rows than selected, and each of the pasted columns contains the same values,
+        # When pasting less rows than selected, if each of the pasted columns contains the same values,
         # stretch the values vertically across the entire selection.
         stretch_mode = \
             0 < len(lines) < sel_range.height() and \
@@ -204,6 +204,26 @@ class BoreTableView(QTableView):
             return None
 
         return data
+
+    def offset_values_at_indexes(self, indexes: list, offset: float):
+        data = []
+
+        try:
+            for index in indexes:
+                if index.flags() & Qt.ItemFlag.ItemIsEditable:
+                    value = self.model().value_for_cell(index.row(), index.column(), DataVariant.DISPLAYED)
+                    if value is not None:
+                        new_value = self.dw.app.parse_length_input(
+                            self.dw.app.build_length_output(value + offset)
+                        )
+                        if abs(new_value) > const.MAX_INTERNAL_FLOAT:
+                            raise OverflowError()
+                        data.append({'row': index.row(), 'column': index.column(), 'value': new_value})
+            if data:
+                self.dw.do_command(commands.EditCells(self.dw, data))
+
+        except OverflowError:
+            self.dw.app.error_value_overflow()
 
 
 class BoreTableHorizontalHeader(QHeaderView):

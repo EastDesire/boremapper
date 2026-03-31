@@ -19,6 +19,7 @@ from boremapper.models.bore_model import BorePointModel
 from boremapper.models.bore_table_model import BoreTableModel
 from boremapper.models.document_model import DocumentModel
 from boremapper.offset_positions_window import OffsetPositionsWindow
+from boremapper.offset_values_window import OffsetValuesWindow
 from boremapper.profile_detail_widget import ProfileDetailWidget
 from boremapper.settings_window import SettingsWindow
 from boremapper.utils import format_position_for_speech, center_window
@@ -49,6 +50,7 @@ class DocumentWindow(QMainWindow):
         self.doc_properties_window = None
         self.insert_position_window = None
         self.insert_positions_range_window = None
+        self.offset_values_window = None
         self.offset_positions_window = None
         self.wid_export_window = None
 
@@ -150,9 +152,13 @@ class DocumentWindow(QMainWindow):
         a.triggered.connect(self.on_action_paste_trigger)
         menu.addAction(a)
 
-        a = self.actions['delete'] = QAction('Delete', self)
+        a = self.actions['delete_values'] = QAction('Delete Values', self)
         a.setShortcut(QKeySequence.StandardKey.Delete)
         a.triggered.connect(self.on_action_delete_trigger)
+        menu.addAction(a)
+
+        a = self.actions['offset_values'] = QAction('Offset Values...', self)
+        a.triggered.connect(self.on_action_offset_values_trigger)
         menu.addAction(a)
 
         a = self.actions['select_all'] = QAction('Select All', self)
@@ -261,7 +267,8 @@ class DocumentWindow(QMainWindow):
         self.actions['cut'].setEnabled(selected_one_range)
         self.actions['copy'].setEnabled(selected_one_range)
         self.actions['paste'].setEnabled(selected_one_range)
-        self.actions['delete'].setEnabled(selected_anything)
+        self.actions['delete_values'].setEnabled(selected_anything)
+        self.actions['offset_values'].setEnabled(selected_anything)
 
         self.actions['delete_positions'].setText('Delete Rows (%d)' % selected_rows)
         self.actions['delete_positions'].setVisible(selected_rows != 0)
@@ -437,6 +444,9 @@ class DocumentWindow(QMainWindow):
         for sel_range in self.table_view.selected_ranges():
             self.table_view.delete_sel_range(sel_range)
 
+    def on_action_offset_values_trigger(self):
+        self.show_offset_values_window()
+
     def on_action_select_all_trigger(self):
         self.table_view.selectAll()
 
@@ -478,9 +488,16 @@ class DocumentWindow(QMainWindow):
         self.insert_positions_range_window = InsertPositionsRangeWindow(self)
         self.insert_positions_range_window.show()
 
+    def show_offset_values_window(self):
+        self.offset_values_window = OffsetValuesWindow(self)
+        self.offset_values_window.show()
+        
     def show_offset_positions_window(self):
         self.offset_positions_window = OffsetPositionsWindow(self)
         self.offset_positions_window.show()
+
+    def offset_selected_values(self, offset: float):
+        self.table_view.offset_values_at_indexes(self.table_view.selectedIndexes(), offset)
 
     def try_insert_positions_command(self, position_inputs: list):
         insert_positions = []

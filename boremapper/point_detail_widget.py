@@ -5,7 +5,7 @@ from boremapper.bunch import Bunch
 from boremapper.const import DETAIL_WIDGET_SPACING
 from boremapper.models.bore_model import BorePointModel
 from boremapper.point_message_list import PointMessageList
-from boremapper.point_property_table import PointPropertyTable
+from boremapper.property_table import PropertyTable
 
 
 class PointDetailWidget(QWidget):
@@ -56,7 +56,7 @@ class PointDetailWidget(QWidget):
         self.content_scroll.setWidgetResizable(True)
         self.layout.addWidget(self.content_scroll)
 
-        self.property_table = PointPropertyTable()
+        self.property_table = PropertyTable()
         self.property_table.setMinimumHeight(100)
         self.property_table.setMaximumHeight(150)
         

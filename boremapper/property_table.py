@@ -2,14 +2,14 @@ from PySide6.QtCore import Qt
 from PySide6.QtGui import QFont
 from PySide6.QtWidgets import QAbstractItemView, QHeaderView, QTableWidget, QTableWidgetItem, QWidget
 
-# <text>, <italic>
 COLUMNS = (
+    # <text>, <italic>
     ('Property', False),
     ('Value', False),
     ('Note', True),
 )
 
-class PointPropertyTable(QTableWidget):
+class PropertyTable(QTableWidget):
 
     def __init__(self, parent: QWidget|None = None):
         super().__init__(parent)

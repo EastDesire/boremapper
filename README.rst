@@ -36,24 +36,23 @@ Tools Needed
 **Recommendation:** To best utilize the app, it is recommended to use calipers with a **data output** feature. By enabling *Voice Hints* option in the app, it keeps reading the current position as you measure. This makes the process much smoother, as you don't need to keep checking the screen.
 
 
-Exporting Results to WIDesigner
+Exporting to WIDesigner
 -----
 
 - In the menu, click *Export* -> *WIDesigner...*
-- Ensure *WIDesigner Length Type* is set to units that you use in WIDesigner
+- Ensure *WIDesigner Length Type* is set to the units you use in WIDesigner
 - If needed, you can offset all bore points using *Bore Origin* field. Otherwise leave it at 0.
-- Copy the generated *XML data* to clipboard
-- In WIDesigner, with your instrument's tab open, click the *Vu* button in the toolbar
-- Carefully select all blocks ``<borePoint>...</borePoint>`` and replace them with the copied data. Whitespace and indentation do not matter.
+- In WIDesigner, in your instrument's tab, add a sufficient number of rows to the *Bore Points* table
+- In BoreMapper, copy the *Positions* column to clipboard and paste it into *Bore Points* table. Then do the same with *Diameters*.
 
-**Note:** It is a good idea to save your WIDesigner instrument before editing it via *Vu* button, so that you can reopen it if you accidentally misformat the data while editing.
+**Note:** Alternatively, instead of employing the *Bore Points* table, you can just paste the generated `<borePoint>` blocks over the existing ones in your instrument's XML editor (the Vu button in WIDesigner toolbar). Use this method only if you know what you are doing.
 
 
 Current Limitations
 -----
 
-- Export to WIDesigner is done by *copy & paste* of a generated XML chunk
 - Bore is assumed to be split horizontally (halves are named *bottom* and *top*, and displayed in this orientation)
+- Only round cutter shape is supported (circular or elliptical). This however covers most of the traditionally used router bits as well as semi-elliptical grooves made with chisel.
 
 
 Features

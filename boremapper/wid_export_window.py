@@ -106,13 +106,13 @@ class WidExportWindow(QMainWindow):
                 
 class TableTab(QWidget):
 
-    def __init__(self, parent: QWidget|None = None):
+    def __init__(self, parent: WidExportWindow):
         super().__init__(parent)
 
 
 class XmlTab(QWidget):
 
-    def __init__(self, parent: QWidget|None = None):
+    def __init__(self, parent: WidExportWindow):
         super().__init__(parent)
 
         self._xml_snippet = None

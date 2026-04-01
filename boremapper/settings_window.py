@@ -4,6 +4,7 @@ from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QFormLayout, QD
     QGroupBox, QCheckBox, QComboBox
 
 from boremapper import const
+from boremapper.bunch import Bunch
 from boremapper.length_units import LengthUnits
 
 
@@ -14,23 +15,23 @@ class SettingsWindow(QWidget):
 
         self.dw = document_window
 
-        self.length_units_combobox = None
-        self.checkbox_beep_hints = None
-        self.checkbox_voice_hints = None
-
         self.setWindowTitle('Settings')
         self.setWindowModality(Qt.WindowModality.ApplicationModal)
         self.setWindowFlags(Qt.WindowType.Dialog)
-        self.setFixedSize(400, 350)
+        self.setFixedSize(400, 250)
 
+        self.tabs = Bunch(
+            general = GeneralTab(self),
+            audio = AudioTab(self),
+        )
+        
         self.layout = QVBoxLayout()
         self.setLayout(self.layout)
 
-        self.general_tab = self.create_general_tab()
-
-        self.tabs = QTabWidget(self)
-        self.tabs.addTab(self.general_tab, 'General')
-        self.layout.addWidget(self.tabs)
+        self.tab_widget = QTabWidget(self)
+        self.tab_widget.addTab(self.tabs.general, 'General')
+        self.tab_widget.addTab(self.tabs.audio, 'Audio')
+        self.layout.addWidget(self.tab_widget)
 
         buttons = QHBoxLayout()
         self.layout.addLayout(buttons)
@@ -43,46 +44,6 @@ class SettingsWindow(QWidget):
         self.button_ok.setDefault(True)
         self.button_ok.clicked.connect(self.on_ok_click)
         buttons.addWidget(self.button_ok)
-
-    def create_general_tab(self):
-        widget = QWidget(self)
-        
-        layout = QVBoxLayout()
-        layout.setSpacing(const.LAYOUT_GROUPS_SPACING)
-        widget.setLayout(layout)
-
-        # Group
-
-        self.length_units_combobox = cb = QComboBox(self)
-        for symbol in LengthUnits.symbols():
-            cb.addItem(symbol)
-        cb.setCurrentText(self.dw.app.current_length_units().symbol)
-
-        form = QFormLayout()
-        form.addRow('Length Units:', self.length_units_combobox)
-
-        group = QGroupBox(self)
-        group.setTitle('Basic')
-        group.setLayout(form)
-        layout.addWidget(group)
-
-        # Group
-
-        self.checkbox_beep_hints = QCheckBox('Beep', self)
-        self.checkbox_beep_hints.setChecked(self.dw.app.settings.load('audio', 'beep_hints'))
-        self.checkbox_voice_hints = QCheckBox('Voice Hints', self)
-        self.checkbox_voice_hints.setChecked(self.dw.app.settings.load('audio', 'voice_hints'))
-
-        form = QFormLayout()
-        form.addRow(self.checkbox_beep_hints)
-        form.addRow(self.checkbox_voice_hints)
-
-        group = QGroupBox(self)
-        group.setTitle('Audio')
-        group.setLayout(form)
-        layout.addWidget(group)
-
-        return widget
 
     def on_cancel_click(self):
         self.close()
@@ -97,11 +58,11 @@ class SettingsWindow(QWidget):
     def apply(self):
         settings = {
             'general': {
-                'length_units': self.length_units_combobox.currentText(),
+                'length_units': self.tabs.general.length_units_combobox.currentText(),
             },
             'audio': {
-                'beep_hints': self.checkbox_beep_hints.isChecked(),
-                'voice_hints': self.checkbox_voice_hints.isChecked(),
+                'beep_hints': self.tabs.audio.beep_hints_checkbox.isChecked(),
+                'voice_hints': self.tabs.audio.voice_hints_checkbox.isChecked(),
             },
         }
         self.dw.app.settings.write(settings)
@@ -111,3 +72,59 @@ class SettingsWindow(QWidget):
         match event.key():
             case Qt.Key.Key_Escape:
                 self.close()
+
+
+class GeneralTab(QWidget):
+
+    def __init__(self, parent: SettingsWindow):
+        super().__init__(parent)
+
+        self.length_units_combobox = None
+
+        layout = QVBoxLayout()
+        layout.setSpacing(const.LAYOUT_GROUPS_SPACING)
+        self.setLayout(layout)
+
+        # Group
+
+        self.length_units_combobox = cb = QComboBox(self)
+        for symbol in LengthUnits.symbols():
+            cb.addItem(symbol)
+        cb.setCurrentText(self.parent().dw.app.current_length_units().symbol)
+
+        form = QFormLayout()
+        form.addRow('Length Units:', self.length_units_combobox)
+
+        group = QGroupBox(self)
+        group.setTitle('Units')
+        group.setLayout(form)
+        layout.addWidget(group)
+
+
+class AudioTab(QWidget):
+
+    def __init__(self, parent: SettingsWindow):
+        super().__init__(parent)
+
+        self.beep_hints_checkbox = None
+        self.voice_hints_checkbox = None
+
+        layout = QVBoxLayout()
+        layout.setSpacing(const.LAYOUT_GROUPS_SPACING)
+        self.setLayout(layout)
+
+        # Group
+
+        self.beep_hints_checkbox = QCheckBox('Beeps', self)
+        self.beep_hints_checkbox.setChecked(self.parent().dw.app.settings.load('audio', 'beep_hints'))
+        self.voice_hints_checkbox = QCheckBox('Voice Hints', self)
+        self.voice_hints_checkbox.setChecked(self.parent().dw.app.settings.load('audio', 'voice_hints'))
+
+        form = QFormLayout()
+        form.addRow(self.beep_hints_checkbox)
+        form.addRow(self.voice_hints_checkbox)
+
+        group = QGroupBox(self)
+        group.setTitle('Hints')
+        group.setLayout(form)
+        layout.addWidget(group)

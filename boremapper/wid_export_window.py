@@ -247,7 +247,7 @@ class WIDesignerBorePointsTable(QTableWidget):
         
         self._column_width = None
         
-        self.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
+        self.setSelectionMode(QAbstractItemView.SelectionMode.ContiguousSelection)
 
         header = QHeaderView(Qt.Orientation.Horizontal)
         header.setSectionResizeMode(QHeaderView.ResizeMode.Fixed)
@@ -264,10 +264,8 @@ class WIDesignerBorePointsTable(QTableWidget):
         for r, row in enumerate(data):
             for c, col_text in enumerate(self.COLUMNS):
                 item = QTableWidgetItem(str(row[c]))
-                item.setFlags(
-                    Qt.ItemFlag.ItemIsEnabled |
-                    Qt.ItemFlag.ItemIsSelectable
-                )
+                item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+                item.setFlags(Qt.ItemFlag.ItemIsEnabled | Qt.ItemFlag.ItemIsSelectable)
                 self.setItem(r, c, item)
 
     def set_column_width(self, value: int):

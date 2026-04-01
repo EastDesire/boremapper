@@ -21,7 +21,7 @@ class AboutWindow(QWidget):
         self.layout = QVBoxLayout()
         self.setLayout(self.layout)
 
-        pixmap = QPixmap(const.RESOURCES_DIR + '/app-icon.png')
+        pixmap = QPixmap(const.RESOURCES_DIR + '/app_icon.png')
         app_icon = PixmapLabel(pixmap, self)
         app_icon.setMaximumHeight(self.width())
         self.layout.addWidget(app_icon, stretch=100)

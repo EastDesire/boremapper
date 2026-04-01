@@ -36,7 +36,7 @@ class App(QApplication):
         self.init_speech()
 
         #self.new_document()
-        self.open_document(const.APP_DIR + '/sample-flute.xml')
+        self.open_document(const.APP_DIR + '/sample_flute.xml')
 
     def init_settings(self):
         self.settings = SettingsModel(self, {

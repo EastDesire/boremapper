@@ -213,6 +213,7 @@ class DocumentWindow(QMainWindow):
 
     def init_content(self):
         self.layout = QHBoxLayout()
+        self.layout.setContentsMargins(0, 0, 0, 0)
 
         self.content_widget = QWidget(self)
         self.content_widget.setLayout(self.layout)
@@ -642,7 +643,7 @@ class DocumentWindow(QMainWindow):
 
 class StatusBarSeparator(QFrame):
 
-    def __init__(self, parent: QWidget = None):
+    def __init__(self, parent: QWidget|None = None):
         super().__init__(parent)
         self.setFrameShape(QFrame.Shape.VLine)
         self.setFrameShadow(QFrame.Shadow.Sunken)

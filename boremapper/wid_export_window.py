@@ -203,7 +203,7 @@ class XmlTab(QWidget):
         toolbar_layout.addWidget(btn)
 
         font = QFont()
-        font.setFamilies(['Courier New', 'Courier', 'Monospace'])
+        font.setFamilies(const.FONTS_MONOSPACE)
         font.setPointSize(14)
 
         self.xml_textbox = QPlainTextEdit(self)

@@ -49,5 +49,8 @@ DETAIL_PANEL_MAX_WIDTH = 650
 DETAIL_WIDGET_SPACING = 8
 LAYOUT_GROUPS_SPACING = 30
 
+FONTS_SANS_SERIF = ['Arial', 'Helvetica', 'sans-serif']
+FONTS_MONOSPACE = ['Courier New', 'Courier', 'Monospace']
+
 APP_DIR = os.path.dirname(os.path.realpath(__file__))
 RESOURCES_DIR = APP_DIR + '/resources'

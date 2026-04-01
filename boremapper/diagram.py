@@ -8,6 +8,7 @@ from PySide6.QtGui import QBrush, QFont, QPaintEvent, QPainter, QPainterPath, QP
     QTextOption
 from PySide6.QtWidgets import QWidget
 
+from boremapper import const
 from boremapper.calculations import angle_from_coordinates, coordinates_from_angle, distance_between_points
 
 
@@ -18,7 +19,6 @@ class ShortDimensionLineStyle(IntEnum):
 
 class Diagram(QWidget):
 
-    font_families = ['Arial', 'Helvetica', 'sans-serif']
     muted_alpha = 0.55
     extra_muted_alpha = 0.2
 
@@ -187,7 +187,7 @@ class Diagram(QWidget):
         text: str,
     ):
         font = QFont()
-        font.setFamilies(self.font_families)
+        font.setFamilies(const.FONTS_SANS_SERIF)
         font.setPointSize(self.dim_font_size)
         self.painter.setFont(font)
 

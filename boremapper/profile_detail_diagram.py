@@ -4,6 +4,7 @@ from PySide6.QtCore import Qt, QRectF
 from PySide6.QtGui import QTransform, QPainterPath, QBrush, QPalette, QFont, QTextOption, QPen
 from PySide6.QtWidgets import QWidget
 
+from boremapper import const
 from boremapper.bunch import Bunch
 from boremapper.diagram import Diagram
 from boremapper.enums import DiagramAlign
@@ -86,7 +87,7 @@ class ProfileDetailDiagram(Diagram):
         # Position marks
 
         font = QFont()
-        font.setFamilies(self.font_families)
+        font.setFamilies(const.FONTS_SANS_SERIF)
         font.setPointSize(self.pos_label_font_size)
         self.painter.setFont(font)
 

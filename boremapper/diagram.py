@@ -76,7 +76,9 @@ class Diagram(QWidget):
             self.painter.end()
 
     def draw(self):
-        # To be implemented in a child class
+        """
+        To be implemented in a child class
+        """
         pass
 
     def background_color(self, alpha: float = 1.0):

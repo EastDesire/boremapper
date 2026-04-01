@@ -83,7 +83,9 @@ class PointDetailWidget(QWidget):
         return None if self.target.point_index is None else self.model.points[self.target.point_index]
 
     def target_name(self) -> str:
-        # To be implemented in a child class
+        """
+        To be implemented in a child class
+        """
         return ''
 
     def _position_text(self) -> str:
@@ -91,7 +93,9 @@ class PointDetailWidget(QWidget):
         return '' if point is None else 'Bore at: %s' % self.dw.app.build_length_output(point.position)
 
     def properties(self) -> list:
-        # To be implemented in a child class
+        """
+        To be implemented in a child class
+        """
         return []
 
     def messages(self) -> list:

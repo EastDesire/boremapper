@@ -7,6 +7,7 @@ from PySide6.QtWidgets import QLabel, QMainWindow, QPlainTextEdit, QToolBar, QCo
 
 from boremapper import const
 from boremapper.bunch import Bunch
+from boremapper.clipboard_copy_button import ClipboardCopyButton
 from boremapper.length_units import LengthUnits
 from boremapper.utils import length_units, format_length
 
@@ -108,8 +109,9 @@ class WidExportWindow(QMainWindow):
                 
 class TableTab(QWidget):
 
-    COLUMN_WIDTH = 200
+    COLUMN_WIDTH = 220
     DISPLAY_EXTRA_DECIMALS = 10
+    TOOLBAR_SPACING = 10
 
     def __init__(self, parent: WidExportWindow):
         super().__init__(parent)
@@ -122,11 +124,17 @@ class TableTab(QWidget):
 
         toolbar_layout = QHBoxLayout()
         toolbar_layout.setContentsMargins(0, 0, 0, 0)
+        toolbar_layout.setSpacing(self.TOOLBAR_SPACING)
         toolbar_layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
         toolbar.setLayout(toolbar_layout)
         
-        # TODO
-        self.copy_positions_button = btn = QPushButton('Copy Positions to Clipboard', self)
+        self.copy_positions_button = btn = ClipboardCopyButton('Copy Positions to Clipboard', self)
+        btn.data_for_clipboard = self.positions_data_for_clipboard
+        btn.setFixedWidth(self.COLUMN_WIDTH)
+        toolbar_layout.addWidget(btn)
+
+        self.copy_diameters_button = btn = ClipboardCopyButton('Copy Diameters to Clipboard', self)
+        btn.data_for_clipboard = self.diameters_data_for_clipboard
         btn.setFixedWidth(self.COLUMN_WIDTH)
         toolbar_layout.addWidget(btn)
         
@@ -152,6 +160,19 @@ class TableTab(QWidget):
             ))
             
         self.table.set_data(data)
+        
+    def text_data_for_column(self, column: int) -> str:
+        out = ''
+        for row in range(0, self.table.rowCount()):
+            item = self.table.item(row, column)
+            out += item.text() + '\n'
+        return out
+
+    def positions_data_for_clipboard(self) -> str:
+        return self.text_data_for_column(0)
+        
+    def diameters_data_for_clipboard(self) -> str:
+        return self.text_data_for_column(1)
 
 
 class XmlTab(QWidget):
@@ -169,13 +190,12 @@ class XmlTab(QWidget):
         
         toolbar_layout = QHBoxLayout()
         toolbar_layout.setContentsMargins(0, 0, 0, 0)
-        toolbar_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        toolbar_layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
         toolbar.setLayout(toolbar_layout)
 
-        self.copy_button_text = 'Copy to Clipboard'
-        self.copy_button = btn = QPushButton(self.copy_button_text, self)
-        self.copy_button.clicked.connect(self.on_copy_click)
-        btn.setMinimumWidth(150)
+        self.copy_button = btn = ClipboardCopyButton('Copy to Clipboard', self)
+        btn.data_for_clipboard = self.data_for_clipboard
+        btn.setFixedWidth(220)
         toolbar_layout.addWidget(btn)
 
         font = QFont()
@@ -210,22 +230,10 @@ class XmlTab(QWidget):
     def xml_snippet(self, value: str):
         self._xml_snippet = value
         self.xml_textbox.setPlainText(self._xml_snippet)
-        
-    def on_copy_click(self):
-        clipboard = QGuiApplication.clipboard()
-        clipboard.setText(self._xml_snippet)
-        self.copy_button.setText('Copied')
-        self.copy_button.setEnabled(False)
-        
-        timer = QTimer(self)
-        timer.setSingleShot(True)
-        timer.timeout.connect(self.on_copy_timer)
-        timer.start(1500)
 
-    def on_copy_timer(self):
-        self.copy_button.setText(self.copy_button_text)
-        self.copy_button.setEnabled(True)
-        
+    def data_for_clipboard(self):
+        return self._xml_snippet
+
 
 class WIDesignerBorePointsTable(QTableWidget):
 

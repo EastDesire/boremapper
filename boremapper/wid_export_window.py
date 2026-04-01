@@ -194,7 +194,7 @@ class XmlTab(QWidget):
         
         toolbar_layout = QHBoxLayout()
         toolbar_layout.setContentsMargins(0, 0, 0, 0)
-        toolbar_layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        toolbar_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
         toolbar.setLayout(toolbar_layout)
 
         self.copy_button = btn = ClipboardCopyButton('Copy to Clipboard', self)

@@ -27,7 +27,7 @@ class WidExportWindow(QMainWindow):
         self.setWindowTitle('WIDesigner Export')
         self.setWindowModality(Qt.WindowModality.NonModal)
         self.setWindowFlags(Qt.WindowType.Window)
-        self.resize(800, 600)
+        self.resize(700, 600)
 
         self.tabs = Bunch(
             table = TableTab(self),
@@ -109,9 +109,9 @@ class WidExportWindow(QMainWindow):
                 
 class TableTab(QWidget):
 
-    COLUMN_WIDTH = 220
-    DISPLAY_EXTRA_DECIMALS = 10
     TOOLBAR_SPACING = 10
+    COLUMN_WIDTH = 250
+    DISPLAY_EXTRA_DECIMALS = 10
 
     def __init__(self, parent: WidExportWindow):
         super().__init__(parent)
@@ -122,20 +122,24 @@ class TableTab(QWidget):
         toolbar = QWidget(self)
         layout.addWidget(toolbar, stretch=0)
 
+        toolbar_x_margin = round(self.TOOLBAR_SPACING / 2)
+        copy_button_width = self.COLUMN_WIDTH - self.TOOLBAR_SPACING
+        
         toolbar_layout = QHBoxLayout()
         toolbar_layout.setContentsMargins(0, 0, 0, 0)
         toolbar_layout.setSpacing(self.TOOLBAR_SPACING)
         toolbar_layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        toolbar_layout.setContentsMargins(toolbar_x_margin, 0, toolbar_x_margin, 0)
         toolbar.setLayout(toolbar_layout)
         
         self.copy_positions_button = btn = ClipboardCopyButton('Copy Positions to Clipboard', self)
         btn.data_for_clipboard = self.positions_data_for_clipboard
-        btn.setFixedWidth(self.COLUMN_WIDTH)
+        btn.setFixedWidth(copy_button_width)
         toolbar_layout.addWidget(btn)
 
         self.copy_diameters_button = btn = ClipboardCopyButton('Copy Diameters to Clipboard', self)
         btn.data_for_clipboard = self.diameters_data_for_clipboard
-        btn.setFixedWidth(self.COLUMN_WIDTH)
+        btn.setFixedWidth(copy_button_width)
         toolbar_layout.addWidget(btn)
         
         self.table = WIDesignerBorePointsTable(self)
@@ -195,7 +199,7 @@ class XmlTab(QWidget):
 
         self.copy_button = btn = ClipboardCopyButton('Copy to Clipboard', self)
         btn.data_for_clipboard = self.data_for_clipboard
-        btn.setFixedWidth(220)
+        btn.setFixedWidth(250)
         toolbar_layout.addWidget(btn)
 
         font = QFont()

@@ -9,10 +9,9 @@ It can be used with routed as well as hand-chiseled bore, and is especially hand
 Motivation
 -----
 
-When crafting a woodwind instrument, it is often important to calculate its effective bore diameter, so that we can lay out its finger holes properly, for example.
+When crafting a woodwind instrument, it is often important to calculate its effective bore diameter, so that we can lay out the finger holes properly, for example.
 
-Yet split-bore flutes, after glued together, rarely have a perfectly circular bore, so the math gets more complex.
-Even more so when the router bit is semi-elliptical rather than semi-circular, or when the groove width/depth is irregular.
+Yet split-bore flutes, after glued together, rarely have a perfectly circular bore. The math gets more complex when the router bit is semi-elliptical rather than semi-circular, or when the groove width/depth is irregular.
 
 How great would it be to have an app that would calculate the effective bore diameter for us.
 
@@ -31,7 +30,7 @@ Tools Needed
 -----
 
 - Calipers
-- Depth Caliper
+- Depth caliper
 - Convenient ruler or tape measure
 
 **Recommendation:** To best utilize the app, it is recommended to use calipers with a **data output** feature. By enabling *Voice Hints* option in the app, it keeps reading the current position as you measure. This makes the process much smoother, as you don't need to keep checking the screen.
@@ -47,7 +46,7 @@ Exporting Results to WIDesigner
 - In WIDesigner, with your instrument's tab open, click the *Vu* button in the toolbar
 - Carefully select all blocks ``<borePoint>...</borePoint>`` and replace them with the copied data. Whitespace and indentation do not matter.
 
-**Note:** It is a good idea to save your WIDesigner instrument before editing it via *Vu* button, so that you can restore it if you accidentally misformat the data while editing.
+**Note:** It is a good idea to save your WIDesigner instrument before editing it via *Vu* button, so that you can reopen it if you accidentally misformat the data while editing.
 
 
 Current Limitations
@@ -61,5 +60,5 @@ Features
 -----
 
 - Voice hints for smoother measurement flow
-- Cross-sectional diagrams
-- `WIDesigner <https://github.com/edwardkort/WWIDesigner>`_ export
+- Cross-sectional diagrams, profile diagrams
+- WIDesigner export

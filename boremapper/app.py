@@ -1,3 +1,4 @@
+import argparse
 import sys
 from xml.etree import ElementTree as ET
 
@@ -20,23 +21,34 @@ class App(QApplication):
     def __init__(self):
         super().__init__(sys.argv)
 
-        self.settings = None
-        self.sounds = None
-        self.document_windows = []
+        commandline_input = self.process_commandline_args()
 
-        # This is to set floating point symbol to '.' in QLineEdit validators etc.
+        # This is i.e. to use '.' as a decimal separator across the application
         QLocale.setDefault(QLocale.c())
 
         self.setApplicationName(const.APP_NAME)
         self.setApplicationVersion(const.APP_VERSION)
         self.setQuitOnLastWindowClosed(True)
+        
+        self.settings = None
+        self.sounds = None
+        self.document_windows = []
 
         self.init_settings()
         self.init_sounds()
         self.init_speech()
+        self.init_by_commandline_input(commandline_input)
 
-        #self.new_document()
-        self.open_document(const.APP_DIR + '/sample_flute.xml')
+    def process_commandline_args(self) -> dict:
+        parser = argparse.ArgumentParser(
+            prog=const.APP_NAME,
+            description=const.APP_DESCRIPTION,
+        )
+        parser.add_argument('file', nargs='*', help='BoreMapper document to be opened')
+        res = parser.parse_args()
+        return {
+            'files': res.file,
+        }
 
     def init_settings(self):
         self.settings = SettingsModel(self, {
@@ -66,6 +78,14 @@ class App(QApplication):
     def init_speech(self):
         # Initialize the speech engine, so that the speech starts promptly when first used
         pyttsx3.init()
+        
+    def init_by_commandline_input(self, params: dict):
+        if params['files']:
+            for file in params['files']:
+                self.open_document(file)
+        else:
+            # We want to have at least one window open
+            self.new_document()
 
     def current_length_units(self) -> 'LengthUnits':
         return length_units(self.settings.load('general', 'length_units'))

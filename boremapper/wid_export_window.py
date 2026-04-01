@@ -3,11 +3,12 @@ from xml.etree import ElementTree as ET
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtGui import QFont, QKeyEvent, QGuiApplication
 from PySide6.QtWidgets import QLabel, QMainWindow, QPlainTextEdit, QToolBar, QComboBox, QDoubleSpinBox, QPushButton, \
-    QTabWidget, QWidget, QVBoxLayout, QHBoxLayout
+    QTabWidget, QWidget, QVBoxLayout, QHBoxLayout, QTableWidget, QAbstractItemView, QHeaderView, QTableWidgetItem
 
 from boremapper import const
 from boremapper.bunch import Bunch
 from boremapper.length_units import LengthUnits
+from boremapper.utils import length_units, format_length
 
 
 class WidExportWindow(QMainWindow):
@@ -86,7 +87,8 @@ class WidExportWindow(QMainWindow):
         self.update_tabs()
 
     def update_tabs(self):
-        self.tabs.xml.update_from_model(self.dw.model)\
+        self.tabs.table.update_from_model(self.dw.model)
+        self.tabs.xml.update_from_model(self.dw.model)
 
     def on_param_change(self):
         self.dw.model.wid_export.length_type = self.length_type_combobox.currentText()
@@ -106,8 +108,52 @@ class WidExportWindow(QMainWindow):
                 
 class TableTab(QWidget):
 
+    COLUMN_WIDTH = 200
+    DISPLAY_EXTRA_DECIMALS = 10
+
     def __init__(self, parent: WidExportWindow):
         super().__init__(parent)
+        
+        self.parent_window = parent # TODO: use everywhere instead of self.parent()?
+
+        layout = QVBoxLayout()
+        self.setLayout(layout)
+
+        toolbar = QWidget(self)
+        layout.addWidget(toolbar, stretch=0)
+
+        toolbar_layout = QHBoxLayout()
+        toolbar_layout.setContentsMargins(0, 0, 0, 0)
+        toolbar_layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        toolbar.setLayout(toolbar_layout)
+        
+        # TODO
+        self.copy_positions_button = btn = QPushButton('Copy Positions to Clipboard', self)
+        btn.setFixedWidth(self.COLUMN_WIDTH)
+        toolbar_layout.addWidget(btn)
+        
+        self.table = WIDesignerBorePointsTable(self)
+        self.table.set_column_width(self.COLUMN_WIDTH)
+        
+        layout.addWidget(self.table, stretch=100)
+
+    def update_from_model(self, model: 'DocumentModel'):
+        units = length_units(model.wid_export.length_type)
+        display_decimals = units.display_decimals + self.DISPLAY_EXTRA_DECIMALS
+        
+        points = model.to_wid_bore_points(
+            model.wid_export.length_type,
+            model.wid_export.bore_origin
+        )
+        
+        data = []
+        for position, diameter in points:
+            data.append((
+                format_length(position, display_decimals),
+                format_length(diameter, display_decimals),
+            ))
+            
+        self.table.set_data(data)
 
 
 class XmlTab(QWidget):
@@ -129,10 +175,10 @@ class XmlTab(QWidget):
         toolbar.setLayout(toolbar_layout)
 
         self.copy_button_text = 'Copy to Clipboard'
-        self.copy_button = b = QPushButton(self.copy_button_text, self)
+        self.copy_button = btn = QPushButton(self.copy_button_text, self)
         self.copy_button.clicked.connect(self.on_copy_click)
-        b.setMinimumWidth(150)
-        toolbar_layout.addWidget(b)
+        btn.setMinimumWidth(150)
+        toolbar_layout.addWidget(btn)
 
         font = QFont()
         font.setFamilies(['Courier New', 'Courier', 'Monospace'])
@@ -147,11 +193,12 @@ class XmlTab(QWidget):
         self.xml_snippet = self._build_xml_snippet(model)
 
     def _build_xml_snippet(self, model: 'DocumentModel') -> str:
-        length_type = model.wid_export.length_type
-        bore_origin = model.wid_export.bore_origin
-        
+        elements = model.to_wid_xml_bore_points(
+            model.wid_export.length_type,
+            model.wid_export.bore_origin
+        )
         xml_blocks = []
-        for element in model.to_wid_bore_points(length_type, bore_origin):
+        for element in elements:
             tree = ET.ElementTree(element)
             ET.indent(tree, space='    ')
             xml_blocks.append(ET.tostring(tree.getroot(), encoding='unicode'))
@@ -175,8 +222,53 @@ class XmlTab(QWidget):
         timer = QTimer(self)
         timer.setSingleShot(True)
         timer.timeout.connect(self.on_copy_timer)
-        timer.start(2000)
+        timer.start(1500)
 
     def on_copy_timer(self):
         self.copy_button.setText(self.copy_button_text)
         self.copy_button.setEnabled(True)
+        
+
+class WIDesignerBorePointsTable(QTableWidget):
+
+    COLUMNS = (
+        'Position',
+        'Diameter',
+    )
+
+    def __init__(self, parent: QWidget|None = None):
+        super().__init__(parent)
+        
+        self._column_width = None
+        
+        self.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
+
+        header = QHeaderView(Qt.Orientation.Horizontal)
+        header.setSectionResizeMode(QHeaderView.ResizeMode.Fixed)
+        self.setHorizontalHeader(header)
+        
+        self.verticalHeader().setVisible(False)
+        
+    def set_data(self, data: list):
+        self.setColumnCount(len(self.COLUMNS))
+        self.setRowCount(len(data))
+        self.setHorizontalHeaderLabels(self.COLUMNS)
+        self._update_column_widths()
+
+        for r, row in enumerate(data):
+            for c, col_text in enumerate(self.COLUMNS):
+                item = QTableWidgetItem(str(row[c]))
+                item.setFlags(
+                    Qt.ItemFlag.ItemIsEnabled |
+                    Qt.ItemFlag.ItemIsSelectable
+                )
+                self.setItem(r, c, item)
+
+    def set_column_width(self, value: int):
+        self._column_width = value
+        self._update_column_widths()
+
+    def _update_column_widths(self):
+        if self._column_width is not None:
+            for c, column in enumerate(self.COLUMNS):
+                self.setColumnWidth(c, self._column_width)

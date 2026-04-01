@@ -61,23 +61,34 @@ class DocumentModel(Model):
                 incomplete_positions.append(point.position)
         return incomplete_positions
 
-    def to_wid_bore_points(self, length_type: str, bore_origin: float):
+    def to_wid_bore_points(self, length_type: str, bore_origin: float) -> list:
+        """
+        Note that the returned values are in chosen length units already, but not rounded.
+        """
         length_type_units = length_units(length_type)
-        
-        out_elements = []
+        out = []
         
         for point in self.bore.points:
             if point.diameter is not None:
                 position = length_type_units.from_mm(bore_origin + point.position)
                 diameter = length_type_units.from_mm(point.diameter)
-                e_point = ET.Element('borePoint')
-                e_position = ET.SubElement(e_point, 'borePosition')
-                e_position.text = xml_build_float(position)
-                e_diameter = ET.SubElement(e_point, 'boreDiameter')
-                e_diameter.text = xml_build_float(diameter)
-                out_elements.append(e_point)
+                out.append((position, diameter))
 
-        return out_elements
+        return out
+    
+    def to_wid_xml_bore_points(self, length_type: str, bore_origin: float) -> list:
+        bore_points = self.to_wid_bore_points(length_type, bore_origin)
+        out = []
+
+        for position, diameter in bore_points:
+            e_point = ET.Element('borePoint')
+            e_position = ET.SubElement(e_point, 'borePosition')
+            e_position.text = xml_build_float(position)
+            e_diameter = ET.SubElement(e_point, 'boreDiameter')
+            e_diameter.text = xml_build_float(diameter)
+            out.append(e_point)
+                
+        return out
 
     @staticmethod
     def from_defaults(app: 'App') -> 'DocumentModel':

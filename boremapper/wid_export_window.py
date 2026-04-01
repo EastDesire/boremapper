@@ -114,8 +114,6 @@ class TableTab(QWidget):
     def __init__(self, parent: WidExportWindow):
         super().__init__(parent)
         
-        self.parent_window = parent # TODO: use everywhere instead of self.parent()?
-
         layout = QVBoxLayout()
         self.setLayout(layout)
 

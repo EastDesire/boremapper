@@ -77,6 +77,8 @@ class ExportTab(QWidget):
     def __init__(self, parent: DocPropertiesWindow):
         super().__init__(parent)
 
+        self.parent_window = parent
+
         self.bore_origin_spinbox = None
         self.length_type_combobox = None
 
@@ -86,21 +88,25 @@ class ExportTab(QWidget):
 
         # Group
 
-        range_max = float(self.parent().dw.app.build_length_output(const.SPINBOX_MAX_RANGE_MM, self.parent().length_units.symbol))
+        range_max = float(self.parent_window.dw.app.build_length_output(const.SPINBOX_MAX_RANGE_MM, self.parent_window.length_units.symbol))
 
+        val = float(self.parent_window.dw.app.build_length_output(
+            self.parent_window.dw.model.wid_export.bore_origin,
+            self.parent_window.length_units.symbol
+        ))
         self.bore_origin_spinbox = sb = QDoubleSpinBox(self)
         sb.setRange(-range_max, range_max)
-        sb.setSingleStep(self.parent().length_units.step)
-        sb.setDecimals(self.parent().length_units.display_decimals)
-        sb.setValue(float(self.parent().dw.app.build_length_output(self.parent().dw.model.wid_export.bore_origin, self.parent().length_units.symbol)))
+        sb.setSingleStep(self.parent_window.length_units.step)
+        sb.setDecimals(self.parent_window.length_units.display_decimals)
+        sb.setValue(val)
 
         self.length_type_combobox = cb = QComboBox(self)
         for symbol in LengthUnits.symbols():
             cb.addItem(symbol)
-        cb.setCurrentText(self.parent().dw.model.wid_export.length_type)
+        cb.setCurrentText(self.parent_window.dw.model.wid_export.length_type)
 
         form = QFormLayout()
-        form.addRow('Bore Origin (%s):' % self.parent().length_units.symbol, self.bore_origin_spinbox)
+        form.addRow('Bore Origin (%s):' % self.parent_window.length_units.symbol, self.bore_origin_spinbox)
         form.addRow('WIDesigner Length Type:', self.length_type_combobox)
 
         group = QGroupBox(self)

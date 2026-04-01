@@ -78,6 +78,8 @@ class GeneralTab(QWidget):
 
     def __init__(self, parent: SettingsWindow):
         super().__init__(parent)
+        
+        self.parent_window = parent
 
         self.length_units_combobox = None
 
@@ -90,7 +92,7 @@ class GeneralTab(QWidget):
         self.length_units_combobox = cb = QComboBox(self)
         for symbol in LengthUnits.symbols():
             cb.addItem(symbol)
-        cb.setCurrentText(self.parent().dw.app.current_length_units().symbol)
+        cb.setCurrentText(self.parent_window.dw.app.current_length_units().symbol)
 
         form = QFormLayout()
         form.addRow('Length Units:', self.length_units_combobox)
@@ -106,6 +108,8 @@ class AudioTab(QWidget):
     def __init__(self, parent: SettingsWindow):
         super().__init__(parent)
 
+        self.parent_window = parent
+
         self.beep_hints_checkbox = None
         self.voice_hints_checkbox = None
 
@@ -116,9 +120,9 @@ class AudioTab(QWidget):
         # Group
 
         self.beep_hints_checkbox = QCheckBox('Beeps', self)
-        self.beep_hints_checkbox.setChecked(self.parent().dw.app.settings.load('audio', 'beep_hints'))
+        self.beep_hints_checkbox.setChecked(self.parent_window.dw.app.settings.load('audio', 'beep_hints'))
         self.voice_hints_checkbox = QCheckBox('Voice Hints', self)
-        self.voice_hints_checkbox.setChecked(self.parent().dw.app.settings.load('audio', 'voice_hints'))
+        self.voice_hints_checkbox.setChecked(self.parent_window.dw.app.settings.load('audio', 'voice_hints'))
 
         form = QFormLayout()
         form.addRow(self.beep_hints_checkbox)

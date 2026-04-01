@@ -251,7 +251,7 @@ class WIDesignerBorePointsTable(QTableWidget):
         
         self._column_width = None
         
-        self.setSelectionMode(QAbstractItemView.SelectionMode.NoSelection)
+        self.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
 
         header = QHeaderView(Qt.Orientation.Horizontal)
         header.setSectionResizeMode(QHeaderView.ResizeMode.Fixed)

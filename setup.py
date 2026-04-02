@@ -17,5 +17,5 @@ setup(
     author_email=const.APP_AUTHOR_EMAIL,
     url=const.APP_REPO_URL,
     license=license,
-    packages=find_packages(exclude=('tests', 'docs', 'data'))
+    packages=find_packages(exclude=('tests', 'data'))
 )

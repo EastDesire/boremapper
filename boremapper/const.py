@@ -1,10 +1,11 @@
 import os
 
+from boremapper import version
 
 APP_NAME = 'BoreMapper'
 APP_HANDLE = 'BoreMapper'
 APP_ORG_HANDLE = 'EastDesire'
-APP_VERSION = '0.1.0'
+APP_VERSION = version.VERSION
 APP_AUTHOR = 'Jan Odvárko'
 APP_AUTHOR_EMAIL = 'jan@odvarko.cz'
 APP_DESCRIPTION = 'A tool for mapping the bore profile of woodwind instruments with a split bore.'

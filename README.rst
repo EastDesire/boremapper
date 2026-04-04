@@ -1,7 +1,7 @@
 BoreMapper
 ==========
 
-A woodwind instrument makers' app for mapping the profile of **split bore** instruments, like Native American flute or forest flute.
+A woodwind instrument makers' app for mapping a profile of **split-bore** instruments (like Native American flute or forest flute).
 
 It can be used with routed as well as hand-chiseled bore, and is especially handy for an irregular bore.
 
@@ -23,7 +23,7 @@ After measuring the width and height (depth) of the groove at various positions 
 The calculated diameters can be exported into `WIDesigner <https://github.com/edwardkort/WWIDesigner>`_ application.
 
 - For a **routed bore**, it is advisable to also specify dimensions of the cutter bit used, so that the groove shape can be determined more accurately.
-- For a **hand-chiseled bore**, leave cutter dimensions at their default values - the groove is then assumed to have an arc shape.
+- For a **hand-chiseled bore**, leave the cutter dimensions at their default values - the groove is then assumed to have an arc shape.
 
 
 Tools Needed
@@ -52,7 +52,7 @@ Current Limitations
 -----
 
 - Bore is assumed to be split horizontally (halves are named *bottom* and *top*, and displayed in this orientation)
-- Only round cutter shape is supported (circular or elliptical). This however covers most of the traditionally used router bits as well as semi-elliptical grooves made with chisel.
+- Only round cutter shape is supported (circular or elliptical). This, however, covers most of the traditionally used router bits as well as semi-elliptical grooves made with chisel.
 
 
 Features

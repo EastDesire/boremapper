@@ -8,7 +8,7 @@ APP_ORG_HANDLE = 'EastDesire'
 APP_VERSION = version.VERSION
 APP_AUTHOR = 'Jan Odvárko'
 APP_AUTHOR_EMAIL = 'jan@odvarko.cz'
-APP_DESCRIPTION = 'A tool for mapping the bore profile of woodwind instruments with a split bore.'
+APP_DESCRIPTION = 'A tool for mapping a bore profile of split-bore woodwind instruments.'
 APP_REPO_URL = 'https://github.com/EastDesire/boremapper'
 
 DOCUMENT_XML_VERSION = '0.1'

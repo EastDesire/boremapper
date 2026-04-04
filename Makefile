@@ -20,7 +20,21 @@ test-static:
 		--init-hook='import sys; sys.path.insert(0, "./")' \
 		--extension-pkg-whitelist=PySide6
 	
-.PHONY: dist
+.PHONY: build-windows
+dist:
+	python3 -m nuitka \
+		--mode=app \
+		--follow-imports \
+		--enable-plugin=pyside6 \
+		--include-package=pyttsx3 \
+		--include-data-dir="${APP_DIR}/resources=resources" \
+		--include-data-files="${APP_DIR}/*.xml=./" \
+		--output-dir=dist/ \
+		--output-filename="${APP_NAME}.bin" \
+		--output-folder-name="${APP_NAME}" \
+		"${APP_DIR}/main.py"
+	
+.PHONY: build-macos
 dist:
 	python3 -m nuitka \
 		--mode=app \

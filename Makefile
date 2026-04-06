@@ -21,7 +21,7 @@ test-static:
 		--extension-pkg-whitelist=PySide6
 	
 .PHONY: build-windows
-dist:
+build-windows:
 	python3 -m nuitka \
 		--mode=app \
 		--follow-imports \
@@ -35,7 +35,7 @@ dist:
 		"${APP_DIR}/main.py"
 	
 .PHONY: build-macos
-dist:
+build-macos:
 	python3 -m nuitka \
 		--mode=app \
 		--follow-imports \

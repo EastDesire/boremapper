@@ -4,7 +4,6 @@ name: Build and release
 
 on:
   push:
-# TODO
 #    branches: [ main ]
     tags:
       - 'v*.*.*'

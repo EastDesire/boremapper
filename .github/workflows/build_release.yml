@@ -11,16 +11,15 @@ on:
 #    branches: [ main ]
 
 jobs:
-  build-linux:
-    runs-on: ubuntu-latest
-    
-    steps:
-      - uses: actions/checkout@v6
-        
-      # TODO
+#  build-linux:
+#    runs-on: ubuntu-latest
+#    
+#    steps:
+#      - uses: actions/checkout@v6
+#      TODO
       
   build-windows:
-    runs-on: windows-latest
+    runs-on: windows-2022
     
     steps:
       - uses: actions/checkout@v6
@@ -48,9 +47,12 @@ jobs:
           pip install -r requirements.txt
           
       # TODO: use APP_DIR instead of boremapper/
+      # TODO rem cat?
       - name: Write version
         run: |
           echo "VERSION = $RELEASE_VERSION" > boremapper/version.py
+          echo "Version file contents:"
+          cat boremapper/version.py
           
       - name: Build Windows executable
         run: |

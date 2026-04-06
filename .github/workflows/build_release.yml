@@ -1,6 +1,6 @@
-# Inspired by https://github.com/Erriez/pyside6-nuitka-deployment/blob/master/.github/workflows/build-release.yml
-
 name: Build and release
+
+# Inspired by https://github.com/Erriez/pyside6-nuitka-deployment/blob/master/.github/workflows/build-release.yml
 
 on:
   push:

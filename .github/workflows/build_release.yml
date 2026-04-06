@@ -4,7 +4,8 @@ name: Build and release
 
 on:
   push:
-    branches: [ main ]
+# TODO
+#    branches: [ main ]
     tags:
       - 'v*.*.*'
 #  pull_request:

@@ -71,7 +71,8 @@ jobs:
         uses: joncloud/makensis-action@v5.0
         with:
           script-file: "install.nsi"
-          arguments: "/V4 /DVERSION=$RELEASE_VERSION"
+          # TODO
+          arguments: "/V4 /DVERSION=0.1.4"
           
       - name: Create hashes
         run: |

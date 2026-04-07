@@ -27,6 +27,7 @@ test-static:
 .PHONY: build-windows
 build-windows:
 	python3 -m nuitka \
+		--assume-yes-for-downloads \
 		--mode=app \
 		--follow-imports \
 		--enable-plugin=pyside6 \
@@ -41,6 +42,7 @@ build-windows:
 .PHONY: build-macos
 build-macos:
 	python3 -m nuitka \
+		--assume-yes-for-downloads \
 		--mode=app \
 		--follow-imports \
 		--enable-plugin=pyside6 \

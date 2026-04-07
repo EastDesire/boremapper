@@ -5,6 +5,10 @@ APP_DIR=boremapper
 init:
 	pip install -r requirements.txt
 
+.PHONY: init-dev
+init-dev:
+	pip install -r requirements_dev.txt
+
 .PHONY: clean
 clean:
 	rm -rf dist/
@@ -28,7 +32,7 @@ build-windows:
 		--enable-plugin=pyside6 \
 		--include-package=pyttsx3 \
 		--include-data-dir="${APP_DIR}/resources=resources" \
-		--include-data-files="${APP_DIR}/*.xml=./" \
+		--include-data-files="./data/*.xml=data" \
 		--output-dir=dist/ \
 		--output-filename="${APP_NAME}.bin" \
 		--output-folder-name="${APP_NAME}" \
@@ -42,7 +46,7 @@ build-macos:
 		--enable-plugin=pyside6 \
 		--include-package=pyttsx3 \
 		--include-data-dir="${APP_DIR}/resources=resources" \
-		--include-data-files="${APP_DIR}/*.xml=./" \
+		--include-data-files="./data/*.xml=data" \
 		--output-dir=dist/ \
 		--output-filename="${APP_NAME}.bin" \
 		--output-folder-name="${APP_NAME}" \

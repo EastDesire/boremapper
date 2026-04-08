@@ -40,6 +40,10 @@ jobs:
           echo "RELEASE_VERSION=$RELEASE_VERSION"
           echo "env.RELEASE_VERSION=${{ env.RELEASE_VERSION }}"
           echo "GIT_TAG=$GIT_TAG"
+      
+      # TODO: move down
+      - name: 'Install makensis'
+        run: choco install nsis
 
       - name: Setup Python
         uses: actions/setup-python@v6
@@ -66,9 +70,6 @@ jobs:
       - name: Build Windows executable
         run: |
           make build-windows
-
-#      - name: 'Install makensis'
-#        run: choco install nsis
 
       - name: Create Windows NSIS installer
         uses: joncloud/makensis-action@v5.0

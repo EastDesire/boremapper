@@ -72,7 +72,7 @@ jobs:
           make build-windows
           
       - name: Create Windows NSIS installer
-        uses: EastDesire/makensis-action
+        uses: EastDesire/makensis-action@publish
         with:
           script-file: "install.nsi"
           # TODO

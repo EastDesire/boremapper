@@ -70,9 +70,9 @@ jobs:
       - name: Build Windows executable
         run: |
           make build-windows
-
+          
       - name: Create Windows NSIS installer
-        uses: joncloud/makensis-action@v5.0
+        uses: EastDesire/makensis-action
         with:
           script-file: "install.nsi"
           # TODO
@@ -80,6 +80,16 @@ jobs:
         env:
           # TODO test
           debug: true
+
+      #- name: Create Windows NSIS installer
+      #  uses: joncloud/makensis-action@v5.0
+      #  with:
+      #    script-file: "install.nsi"
+      #    # TODO
+      #    arguments: "/V4 /DVERSION=0.1.4"
+      #  env:
+      #    # TODO test
+      #    debug: true
           
       - name: Create hashes
         run: |

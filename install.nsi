@@ -7,10 +7,11 @@
 !define APP_NAME "BoreMapper"
 !define COMP_NAME "EastDesire"
 !define VERSION "00.01.00.00"
+; TODO
 !define COPYRIGHT "Jan Odvarko (c) 2026"
 !define DESCRIPTION "A tool for mapping a bore profile of split-bore woodwind instruments."
-!define LICENSE_TXT "C:\Users\jan\Downloads\LICENSE.txt"
-!define INSTALLER_NAME "C:\Users\jan\Desktop\Nsisqssg\Output\BoreMapper\setup.exe"
+!define LICENSE_TXT "LICENSE"
+!define INSTALLER_NAME "setup.exe"
 !define MAIN_APP_EXE "BoreMapper.exe"
 !define INSTALL_TYPE "SetShellVarContext current"
 !define REG_ROOT "HKCU"
@@ -78,20 +79,22 @@ Section -MainProgram
 ${INSTALL_TYPE}
 SetOverwrite ifnewer
 SetOutPath "$INSTDIR"
-File "Z:\tmp\BoreMapper.exe"
-File "Z:\tmp\resources\app_icon.png"
-File "Z:\tmp\resources\beep2.wav"
-File "Z:\tmp\resources\beep3.wav"
-File "Z:\tmp\resources\beep1.wav"
-File "Z:\tmp\resources\beep4.wav"
+File "dist\BoreMapper.exe"
+;TODO: rem?
+;File "dist\resources\app_icon.png"
+;File "dist\resources\beep2.wav"
+;File "dist\resources\beep3.wav"
+;File "dist\resources\beep1.wav"
+;File "dist\resources\beep4.wav"
 SectionEnd
 
 ######################################################################
 
-Section -Additional
-SetOutPath "$DOCUMENTS\${APP_NAME}"
-File "Z:\tmp\documents\sample_flute.xml"
-SectionEnd
+;TODO: rem?
+;Section -Additional
+;SetOutPath "$DOCUMENTS\${APP_NAME}"
+;File "dist\sample_flute.xml"
+;SectionEnd
 
 ######################################################################
 

@@ -35,7 +35,7 @@ build-windows:
 		--include-data-dir="${APP_DIR}/resources=resources" \
 		--include-data-files="./data/*.xml=data" \
 		--output-dir=dist/ \
-		--output-filename="${APP_NAME}.bin" \
+		--output-filename="${APP_NAME}.exe" \
 		--output-folder-name="${APP_NAME}" \
 		"${APP_DIR}/main.py"
 	

@@ -24,7 +24,7 @@ jobs:
 #      TODO
       
   build-windows:
-    runs-on: windows-2022
+    runs-on: windows-2025
     
     steps:
       - uses: actions/checkout@v6
@@ -66,6 +66,9 @@ jobs:
       - name: Build Windows executable
         run: |
           make build-windows
+
+#      - name: 'Install makensis'
+#        run: choco install nsis
 
       - name: Create Windows NSIS installer
         uses: joncloud/makensis-action@v5.0

@@ -73,6 +73,9 @@ jobs:
           script-file: "install.nsi"
           # TODO
           arguments: "/V4 /DVERSION=0.1.4"
+        env:
+          # TODO test
+          debug: true
           
       - name: Create hashes
         run: |

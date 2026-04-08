@@ -6,8 +6,6 @@
 
 !define APP_NAME "BoreMapper"
 !define COMP_NAME "EastDesire"
-!define VERSION "00.01.00.00"
-; TODO
 !define COPYRIGHT "Jan Odvarko (c) 2026"
 !define DESCRIPTION "A tool for mapping a bore profile of split-bore woodwind instruments."
 !define LICENSE_TXT "LICENSE"

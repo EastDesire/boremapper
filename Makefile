@@ -35,7 +35,7 @@ build-windows:
 		--include-data-dir="${APP_DIR}/resources=resources" \
 		--include-data-files="./data/*.xml=data" \
 		--output-dir=dist/ \
-		--output-filename="${APP_NAME}.exe" \
+		--output-filename="${APP_NAME}-$(version).exe" \
 		--output-folder-name="${APP_NAME}" \
 		"${APP_DIR}/main.py"
 	
@@ -50,7 +50,7 @@ build-macos:
 		--include-data-dir="${APP_DIR}/resources=resources" \
 		--include-data-files="./data/*.xml=data" \
 		--output-dir=dist/ \
-		--output-filename="${APP_NAME}.bin" \
+		--output-filename="${APP_NAME}-$(version).bin" \
 		--output-folder-name="${APP_NAME}" \
 		--macos-app-name="${APP_NAME}" \
 		"${APP_DIR}/main.py"

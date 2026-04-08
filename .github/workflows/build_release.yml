@@ -13,7 +13,8 @@ on:
 
 env:
   # TODO rem
-  RELEASE_VERSION: 'v0.1.4'
+  VERSION: '0.1.4'
+  APP_NAME: 'BoreMapper'
 
 jobs:
 #  build-linux:
@@ -31,14 +32,14 @@ jobs:
         
 #      - name: Set env vars
 #        run: |
-#          echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+#          echo "VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 #          echo "GIT_TAG=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
         
       # TODO: rem?
       - name: Check vars
         run: |
-          echo "RELEASE_VERSION=$RELEASE_VERSION"
-          echo "env.RELEASE_VERSION=${{ env.RELEASE_VERSION }}"
+          echo "VERSION=$VERSION"
+          echo "env.VERSION=${{ env.VERSION }}"
           echo "GIT_TAG=$GIT_TAG"
       
       # TODO: move down
@@ -63,7 +64,7 @@ jobs:
       # TODO rem cat?
       - name: Write version
         run: |
-          echo "VERSION = '$RELEASE_VERSION'" > boremapper/version.py
+          echo "VERSION = '$VERSION'" > boremapper/version.py
           echo "Version file contents:"
           cat boremapper/version.py
           
@@ -72,9 +73,8 @@ jobs:
           make build-windows
           
       - name: Create Windows NSIS installer
-        # TODO: variable into DVERSION (must be in X.X.X.X format, so I guess add .0 at the end)
         run: |
-          & "${env:ProgramFiles(x86)}\NSIS\makensis.exe" /V4 /DVERSION=0.1.4.0 "install.nsi"
+          & "${env:ProgramFiles(x86)}\NSIS\makensis.exe" /V4 /DVERSION=${{ env.VERSION }} "install.nsi"
           
 #      - name: Create Windows NSIS installer
 #        uses: EastDesire/makensis-action@publish
@@ -98,10 +98,10 @@ jobs:
           
       - name: Create hashes
         run: |
-          sha1sum BoreMapper.exe > BoreMapper.exe.sha1
-          sha1sum setup.exe > setup.exe.sha1
-          cat BoreMapper.exe.sha1
-          cat setup.exe.sha1
+          sha1sum ${{ env.APP_NAME }}-${{ env.VERSION }}.exe > ${{ env.APP_NAME }}-${{ env.VERSION }}.exe.sha1
+          sha1sum ${{ env.APP_NAME }}-${{ env.VERSION }}-Setup.exe > ${{ env.APP_NAME }}-${{ env.VERSION }}-Setup.exe.sha1
+          cat ${{ env.APP_NAME }}-${{ env.VERSION }}.exe.sha1
+          cat ${{ env.APP_NAME }}-${{ env.VERSION }}-Setup.exe.sha1
           
       - name: Upload artifacts
         uses: actions/upload-artifact@v6
@@ -109,10 +109,10 @@ jobs:
           name: Windows Build
           if-no-files-found: error
           path: |
-            BoreMapper.exe
-            BoreMapper.exe.sha1
-            setup.exe
-            setup.exe.sha1
+            ${{ env.APP_NAME }}-${{ env.VERSION }}.exe
+            ${{ env.APP_NAME }}-${{ env.VERSION }}.exe.sha1
+            ${{ env.APP_NAME }}-${{ env.VERSION }}-Setup.exe
+            ${{ env.APP_NAME }}-${{ env.VERSION }}-Setup.exe.sha1
 
   release:
     name: "Create GitHub release"
@@ -136,10 +136,10 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            ${{ github.workspace }}/artifacts/Windows Build/BoreMapper.exe
-            ${{ github.workspace }}/artifacts/Windows Build/BoreMapper.exe.sha1
-            ${{ github.workspace }}/artifacts/Windows Build/setup.exe
-            ${{ github.workspace }}/artifacts/Windows Build/setup.exe.sha1
+            ${{ github.workspace }}/artifacts/Windows Build/${{ env.APP_NAME }}-${{ env.VERSION }}.exe
+            ${{ github.workspace }}/artifacts/Windows Build/${{ env.APP_NAME }}-${{ env.VERSION }}.exe.sha1
+            ${{ github.workspace }}/artifacts/Windows Build/${{ env.APP_NAME }}-${{ env.VERSION }}-Setup.exe
+            ${{ github.workspace }}/artifacts/Windows Build/${{ env.APP_NAME }}-${{ env.VERSION }}-Setup.exe.sha1
 
       - name: Create GitHub release
         uses: Roang-zero1/github-create-release-action@v3

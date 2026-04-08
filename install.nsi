@@ -6,11 +6,12 @@
 
 !define APP_NAME "BoreMapper"
 !define COMP_NAME "EastDesire"
+!define VERSION_LONG "${VERSION}.0"
 !define COPYRIGHT "Jan Odvarko (c) 2026"
 !define DESCRIPTION "A tool for mapping a bore profile of split-bore woodwind instruments."
 !define LICENSE_TXT "LICENSE"
-!define INSTALLER_NAME "setup.exe"
-!define MAIN_APP_EXE "BoreMapper.exe"
+!define INSTALLER_NAME "${APP_NAME}-${VERSION}-Setup.exe"
+!define MAIN_APP_EXE "${APP_NAME}-${VERSION}.exe"
 !define INSTALL_TYPE "SetShellVarContext current"
 !define REG_ROOT "HKCU"
 !define REG_APP_PATH "Software\Microsoft\Windows\CurrentVersion\App Paths\${MAIN_APP_EXE}"
@@ -18,12 +19,12 @@
 
 ######################################################################
 
-VIProductVersion  "${VERSION}"
+VIProductVersion  "${VERSION_LONG}"
 VIAddVersionKey "ProductName"  "${APP_NAME}"
 VIAddVersionKey "CompanyName"  "${COMP_NAME}"
 VIAddVersionKey "LegalCopyright"  "${COPYRIGHT}"
 VIAddVersionKey "FileDescription"  "${DESCRIPTION}"
-VIAddVersionKey "FileVersion"  "${VERSION}"
+VIAddVersionKey "FileVersion"  "${VERSION_LONG}"
 
 ######################################################################
 
@@ -34,7 +35,7 @@ OutFile "${INSTALLER_NAME}"
 BrandingText "${APP_NAME}"
 XPStyle on
 InstallDirRegKey "${REG_ROOT}" "${REG_APP_PATH}" ""
-InstallDir "$PROGRAMFILES\BoreMapper"
+InstallDir "$PROGRAMFILES\${APP_NAME}"
 
 ######################################################################
 
@@ -51,7 +52,7 @@ InstallDir "$PROGRAMFILES\BoreMapper"
 
 !ifdef REG_START_MENU
 !define MUI_STARTMENUPAGE_NODISABLE
-!define MUI_STARTMENUPAGE_DEFAULTFOLDER "BoreMapper"
+!define MUI_STARTMENUPAGE_DEFAULTFOLDER "${APP_NAME}"
 !define MUI_STARTMENUPAGE_REGISTRY_ROOT "${REG_ROOT}"
 !define MUI_STARTMENUPAGE_REGISTRY_KEY "${UNINSTALL_PATH}"
 !define MUI_STARTMENUPAGE_REGISTRY_VALUENAME "${REG_START_MENU}"
@@ -77,7 +78,7 @@ Section -MainProgram
 ${INSTALL_TYPE}
 SetOverwrite ifnewer
 SetOutPath "$INSTDIR"
-File "dist\BoreMapper.exe"
+File "dist\${MAIN_APP_EXE}"
 ;TODO: rem?
 ;File "dist\resources\app_icon.png"
 ;File "dist\resources\beep2.wav"
@@ -113,12 +114,12 @@ CreateShortCut "$SMPROGRAMS\$SM_Folder\${APP_NAME} Website.lnk" "$INSTDIR\${APP_
 !endif
 
 !ifndef REG_START_MENU
-CreateDirectory "$SMPROGRAMS\BoreMapper"
-CreateShortCut "$SMPROGRAMS\BoreMapper\${APP_NAME}.lnk" "$INSTDIR\${MAIN_APP_EXE}"
+CreateDirectory "$SMPROGRAMS\${APP_NAME}"
+CreateShortCut "$SMPROGRAMS\${APP_NAME}\${APP_NAME}.lnk" "$INSTDIR\${MAIN_APP_EXE}"
 CreateShortCut "$DESKTOP\${APP_NAME}.lnk" "$INSTDIR\${MAIN_APP_EXE}"
 !ifdef WEB_SITE
 WriteIniStr "$INSTDIR\${APP_NAME} website.url" "InternetShortcut" "URL" "${WEB_SITE}"
-CreateShortCut "$SMPROGRAMS\BoreMapper\${APP_NAME} Website.lnk" "$INSTDIR\${APP_NAME} website.url"
+CreateShortCut "$SMPROGRAMS\${APP_NAME}\${APP_NAME} Website.lnk" "$INSTDIR\${APP_NAME} website.url"
 !endif
 !endif
 
@@ -126,7 +127,7 @@ WriteRegStr ${REG_ROOT} "${REG_APP_PATH}" "" "$INSTDIR\${MAIN_APP_EXE}"
 WriteRegStr ${REG_ROOT} "${UNINSTALL_PATH}"  "DisplayName" "${APP_NAME}"
 WriteRegStr ${REG_ROOT} "${UNINSTALL_PATH}"  "UninstallString" "$INSTDIR\uninstall.exe"
 WriteRegStr ${REG_ROOT} "${UNINSTALL_PATH}"  "DisplayIcon" "$INSTDIR\${MAIN_APP_EXE}"
-WriteRegStr ${REG_ROOT} "${UNINSTALL_PATH}"  "DisplayVersion" "${VERSION}"
+WriteRegStr ${REG_ROOT} "${UNINSTALL_PATH}"  "DisplayVersion" "${VERSION_LONG}"
 WriteRegStr ${REG_ROOT} "${UNINSTALL_PATH}"  "Publisher" "${COMP_NAME}"
 
 !ifdef WEB_SITE
@@ -172,13 +173,13 @@ RmDir "$SMPROGRAMS\$SM_Folder"
 !endif
 
 !ifndef REG_START_MENU
-Delete "$SMPROGRAMS\BoreMapper\${APP_NAME}.lnk"
+Delete "$SMPROGRAMS\${APP_NAME}\${APP_NAME}.lnk"
 !ifdef WEB_SITE
-Delete "$SMPROGRAMS\BoreMapper\${APP_NAME} Website.lnk"
+Delete "$SMPROGRAMS\${APP_NAME}\${APP_NAME} Website.lnk"
 !endif
 Delete "$DESKTOP\${APP_NAME}.lnk"
 
-RmDir "$SMPROGRAMS\BoreMapper"
+RmDir "$SMPROGRAMS\${APP_NAME}"
 !endif
 
 DeleteRegKey ${REG_ROOT} "${REG_APP_PATH}"

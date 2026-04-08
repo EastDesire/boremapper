@@ -74,7 +74,7 @@ jobs:
       - name: Create Windows NSIS installer
         # TODO: variable into DVERSION
         run: |
-          "%programfiles(x86)%\NSIS\makensis.exe" /V4 DVERSION=0.1.4 "install.nsi"
+          "%programfiles(x86)%\NSIS\makensis.exe" /V4 /DVERSION=0.1.4 "install.nsi"
           
 #      - name: Create Windows NSIS installer
 #        uses: EastDesire/makensis-action@publish

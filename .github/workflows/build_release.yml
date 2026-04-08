@@ -72,9 +72,9 @@ jobs:
           make build-windows
           
       - name: Create Windows NSIS installer
-        # TODO: variable into DVERSION
+        # TODO: variable into DVERSION (must be in X.X.X.X format, so I guess add .0 at the end)
         run: |
-          & "${env:ProgramFiles(x86)}\NSIS\makensis.exe" /V4 /DVERSION=0.1.4 "install.nsi"
+          & "${env:ProgramFiles(x86)}\NSIS\makensis.exe" /V4 /DVERSION=0.1.4.0 "install.nsi"
           
 #      - name: Create Windows NSIS installer
 #        uses: EastDesire/makensis-action@publish

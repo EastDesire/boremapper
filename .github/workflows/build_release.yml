@@ -70,7 +70,7 @@ jobs:
           
       - name: Build Windows executable
         run: |
-          make build-windows
+          make build-windows version=${{ env.VERSION }}
           
       - name: Create Windows NSIS installer
         run: |

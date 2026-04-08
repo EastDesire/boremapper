@@ -75,7 +75,7 @@ jobs:
         uses: EastDesire/makensis-action@publish
         with:
           script-file: "install.nsi"
-          # TODO version
+          # TODO
           arguments: "/V4 /DVERSION=0.1.4"
         env:
           # TODO test

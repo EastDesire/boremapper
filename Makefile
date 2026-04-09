@@ -3,11 +3,11 @@ APP_DIR=boremapper
 
 .PHONY: init
 init:
-	pip install -r requirements.txt
+	python3 -m pip install -r requirements.txt
 
 .PHONY: init-dev
 init-dev:
-	pip install -r requirements_dev.txt
+	python3 -m pip install -r requirements_dev.txt
 
 .PHONY: clean
 clean:

@@ -26,12 +26,14 @@ test-static:
 	
 .PHONY: build-windows
 build-windows:
+	python3 -m pip install speechlib
 	python3 -m nuitka \
 		--assume-yes-for-downloads \
 		--mode=app \
 		--follow-imports \
-		--enable-plugin=pyside6 \
+		--enable-plugins=pyside6 \
 		--include-package=pyttsx3 \
+		--include-package=speechlib \
 		--include-data-dir="${APP_DIR}/resources=resources" \
 		--include-data-files="./data/*.xml=data" \
 		--output-dir=dist/ \
@@ -45,7 +47,7 @@ build-macos:
 		--assume-yes-for-downloads \
 		--mode=app \
 		--follow-imports \
-		--enable-plugin=pyside6 \
+		--enable-plugins=pyside6 \
 		--include-package=pyttsx3 \
 		--include-data-dir="${APP_DIR}/resources=resources" \
 		--include-data-files="./data/*.xml=data" \

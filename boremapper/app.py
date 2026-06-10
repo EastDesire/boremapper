@@ -250,7 +250,7 @@ class App(QApplication):
             show_positions.append('etc.')
 
         text = (
-            'Will omit position ' + (', '.join(show_positions)) + ' because of missing diameter.\n\n' +
+            'Omitting position ' + (', '.join(show_positions)) + ' because of missing diameter.\n\n' +
             'Export anyway?'
         )
 

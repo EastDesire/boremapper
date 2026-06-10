@@ -3,7 +3,7 @@ BoreMapper
 
 A woodwind instrument makers' app for mapping a profile of **split-bore** instruments (like Native American flute or forest flute).
 
-It can be used with routed as well as hand-chiseled bore, and is especially handy for an irregular bore.
+It can be used with a routed as well as hand-chiseled bore, and is especially handy for irregular bores.
 
 
 Motivation
@@ -33,7 +33,7 @@ Tools Needed
 - Depth caliper
 - Convenient ruler or tape measure
 
-**Recommendation:** To best utilize the app, it is recommended to use calipers with a **data output** feature. By enabling *Voice Hints* option in the app, it keeps reading the current position as you measure. This makes the process much smoother, as you don't need to keep checking the screen.
+**Recommendation:** To best utilize the app, it is recommended to use calipers with a **data output** feature. By enabling *Voice Hints* option in the app, it keeps reading the current position as you measure. This makes the process much easier, since you don't need to keep checking the screen.
 
 
 Exporting to WIDesigner

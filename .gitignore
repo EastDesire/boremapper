@@ -5,6 +5,8 @@ target/
 dist/
 build/
 
+main.spec
+
 *.py[cod]
 
 *.class

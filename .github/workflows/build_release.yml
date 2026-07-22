@@ -91,7 +91,7 @@ jobs:
           path: dist/
 
       - name: Create artifact - macOS
-        if: matrix.os == 'windows-latest'
+        if: matrix.os == 'macos-latest'
         uses: actions/upload-artifact@v6
         with:
           name: 'macos-executables'

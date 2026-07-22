@@ -78,21 +78,21 @@ jobs:
 
       - name: Create artifact - Windows
         if: matrix.os == 'windows-latest'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v6
         with:
           name: 'windows-executables'
           path: dist/
 
       - name: Create artifact - Linux
         if: matrix.os == 'ubuntu-latest'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v6
         with:
           name: 'linux-executables'
           path: dist/
 
       - name: Create artifact - macOS
         if: matrix.os == 'windows-latest'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v6
         with:
           name: 'macos-executables'
           path: dist/

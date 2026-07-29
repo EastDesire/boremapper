@@ -28,7 +28,7 @@ jobs:
         os:
           - 'windows-latest'
           - 'ubuntu-latest'
-          - 'macos-latest'
+#          - 'macos-latest'
 
     steps:
       - name: Checkout code
@@ -89,21 +89,18 @@ jobs:
         with:
           name: 'linux-executables'
           path: dist/
-
-      - name: Create artifact - macOS
-        if: matrix.os == 'macos-latest'
-        uses: actions/upload-artifact@v6
-        with:
-          name: 'macos-executables'
-          path: dist/
           
       - name: List the dist folder
         run: |
           ls -R dist/
-          
-          
-          
-          
+
+#      - name: Create artifact - macOS
+#        if: matrix.os == 'macos-latest'
+#        uses: actions/upload-artifact@v6
+#        with:
+#          name: 'macos-executables'
+#          path: dist/
+
 #      - name: 'Install makensis'
 #        if: matrix.os == 'windows-latest'
 #        run: |
@@ -114,7 +111,6 @@ jobs:
 #        run: |
 #          & "${env:ProgramFiles(x86)}\NSIS\makensis.exe" /V4 /DVERSION=${{ env.VERSION }} "install.nsi"
 
-          
 #      - name: Create Windows NSIS installer
 #        uses: EastDesire/makensis-action@publish
 #        with:

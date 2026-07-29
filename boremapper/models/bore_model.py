@@ -257,3 +257,16 @@ class BorePointModel(Model):
             (warning['part'].capitalize() + ' part: ' if 'part' in warning else '') +
             warning['text']
         )
+
+    @staticmethod
+    def distance(*points: list) -> float|None:
+        """
+        :param points: Points to evaluate
+        :return: Distance between the points that are furthest apart.
+        """
+        if len(points) == 0:
+            return None
+        if len(points) == 1:
+            return 0
+        positions = sorted(point.position for point in points)
+        return positions[-1] - positions[0]

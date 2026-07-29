@@ -96,6 +96,17 @@ def ellipse_horizontal_chord(a: float, b: float, h: float) -> float:
     return 2 * (a / b) * math.sqrt((2 * b * h) - (h * h))
 
 
+def conical_frustum_volume(r1: float, r2: float, h: float) -> float:
+    """
+    Calculates the volume of a conical frustum.
+    :param r1: radius 1
+    :param r2: radius 2
+    :param h: height
+    :return: volume
+    """
+    return (1 / 3) * math.pi * h * (math.pow(r1,2) + math.pow(r2,2) + (r1 * r2))
+
+
 def cutter_used_dimensions(groove_w: float, groove_h: float, cutter_w: float, cutter_h: float) -> tuple:
     """
     Calculates how much of the cutter width and height is used in the groove.
@@ -134,7 +145,6 @@ def cutter_used_dimensions(groove_w: float, groove_h: float, cutter_w: float, cu
 def groove_crosssectional_area(groove_w: float, groove_h: float, cutter_w: float, cutter_h: float) -> float:
     """
     Calculates cross-sectional area of the groove in flute's half part.
-
     :param groove_w: Groove width
     :param groove_h: Groove height
     :param cutter_w: Width (diameter) of the cutter used
@@ -149,3 +159,38 @@ def groove_crosssectional_area(groove_w: float, groove_h: float, cutter_w: float
         ((groove_w - cutter_used_w) * cutter_used_h) + # Rectangular area between round corners
         (groove_w * (groove_h - cutter_used_h)) # Remaining rectangular area
     )
+
+
+def volume_based_diameter(points: list) -> float|None:
+    """
+    Calculates the diameter of a cylinder that has the same volume and length as the tube described by input points.
+    :param points: Points describing the profile of the tube, as a list of tuples in format [(position, diameter), ...],
+    :return: diameter
+    """
+    if len(points) == 0:
+        # No points -> no diameter can be determined
+        return None
+    
+    if len(points) == 1:
+        # Just a single point -> the resulting diameter is point's diameter itself
+        return points[0][1]
+    
+    # Sort points by their position
+    points.sort(key=lambda p: p[0])
+
+    total_volume = 0
+    total_length = points[-1][0] - points[0][0]
+    
+    for i in range(1, len(points)):
+        prev_point = points[i - 1]
+        curr_point = points[i]
+        distance = curr_point[0] - prev_point[0]
+        segment_volume = conical_frustum_volume(
+            prev_point[1] / 2,
+            curr_point[1] / 2,
+            distance
+        )
+        total_volume += segment_volume
+
+    area = total_volume / total_length
+    return 2 * circle_radius_from_area(area)

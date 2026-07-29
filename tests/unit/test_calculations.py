@@ -3,7 +3,7 @@ import unittest
 
 from boremapper.calculations import (
     circle_radius_from_area, ellipse_area, ellipse_horizontal_chord, ellipse_horizontal_segment_area,
-    groove_crosssectional_area
+    groove_crosssectional_area, conical_frustum_volume, volume_based_diameter
 )
 
 
@@ -39,6 +39,16 @@ class CalculationsTestCase(unittest.TestCase):
         self.assertAlmostEqual(ellipse_horizontal_chord(10, 5, 5), 20)
         self.assertAlmostEqual(ellipse_horizontal_chord(10, 5, 2.5), 17.320508075688775)
         self.assertAlmostEqual(ellipse_horizontal_chord(5, 10, 2.5), 6.614378277661476)
+
+    def test_conical_frustum_volume(self):
+        def cylinder_volume(r, h):
+            return math.pi * math.pow(r, 2) * h
+        def cone_volume(r, h):
+            return (1 / 3) * math.pi * math.pow(r, 2) * h
+
+        self.assertAlmostEqual(conical_frustum_volume(5, 5, 3), cylinder_volume(5, 3))
+        self.assertAlmostEqual(conical_frustum_volume(0, 8, 10), cone_volume(8, 10))
+        self.assertAlmostEqual(conical_frustum_volume(8, 0, 10), cone_volume(8, 10))
 
     def test_groove_crosssectional_area_zero_cutter(self):
         self.assertAlmostEqual(
@@ -197,3 +207,23 @@ class CalculationsTestCase(unittest.TestCase):
             2 * groove_crosssectional_area(x, x / 2, 0.000001, 0.000001),
             x * x,
         )
+
+    def test_volume_based_diameter(self):
+        def cylinder_volume(r, h):
+            return math.pi * math.pow(r, 2) * h
+        def cone_volume(r, h):
+            return (1 / 3) * math.pi * math.pow(r, 2) * h
+
+        length = 13
+        volume = cone_volume(9/2, 5) + cylinder_volume(9/2, 3) + cone_volume(9/2, 5)
+        area = volume / length
+        expect_diam = 2 * math.sqrt(area / math.pi)
+        
+        points = [(10, 0), (15, 9), (18, 9), (23, 0)]
+        
+        self.assertAlmostEqual(volume_based_diameter(points), expect_diam)
+        self.assertAlmostEqual(volume_based_diameter(list(reversed(points))), expect_diam)
+
+        self.assertEqual(volume_based_diameter([]), None)
+        self.assertEqual(volume_based_diameter([(10, 0)]), 0)
+        self.assertEqual(volume_based_diameter([(10, 7)]), 7)

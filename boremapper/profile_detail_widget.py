@@ -153,7 +153,7 @@ class ProfileDetailWidget(QWidget):
         
         return [
             (
-                'Selection Length',
+                'Selection Length (L)',
                 self.dw.app.build_length_output(info['length']) if info['length'] is not None else '',
                 '',
             ),
@@ -163,7 +163,7 @@ class ProfileDetailWidget(QWidget):
                 '',
             ),
             (
-                'VD:Length Ratio',
+                'VD:L Ratio',
                 '1 : ' + ('{:.3f}'.format(ratio)) if ratio is not None else '',
                 '',
             ),

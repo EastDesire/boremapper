@@ -179,10 +179,10 @@ class App(QApplication):
 
     def create_open_document_dialog(self):
         dialog = QFileDialog(None)
-        dialog.setFileMode(QFileDialog.FileMode.ExistingFile)
+        dialog.setFileMode(QFileDialog.FileMode.ExistingFiles)
         dialog.setAcceptMode(QFileDialog.AcceptMode.AcceptOpen)
         dialog.setNameFilter('XML files (*.xml)')
-        dialog.fileSelected.connect(self.on_document_open_dialog_file_selected)
+        dialog.filesSelected.connect(self.on_document_open_dialog_files_selected)
         return dialog
 
     def find_document_window_by_file(self, file):
@@ -201,8 +201,8 @@ class App(QApplication):
             return True
         return False
 
-    def on_document_open_dialog_file_selected(self, file):
-        if file:
+    def on_document_open_dialog_files_selected(self, files):
+        for file in files:
             self.open_document(file)
 
     def play_sound(self, name):

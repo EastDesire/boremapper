@@ -7,7 +7,7 @@ from PySide6.QtCore import QByteArray, QUrl, QLocale
 from PySide6.QtMultimedia import QSoundEffect
 from PySide6.QtWidgets import QApplication, QFileDialog, QMessageBox
 
-import const
+from boremapper import const
 from boremapper import exceptions
 from boremapper.document_window import DocumentWindow
 from boremapper.length_units import LengthUnits

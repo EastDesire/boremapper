@@ -4,7 +4,7 @@ from xml.etree import ElementTree as ET
 from PySide6.QtGui import QColor, QScreen
 from PySide6.QtWidgets import QApplication, QWidget
 
-import const
+from boremapper import const
 from boremapper import exceptions
 from boremapper.length_units import LengthUnits
 

@@ -153,17 +153,17 @@ class ProfileDetailWidget(QWidget):
         
         return [
             (
-                'Selection Length (L)',
+                'Selection Length (SL)',
                 self.dw.app.build_length_output(info['length']) if info['length'] is not None else '',
                 '',
             ),
             (
-                'Volume-based Diameter (VD)',
+                'Selection Diameter (SD)',
                 self.dw.app.build_length_output(info['diameter']) if info['diameter'] is not None else '',
-                '',
+                'diameter of volume-equivalent cylinder',
             ),
             (
-                'VD:L Ratio',
+                'SD:SL Ratio',
                 '1 : ' + ('{:.3f}'.format(ratio)) if ratio is not None else '',
                 '',
             ),

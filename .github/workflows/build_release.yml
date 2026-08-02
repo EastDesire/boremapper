@@ -74,7 +74,6 @@ jobs:
 
       - name: Build executable
         run: |
-          pyi-makespec --paths=./boremapper ${{ env.MAIN_PY_FILE }}
           pyinstaller ${{ env.MAIN_PY_FILE }}
 
       - name: Create artifact - Windows

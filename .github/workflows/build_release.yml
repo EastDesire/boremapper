@@ -11,6 +11,7 @@ env:
   # TODO rem
   VERSION: '0.1.4'
   APP_NAME: 'BoreMapper'
+  MAIN_PY_FILE: 'boremapper/main.py'
 
 # TODO: put tags back
 #    tags:
@@ -73,8 +74,8 @@ jobs:
 
       - name: Build executable
         run: |
-          pyi-makespec --paths=./boremapper
-          pyinstaller boremapper/main.py
+          pyi-makespec --paths=./boremapper ${{ env.MAIN_PY_FILE }}
+          pyinstaller ${{ env.MAIN_PY_FILE }}
 
       - name: Create artifact - Windows
         if: matrix.os == 'windows-latest'

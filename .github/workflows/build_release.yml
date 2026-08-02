@@ -45,13 +45,10 @@ jobs:
 #          echo "VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 #          echo "GIT_TAG=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
       
-      # TODO: rem?
-      - name: Check vars
+      - name: Process version
         run: |
-          echo "version from extract_version: $MAJOR.$MINOR.PATCH"
+          VERSION="$MAJOR.$MINOR.$PATCH"
           echo "VERSION=$VERSION"
-          echo "env.VERSION=${{ env.VERSION }}"
-          echo "GIT_TAG=$GIT_TAG"
       
       # TODO: use APP_DIR instead of boremapper/
       # TODO rem cat?
@@ -87,14 +84,14 @@ jobs:
         if: matrix.os == 'windows-latest'
         uses: actions/upload-artifact@v6
         with:
-          name: 'windows-executables'
+          name: '${{ env.APP_NAME }}-${{ env.VERSION }}-windows'
           path: dist/
 
       - name: Create artifact - Linux
         if: matrix.os == 'ubuntu-latest'
         uses: actions/upload-artifact@v6
         with:
-          name: 'linux-executables'
+          name: '${{ env.APP_NAME }}-${{ env.VERSION }}-linux'
           path: dist/
           
       - name: List the dist folder

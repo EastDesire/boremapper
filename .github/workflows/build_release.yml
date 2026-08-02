@@ -33,6 +33,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0 # Needed for extract-version-from-tag-action
+          
+      - name: Extract version from tag
+        id: extract_version
+        uses: damienaicheh/extract-version-from-tag-action@v1.3.0
         
 #      - name: Set env vars
 #        run: |
@@ -42,6 +48,7 @@ jobs:
       # TODO: rem?
       - name: Check vars
         run: |
+          echo "version from extract_version: ${{ steps.extract_version.outputs.MAJOR }}.${{ steps.extract_version.outputs.MINOR }}.${{ steps.extract_version.outputs.PATCH }}"
           echo "VERSION=$VERSION"
           echo "env.VERSION=${{ env.VERSION }}"
           echo "GIT_TAG=$GIT_TAG"

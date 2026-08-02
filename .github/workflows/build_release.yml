@@ -9,7 +9,7 @@ on:
 
 env:
   # TODO rem
-  VERSION: '0.1.4'
+  #VERSION: '0.1.4'
   APP_NAME: 'BoreMapper'
   MAIN_PY_FILE: 'boremapper/main.py'
 
@@ -48,7 +48,7 @@ jobs:
       # TODO: rem?
       - name: Check vars
         run: |
-          echo "version from extract_version: ${{ steps.extract_version.outputs.MAJOR }}.${{ steps.extract_version.outputs.MINOR }}.${{ steps.extract_version.outputs.PATCH }}"
+          echo "version from extract_version: $MAJOR.$MINOR.PATCH"
           echo "VERSION=$VERSION"
           echo "env.VERSION=${{ env.VERSION }}"
           echo "GIT_TAG=$GIT_TAG"

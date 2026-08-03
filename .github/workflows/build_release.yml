@@ -57,7 +57,7 @@ jobs:
 
       - name: Build executable
         run: |
-          pyinstaller ${{ env.MAIN_PY_FILE }}
+          pyinstaller "${{ env.MAIN_PY_FILE }}" -n "${{ env.APP_NAME }}"
 
       - name: Create artifact
         uses: actions/upload-artifact@v6
@@ -112,12 +112,7 @@ jobs:
 
       - name: Build executable
         run: |
-          pyinstaller ${{ env.MAIN_PY_FILE }}
-
-#      - name: Create hashes
-#        run: |
-#          sha1sum "${{ env.APP_NAME }}-${{ env.VERSION }}-linux" > "${{ env.APP_NAME }}-${{ env.VERSION }}-linux.sha1"
-#          cat "${{ env.APP_NAME }}-${{ env.VERSION }}-linux.sha1"
+          pyinstaller "${{ env.MAIN_PY_FILE }}" -n "${{ env.APP_NAME }}"
 
       - name: Create artifact
         uses: actions/upload-artifact@v6
@@ -159,9 +154,9 @@ jobs:
       - name: Create release files
         run: |
           ls -R
-          mkdir release/
-          zip -r release/APP_NAME-$VERSION-windows.zip artifacts/$APP_NAME-$VERSION-windows
-          tar -cvzf release/$APP_NAME-$VERSION-linux.tar.gz artifacts/$APP_NAME-$VERSION-linux
+          mkdir release
+          (cd artifacts/$APP_NAME-$VERSION-windows/ && zip -r ../release/$APP_NAME-$VERSION-windows.zip .)
+          (cd artifacts/$APP_NAME-$VERSION-linux/ && tar -cvzf ../release/$APP_NAME-$VERSION-linux.tar.gz .)
     
       - name: Add files to GitHub release
         uses: softprops/action-gh-release@v3

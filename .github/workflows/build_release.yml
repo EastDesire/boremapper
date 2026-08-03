@@ -160,7 +160,7 @@ jobs:
         with:
           token: ${{ secrets.RELEASE_TOKEN }}
           files: |
-            ${{ github.workspace }}/artifacts/${{ env.APP_NAME }}-*
+            artifacts/${{ env.APP_NAME }}-*
 
       - name: Create GitHub release
         uses: Roang-zero1/github-create-release-action@v3

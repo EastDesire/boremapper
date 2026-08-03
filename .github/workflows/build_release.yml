@@ -158,6 +158,7 @@ jobs:
       - name: Add files to GitHub release
         uses: softprops/action-gh-release@v3
         with:
+          token: ${{ secrets.RELEASE_TOKEN }}
           files: |
             ${{ github.workspace }}/artifacts/${{ env.APP_NAME }}-*
 
@@ -167,4 +168,4 @@ jobs:
           update_existing: true
           version_regex: ^v[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+
         env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN_FOR_RELEASES }}
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}

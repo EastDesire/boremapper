@@ -32,20 +32,18 @@ build-windows:
 	pyinstaller \
 		"${MAIN_FILE}" \
 		--onefile \
-		--distpath dist/windows \
 		--name "${APP_NAME}" \
 		--icon "${ICON_FILE}" \
 		--add-data "${RESOURCES_DIR}:${RESOURCES_DIR}" \
 		--noconsole
-	cp -r extras/* dist/windows/
+	cp -r extras/* dist/
 	
 .PHONY: build-linux
 build-linux:
 	pyinstaller \
 		"${MAIN_FILE}" \
 		--onefile \
-		--distpath dist/linux \
 		--name "${APP_NAME}" \
 		--icon "${ICON_FILE}" \
 		--add-data "${RESOURCES_DIR}:${RESOURCES_DIR}"
-	cp -r extras/* dist/linux/
+	cp -r extras/* dist/

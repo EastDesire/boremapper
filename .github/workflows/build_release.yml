@@ -8,10 +8,9 @@ on:
       - main
 
 env:
-  # TODO rem
-  #VERSION: '0.1.4'
   APP_NAME: 'BoreMapper'
-  MAIN_PY_FILE: 'boremapper/main.py'
+  APP_DIR: 'boremapper/'
+  MAIN_PY_FILE: '${{ env.APP_DIR }}main.py'
 
 # TODO: put tags back
 #    tags:
@@ -37,13 +36,11 @@ jobs:
         run: |
           Add-Content -Path $env:GITHUB_ENV -Value "VERSION=${env:MAJOR}.${env:MINOR}.${env:PATCH}"
       
-      # TODO: use APP_DIR instead of boremapper/
-      # TODO rem cat?
       - name: Write version
         run: |
-          echo "VERSION = '${env:VERSION}'" > boremapper/version.py
+          echo "VERSION = '${env:VERSION}'" > "${env:APP_DIR}version.py"
           echo "Version file contents:"
-          cat boremapper/version.py
+          cat "${env:APP_DIR}version.py"
 
       - name: Setup Python
         uses: actions/setup-python@v6
@@ -93,13 +90,11 @@ jobs:
         run: |
           echo "VERSION=$MAJOR.$MINOR.$PATCH" >> $GITHUB_ENV
       
-      # TODO: use APP_DIR instead of boremapper/
-      # TODO rem cat?
       - name: Write version
         run: |
-          echo "VERSION = '$VERSION'" > boremapper/version.py
+          echo "VERSION = '$VERSION'" > "${APP_DIR}version.py"
           echo "Version file contents:"
-          cat boremapper/version.py
+          cat "${APP_DIR}version.py"
 
       - name: Setup Python
         uses: actions/setup-python@v6

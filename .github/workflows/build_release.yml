@@ -167,4 +167,4 @@ jobs:
           update_existing: true
           version_regex: ^v[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+
         env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN_FOR_RELEASING }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN_FOR_RELEASES }}

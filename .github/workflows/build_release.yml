@@ -155,8 +155,8 @@ jobs:
         run: |
           ls -R
           mkdir release
-          (cd artifacts/$APP_NAME-$VERSION-windows/ && zip -r ../release/$APP_NAME-$VERSION-windows.zip .)
-          (cd artifacts/$APP_NAME-$VERSION-linux/ && tar -cvzf ../release/$APP_NAME-$VERSION-linux.tar.gz .)
+          (cd artifacts/$APP_NAME-$VERSION-windows/ && zip -r ../../release/$APP_NAME-$VERSION-windows.zip .)
+          (cd artifacts/$APP_NAME-$VERSION-linux/ && tar -cvzf ../../release/$APP_NAME-$VERSION-linux.tar.gz .)
     
       - name: Add files to GitHub release
         uses: softprops/action-gh-release@v3

@@ -149,7 +149,6 @@ jobs:
       - name: Download and extract artifacts
         uses: actions/download-artifact@v8
         with:
-          # TODO: or dist/?
           path: artifacts
     
       - name: List files
@@ -157,12 +156,10 @@ jobs:
           ls -R
     
       - name: Add files to GitHub release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
-          # TODO: or dist/?
           files: |
-            ${{ github.workspace }}/artifacts/${{ env.APP_NAME }}-${{ env.VERSION }}-windows
-            ${{ github.workspace }}/artifacts/${{ env.APP_NAME }}-${{ env.VERSION }}-linux
+            ${{ github.workspace }}/artifacts/${{ env.APP_NAME }}-*
 
       - name: Create GitHub release
         uses: Roang-zero1/github-create-release-action@v3
@@ -170,4 +167,4 @@ jobs:
           update_existing: true
           version_regex: ^v[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN_FOR_RELEASING }}

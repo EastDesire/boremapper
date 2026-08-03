@@ -160,7 +160,7 @@ class ProfileDetailWidget(QWidget):
             (
                 'Selection Diameter (SD)',
                 self.dw.app.build_length_output(info['diameter']) if info['diameter'] is not None else '',
-                'diameter of volume-equivalent cylinder',
+                'Diameter of volume-equivalent cylinder',
             ),
             (
                 'SD:SL Ratio',

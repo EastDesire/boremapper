@@ -17,8 +17,6 @@ env:
 jobs:
   
   build-windows:
-    needs:
-      - init-build
     if: github.event.base_ref == 'refs/heads/main'
     runs-on: 'windows-latest'
     
@@ -74,8 +72,6 @@ jobs:
           ls -R dist/
 
   build-linux:
-    needs:
-      - init-build
     if: github.event.base_ref == 'refs/heads/main'
     runs-on: 'ubuntu-latest'
     

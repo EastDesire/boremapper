@@ -227,5 +227,3 @@ class CalculationsTestCase(unittest.TestCase):
         self.assertEqual(volume_based_diameter([]), None)
         self.assertEqual(volume_based_diameter([(10, 0)]), 0)
         self.assertEqual(volume_based_diameter([(10, 7)]), 7)
-        
-        self.assertEqual(0, 1)

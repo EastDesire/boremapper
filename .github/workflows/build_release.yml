@@ -13,35 +13,27 @@ env:
   APP_NAME: 'BoreMapper'
   APP_DIR: 'boremapper/'
   MAIN_PY_FILE: 'boremapper/main.py'
-  BUILD_AT_REF: 'refs/heads/main'
 
 jobs:
-  
-  init-build:
-    if: github.event.base_ref == ${{ env.BUILD_AT_REF }}
-    runs-on: 'ubuntu-latest'
-
-    steps:
-      - name: Extract version from tag
-        uses: damienaicheh/extract-version-from-tag-action@v1.3.0
-
-      - name: Store version
-        run: |
-          echo "VERSION=$MAJOR.$MINOR.$PATCH" >> "$GITHUB_OUTPUT"
   
   build-windows:
     needs:
       - init-build
+    if: github.event.base_ref == 'refs/heads/main'
     runs-on: 'windows-latest'
     
-    env:
-      VERSION: ${{ steps.init-build.outputs.VERSION }}
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
         with:
           fetch-depth: 0 # Needed for extract-version-from-tag-action
+          
+      - name: Extract version from tag
+        uses: damienaicheh/extract-version-from-tag-action@v1.3.0
+
+      - name: Process version
+        run: |
+          Add-Content -Path $env:GITHUB_ENV -Value "VERSION=${env:MAJOR}.${env:MINOR}.${env:PATCH}"
       
       - name: Write version file
         run: |
@@ -84,17 +76,22 @@ jobs:
   build-linux:
     needs:
       - init-build
+    if: github.event.base_ref == 'refs/heads/main'
     runs-on: 'ubuntu-latest'
     
-    env:
-      VERSION: ${{ steps.init-build.outputs.VERSION }}
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
         with:
           fetch-depth: 0 # Needed for extract-version-from-tag-action
+          
+      - name: Extract version from tag
+        uses: damienaicheh/extract-version-from-tag-action@v1.3.0
 
+      - name: Process version
+        run: |
+          echo "VERSION=$MAJOR.$MINOR.$PATCH" >> $GITHUB_ENV
+      
       - name: Write version file
         run: |
           echo "VERSION = '$VERSION'" > "${APP_DIR}version.py"
@@ -147,7 +144,14 @@ jobs:
     
     steps:
       - uses: actions/checkout@v6
-    
+        
+      - name: Extract version from tag
+        uses: damienaicheh/extract-version-from-tag-action@v1.3.0
+
+      - name: Process version
+        run: |
+          echo "VERSION=$MAJOR.$MINOR.$PATCH" >> $GITHUB_ENV
+      
       - name: Download and extract artifacts
         uses: actions/download-artifact@v8
         with:

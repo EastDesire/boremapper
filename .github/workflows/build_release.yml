@@ -67,20 +67,12 @@ jobs:
         run: |
           pyinstaller ${{ env.MAIN_PY_FILE }}
 
-      - name: Create artifact - Windows
-        if: matrix.os == 'windows-latest'
+      - name: Create artifact
         uses: actions/upload-artifact@v6
         with:
           name: '${{ env.APP_NAME }}-${{ env.VERSION }}-windows'
           path: dist/
 
-      - name: Create artifact - Linux
-        if: matrix.os == 'ubuntu-latest'
-        uses: actions/upload-artifact@v6
-        with:
-          name: '${{ env.APP_NAME }}-${{ env.VERSION }}-linux'
-          path: dist/
-          
       - name: List the dist folder
         run: |
           ls -R dist/
@@ -131,15 +123,7 @@ jobs:
         run: |
           pyinstaller ${{ env.MAIN_PY_FILE }}
 
-      - name: Create artifact - Windows
-        if: matrix.os == 'windows-latest'
-        uses: actions/upload-artifact@v6
-        with:
-          name: '${{ env.APP_NAME }}-${{ env.VERSION }}-windows'
-          path: dist/
-
-      - name: Create artifact - Linux
-        if: matrix.os == 'ubuntu-latest'
+      - name: Create artifact
         uses: actions/upload-artifact@v6
         with:
           name: '${{ env.APP_NAME }}-${{ env.VERSION }}-linux'

@@ -1,8 +1,8 @@
 APP_NAME=BoreMapper
 APP_DIR=boremapper
-RESOURCES_DIR=resources
+RESOURCES_DIR=${APP_DIR}/resources
 MAIN_FILE=${APP_DIR}/main.py
-ICON_FILE=${APP_DIR}/${RESOURCES_DIR}/app_icon.png
+ICON_FILE=${RESOURCES_DIR}/app_icon.png
 
 .PHONY: init
 init:
@@ -14,7 +14,7 @@ init-dev:
 
 .PHONY: clean
 clean:
-	rm -rf dist/
+	rm -rf dist/ build/ *.spec
 
 .PHONY: test-unit
 test-unit:
@@ -35,6 +35,6 @@ build-windows:
 		--distpath dist/windows \
 		--name "${APP_NAME}" \
 		--icon "${ICON_FILE}" \
-		--add-data "${APP_DIR}/${RESOURCES_DIR}:${RESOURCES_DIR}" \
+		--add-data "${RESOURCES_DIR}:${RESOURCES_DIR}" \
 		--noconsole
 	cp -r extras/* dist/windows/

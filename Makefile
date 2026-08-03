@@ -32,8 +32,9 @@ build-windows:
 	pyinstaller \
 		"${MAIN_FILE}" \
 		--onefile \
+		--distpath dist/windows \
 		--name "${APP_NAME}" \
 		--icon "${ICON_FILE}" \
 		--add-data "${APP_DIR}/${RESOURCES_DIR}:${RESOURCES_DIR}" \
 		--noconsole
-	cp -r extras/* dist/
+	cp -r extras/* dist/windows/

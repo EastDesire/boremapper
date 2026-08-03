@@ -61,8 +61,8 @@ jobs:
       - name: Create artifact
         uses: actions/upload-artifact@v6
         with:
-          name: 'windows-build'
-          path: dist/
+          name: 'windows-dist'
+          path: dist/windows/
 
       - name: Show dist files
         run: |
@@ -112,8 +112,8 @@ jobs:
 #      - name: Create artifact
 #        uses: actions/upload-artifact@v6
 #        with:
-#          name: 'linux-build'
-#          path: dist/
+#          name: 'linux-dist'
+#          path: dist/linux/
 #
 #      - name: Show dist files
 #        run: |
@@ -146,12 +146,12 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y zip tar gzip
       
-      - name: Create release files
+      - name: Create release archives
         run: |
           ls -R
           mkdir release
-          (cd artifacts/windows-build/ && zip -r ../../release/$APP_NAME-$VERSION-windows.zip .)
-#          (cd artifacts/linux-build/ && tar -cvzf ../../release/$APP_NAME-$VERSION-linux.tar.gz .)
+          (cd artifacts/windows-dist/ && zip -r ../../release/$APP_NAME-$VERSION-windows.zip .)
+#          (cd artifacts/linux-dist/ && tar -cvzf ../../release/$APP_NAME-$VERSION-linux.tar.gz .)
     
       - name: Add files to GitHub release
         uses: softprops/action-gh-release@v3

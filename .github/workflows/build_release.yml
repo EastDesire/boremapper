@@ -49,7 +49,7 @@ jobs:
           echo "MAJOR=$MAJOR"
           echo "env:MAJOR=${env:MAJOR}"
           echo ${env:MAJOR}
-          echo "VERSION=${env:MAJOR}.${env:MINOR}.${env:PATCH}" >> "$GITHUB_ENV"
+          Add-Content -Path $env:GITHUB_ENV -Value "VERSION=${env:MAJOR}.${env:MINOR}.${env:PATCH}"
       
       # TODO: use APP_DIR instead of boremapper/
       # TODO rem cat?

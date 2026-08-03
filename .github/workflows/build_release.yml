@@ -62,7 +62,7 @@ jobs:
         uses: actions/upload-artifact@v6
         with:
           name: 'windows-dist'
-          path: dist/windows/
+          path: dist/
 
       - name: Show dist files
         run: |
@@ -113,7 +113,7 @@ jobs:
 #        uses: actions/upload-artifact@v6
 #        with:
 #          name: 'linux-dist'
-#          path: dist/linux/
+#          path: dist/
 #
 #      - name: Show dist files
 #        run: |
@@ -150,8 +150,8 @@ jobs:
         run: |
           ls -R
           mkdir release
-          (cd artifacts/windows-dist/ && zip -r ../../release/$APP_NAME-$VERSION-windows.zip .)
-#          (cd artifacts/linux-dist/ && tar -cvzf ../../release/$APP_NAME-$VERSION-linux.tar.gz .)
+          (cd artifacts/windows/ && zip -r ../../release/$APP_NAME-$VERSION-windows.zip .)
+#          (cd artifacts/linux/ && tar -cvzf ../../release/$APP_NAME-$VERSION-linux.tar.gz .)
     
       - name: Add files to GitHub release
         uses: softprops/action-gh-release@v3

@@ -153,8 +153,8 @@ jobs:
 
       - name: Install command-line tools
         run: |
-          apt-get update
-          apt-get install -y zip tar gzip
+          sudo apt-get update
+          sudo apt-get install -y zip tar gzip
       
       - name: Create release files
         run: |

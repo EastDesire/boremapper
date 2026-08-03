@@ -20,15 +20,9 @@ env:
 #    branches: [ main ]
 
 jobs:
-  build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os:
-          - 'windows-latest'
-#          - 'ubuntu-latest'
-#          - 'macos-latest'
+  
+  build-windows:
+    runs-on: 'windows-latest'
 
     steps:
       - name: Checkout code
@@ -38,25 +32,15 @@ jobs:
           
       - name: Extract version from tag
         uses: damienaicheh/extract-version-from-tag-action@v1.3.0
-        
-#      - name: Set env vars
-#        run: |
-#          echo "VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
-#          echo "GIT_TAG=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
       
       - name: Process version
         run: |
-          echo "MAJOR=$MAJOR"
-          echo "env:MAJOR=${env:MAJOR}"
-          echo ${env:MAJOR}
           Add-Content -Path $env:GITHUB_ENV -Value "VERSION=${env:MAJOR}.${env:MINOR}.${env:PATCH}"
       
       # TODO: use APP_DIR instead of boremapper/
       # TODO rem cat?
       - name: Write version
         run: |
-          echo "VERSION=$VERSION"
-          echo "env:VERSION=${env:VERSION}"
           echo "VERSION = '${env:VERSION}'" > boremapper/version.py
           echo "Version file contents:"
           cat boremapper/version.py
@@ -100,6 +84,72 @@ jobs:
       - name: List the dist folder
         run: |
           ls -R dist/
+
+  build-linux:
+    runs-on: 'ubuntu-latest'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0 # Needed for extract-version-from-tag-action
+
+      - name: Extract version from tag
+        uses: damienaicheh/extract-version-from-tag-action@v1.3.0
+
+      - name: Process version
+        run: |
+          echo "VERSION=$MAJOR.$MINOR.$PATCH" >> $GITHUB_ENV
+      
+      # TODO: use APP_DIR instead of boremapper/
+      # TODO rem cat?
+      - name: Write version
+        run: |
+          echo "VERSION = '$VERSION'" > boremapper/version.py
+          echo "Version file contents:"
+          cat boremapper/version.py
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: 3.14.x
+          #architecture: 'x64'
+          cache: 'pip'
+          cache-dependency-path: |
+            **/requirements*.txt
+
+      - name: Install requirements
+        run: |
+          pip install -r requirements.txt
+          pip install -r requirements_dev.txt
+
+      - name: Install PyInstaller
+        run: |
+          pip install pyinstaller
+
+      - name: Build executable
+        run: |
+          pyinstaller ${{ env.MAIN_PY_FILE }}
+
+      - name: Create artifact - Windows
+        if: matrix.os == 'windows-latest'
+        uses: actions/upload-artifact@v6
+        with:
+          name: '${{ env.APP_NAME }}-${{ env.VERSION }}-windows'
+          path: dist/
+
+      - name: Create artifact - Linux
+        if: matrix.os == 'ubuntu-latest'
+        uses: actions/upload-artifact@v6
+        with:
+          name: '${{ env.APP_NAME }}-${{ env.VERSION }}-linux'
+          path: dist/
+
+      - name: List the dist folder
+        run: |
+          ls -R dist/
+
+
 
 #      - name: Create artifact - macOS
 #        if: matrix.os == 'macos-latest'

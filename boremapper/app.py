@@ -4,6 +4,7 @@ from xml.etree import ElementTree as ET
 
 import pyttsx3
 from PySide6.QtCore import QByteArray, QUrl, QLocale
+from PySide6.QtGui import QPixmap
 from PySide6.QtMultimedia import QSoundEffect
 from PySide6.QtWidgets import QApplication, QFileDialog, QMessageBox
 
@@ -29,6 +30,7 @@ class App(QApplication):
         self.setApplicationName(const.APP_NAME)
         self.setApplicationVersion(const.APP_VERSION)
         self.setQuitOnLastWindowClosed(True)
+        self.setWindowIcon(self.icon_pixmap())
         
         self.settings = None
         self.sounds = None
@@ -220,6 +222,9 @@ class App(QApplication):
     def try_say(self, text):
         if self.settings.load('audio', 'voice_hints'):
             self.say(text)
+            
+    def icon_pixmap(self) -> 'QPixmap':
+        return QPixmap(const.RESOURCES_DIR + '/app_icon.png')
 
     def show_error(self, text):
         msg = QMessageBox(None)

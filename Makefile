@@ -1,5 +1,8 @@
 APP_NAME=BoreMapper
 APP_DIR=boremapper
+RESOURCES_DIR=resources
+MAIN_FILE=${APP_DIR}/main.py
+ICON_FILE=${APP_DIR}/${RESOURCES_DIR}/app_icon.png
 
 .PHONY: init
 init:
@@ -26,33 +29,10 @@ test-static:
 	
 .PHONY: build-windows
 build-windows:
-	python3 -m pip install speechlib
-	python3 -m nuitka \
-		--assume-yes-for-downloads \
-		--mode=app \
-		--follow-imports \
-		--enable-plugins=pyside6 \
-		--include-package=pyttsx3 \
-		--include-package=speechlib \
-		--include-data-dir="${APP_DIR}/resources=resources" \
-		--include-data-files="./data/*.xml=data" \
-		--output-dir=dist/ \
-		--output-filename="${APP_NAME}-$(version).exe" \
-		--output-folder-name="${APP_NAME}" \
-		"${APP_DIR}/main.py"
-	
-.PHONY: build-macos
-build-macos:
-	python3 -m nuitka \
-		--assume-yes-for-downloads \
-		--mode=app \
-		--follow-imports \
-		--enable-plugins=pyside6 \
-		--include-package=pyttsx3 \
-		--include-data-dir="${APP_DIR}/resources=resources" \
-		--include-data-files="./data/*.xml=data" \
-		--output-dir=dist/ \
-		--output-filename="${APP_NAME}-$(version).bin" \
-		--output-folder-name="${APP_NAME}" \
-		--macos-app-name="${APP_NAME}" \
-		"${APP_DIR}/main.py"
+	pyinstaller \
+		"${MAIN_FILE}" \
+		--onefile \
+		--name "${APP_NAME}" \
+		--icon "${ICON_FILE}" \
+		--add-data "${APP_DIR}/${RESOURCES_DIR}:${RESOURCES_DIR}" \
+		--noconsole

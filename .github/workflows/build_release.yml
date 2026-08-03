@@ -10,7 +10,6 @@ on:
 env:
   APP_NAME: 'BoreMapper'
   APP_DIR: 'boremapper/'
-  MAIN_PY_FILE: 'boremapper/main.py'
 
 jobs:
   
@@ -46,18 +45,18 @@ jobs:
           cache-dependency-path: |
             **/requirements*.txt
 
-      - name: Install requirements
+      - name: Init environment
         run: |
-          pip install -r requirements.txt
-          pip install -r requirements_dev.txt
-        
-      - name: Install PyInstaller
-        run: |
-          pip install pyinstaller
+          make init
+          make init-dev
 
-      - name: Build executable
+      - name: Run tests
         run: |
-          pyinstaller "${{ env.MAIN_PY_FILE }}" -n "${{ env.APP_NAME }}"
+          make test-unit
+
+      - name: Build app
+        run: |
+          make build-windows
 
       - name: Create artifact
         uses: actions/upload-artifact@v6
@@ -65,69 +64,65 @@ jobs:
           name: '${{ env.APP_NAME }}-${{ env.VERSION }}-windows'
           path: dist/
 
-      - name: List the dist folder
+      - name: Show dist files
         run: |
           ls -R dist/
 
-  build-linux:
-    if: github.event.base_ref == 'refs/heads/main'
-    runs-on: 'ubuntu-latest'
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 0 # Needed for extract-version-from-tag-action
-          
-      - name: Extract version from tag
-        uses: damienaicheh/extract-version-from-tag-action@v1.3.0
-
-      - name: Process version
-        run: |
-          echo "VERSION=$MAJOR.$MINOR.$PATCH" >> $GITHUB_ENV
-      
-      - name: Write version file
-        run: |
-          echo "VERSION = '$VERSION'" > "${APP_DIR}version.py"
-          echo "Version file contents:"
-          cat "${APP_DIR}version.py"
-
-      - name: Setup Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: 3.14.x
-          architecture: 'x64'
-          cache: 'pip'
-          cache-dependency-path: |
-            **/requirements*.txt
-
-      - name: Install requirements
-        run: |
-          pip install -r requirements.txt
-          pip install -r requirements_dev.txt
-
-      - name: Install PyInstaller
-        run: |
-          pip install pyinstaller
-
-      - name: Build executable
-        run: |
-          pyinstaller "${{ env.MAIN_PY_FILE }}" -n "${{ env.APP_NAME }}"
-
-      - name: Create artifact
-        uses: actions/upload-artifact@v6
-        with:
-          name: '${{ env.APP_NAME }}-${{ env.VERSION }}-linux'
-          path: dist/
-
-      - name: List the dist folder
-        run: |
-          ls -R dist/
+#  build-linux:
+#    if: github.event.base_ref == 'refs/heads/main'
+#    runs-on: 'ubuntu-latest'
+#    
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v6
+#        with:
+#          fetch-depth: 0 # Needed for extract-version-from-tag-action
+#          
+#      - name: Extract version from tag
+#        uses: damienaicheh/extract-version-from-tag-action@v1.3.0
+#
+#      - name: Process version
+#        run: |
+#          echo "VERSION=$MAJOR.$MINOR.$PATCH" >> $GITHUB_ENV
+#      
+#      - name: Write version file
+#        run: |
+#          echo "VERSION = '$VERSION'" > "${APP_DIR}version.py"
+#          echo "Version file contents:"
+#          cat "${APP_DIR}version.py"
+#
+#      - name: Setup Python
+#        uses: actions/setup-python@v6
+#        with:
+#          python-version: 3.14.x
+#          architecture: 'x64'
+#          cache: 'pip'
+#          cache-dependency-path: |
+#            **/requirements*.txt
+#
+#      - name: Install requirements
+#        run: |
+#          pip install -r requirements.txt
+#          pip install -r requirements_dev.txt
+#
+#      - name: Build executable
+#        run: |
+#          pyinstaller "${{ env.MAIN_PY_FILE }}" -n "${{ env.APP_NAME }}"
+#
+#      - name: Create artifact
+#        uses: actions/upload-artifact@v6
+#        with:
+#          name: '${{ env.APP_NAME }}-${{ env.VERSION }}-linux'
+#          path: dist/
+#
+#      - name: Show dist files
+#        run: |
+#          ls -R dist/
 
   release:
     needs:
       - build-windows
-      - build-linux
+#      - build-linux
     runs-on: ubuntu-latest
     if: startswith(github.ref, 'refs/tags/v')
     
@@ -156,7 +151,7 @@ jobs:
           ls -R
           mkdir release
           (cd artifacts/$APP_NAME-$VERSION-windows/ && zip -r ../../release/$APP_NAME-$VERSION-windows.zip .)
-          (cd artifacts/$APP_NAME-$VERSION-linux/ && tar -cvzf ../../release/$APP_NAME-$VERSION-linux.tar.gz .)
+#          (cd artifacts/$APP_NAME-$VERSION-linux/ && tar -cvzf ../../release/$APP_NAME-$VERSION-linux.tar.gz .)
     
       - name: Add files to GitHub release
         uses: softprops/action-gh-release@v3

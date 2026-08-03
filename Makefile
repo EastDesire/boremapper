@@ -16,16 +16,16 @@ init-dev:
 clean:
 	rm -rf dist/ build/ *.spec
 
-.PHONY: test-unit
-test-unit:
-	tests/unit_tests.py
-
 .PHONY: test-static
 test-static:
 	python3 -m pylint "${APP_DIR}/" \
 		--errors-only \
 		--init-hook='import sys; sys.path.insert(0, "./")' \
 		--extension-pkg-whitelist=PySide6
+
+.PHONY: test-unit
+test-unit:
+	tests/unit_tests.py
 	
 .PHONY: build-windows
 build-windows:
@@ -38,3 +38,14 @@ build-windows:
 		--add-data "${RESOURCES_DIR}:${RESOURCES_DIR}" \
 		--noconsole
 	cp -r extras/* dist/windows/
+	
+.PHONY: build-linux
+build-linux:
+	pyinstaller \
+		"${MAIN_FILE}" \
+		--onefile \
+		--distpath dist/linux \
+		--name "${APP_NAME}" \
+		--icon "${ICON_FILE}" \
+		--add-data "${RESOURCES_DIR}:${RESOURCES_DIR}"
+	cp -r extras/* dist/linux/

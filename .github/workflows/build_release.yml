@@ -1,6 +1,6 @@
 # Inspired by https://github.com/NotCookey/Pyinstaller-Github-Actions
 
-name: Build
+name: Build and release
 
 on:
   push:

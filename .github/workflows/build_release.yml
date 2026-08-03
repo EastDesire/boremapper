@@ -27,7 +27,7 @@ jobs:
       matrix:
         os:
           - 'windows-latest'
-          - 'ubuntu-latest'
+#          - 'ubuntu-latest'
 #          - 'macos-latest'
 
     steps:
@@ -37,7 +37,6 @@ jobs:
           fetch-depth: 0 # Needed for extract-version-from-tag-action
           
       - name: Extract version from tag
-        id: extract_version
         uses: damienaicheh/extract-version-from-tag-action@v1.3.0
         
 #      - name: Set env vars

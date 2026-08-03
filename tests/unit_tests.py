@@ -16,7 +16,10 @@ def main():
     suite = loader.discover(test_dir, test_pattern, app_root_dir)
 
     runner = unittest.TextTestRunner()
-    runner.run(suite)
+    result = runner.run(suite)
+    
+    if not result.wasSuccessful():
+        sys.exit(1)
 
 if __name__ == '__main__':
     main()

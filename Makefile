@@ -36,3 +36,4 @@ build-windows:
 		--icon "${ICON_FILE}" \
 		--add-data "${APP_DIR}/${RESOURCES_DIR}:${RESOURCES_DIR}" \
 		--noconsole
+	cp -r extras/* dist/

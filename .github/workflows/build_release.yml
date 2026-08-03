@@ -161,9 +161,7 @@ jobs:
           # TODO: or dist/?
           files: |
             ${{ github.workspace }}/artifacts/${{ env.APP_NAME }}-${{ env.VERSION }}-windows
-            ${{ github.workspace }}/artifacts/${{ env.APP_NAME }}-${{ env.VERSION }}-windows.sha1
             ${{ github.workspace }}/artifacts/${{ env.APP_NAME }}-${{ env.VERSION }}-linux
-            ${{ github.workspace }}/artifacts/${{ env.APP_NAME }}-${{ env.VERSION }}-linux.sha1
 
       - name: Create GitHub release
         uses: Roang-zero1/github-create-release-action@v3

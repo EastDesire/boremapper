@@ -154,7 +154,7 @@ jobs:
       - name: Install command-line tools
         run: |
           apt-get update
-          apt-get install -y zip gzip tar
+          apt-get install -y zip tar gzip
       
       - name: Create release files
         run: |

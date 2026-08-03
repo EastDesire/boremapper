@@ -138,18 +138,12 @@ jobs:
     
     steps:
       - uses: actions/checkout@v6
-        
-      - name: Extract version from tag
-        uses: damienaicheh/extract-version-from-tag-action@v1.3.0
-
-      - name: Process version
-        run: |
-          echo "VERSION=$MAJOR.$MINOR.$PATCH" >> $GITHUB_ENV
       
       - name: Download and extract artifacts
         uses: actions/download-artifact@v8
         with:
           path: artifacts
+          skip-decompress: true
     
       - name: List files
         run: |
@@ -160,7 +154,7 @@ jobs:
         with:
           token: ${{ secrets.RELEASE_TOKEN }}
           files: |
-            artifacts/${{ env.APP_NAME }}-*
+            ${{ github.workspace }}/artifacts/${{ env.APP_NAME }}-*
 
       - name: Create GitHub release
         uses: Roang-zero1/github-create-release-action@v3

@@ -138,23 +138,37 @@ jobs:
     
     steps:
       - uses: actions/checkout@v6
-      
+
+      - name: Extract version from tag
+        uses: damienaicheh/extract-version-from-tag-action@v1.3.0
+
+      - name: Process version
+        run: |
+          echo "VERSION=$MAJOR.$MINOR.$PATCH" >> $GITHUB_ENV
+
       - name: Download and extract artifacts
         uses: actions/download-artifact@v8
         with:
           path: artifacts
-          skip-decompress: true
-    
-      - name: List files
+
+      - name: Install command-line tools
+        run: |
+          apt-get update
+          apt-get install -y zip gzip tar
+      
+      - name: Create release files
         run: |
           ls -R
+          mkdir release/
+          zip -r release/APP_NAME-$VERSION-windows.zip artifacts/$APP_NAME-$VERSION-windows
+          tar -cvzf release/$APP_NAME-$VERSION-linux.tar.gz artifacts/$APP_NAME-$VERSION-linux
     
       - name: Add files to GitHub release
         uses: softprops/action-gh-release@v3
         with:
           token: ${{ secrets.RELEASE_TOKEN }}
           files: |
-            ${{ github.workspace }}/artifacts/${{ env.APP_NAME }}-*
+            release/*
 
       - name: Create GitHub release
         uses: Roang-zero1/github-create-release-action@v3

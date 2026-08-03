@@ -27,7 +27,7 @@ jobs:
       matrix:
         os:
           - 'windows-latest'
-#          - 'ubuntu-latest'
+          - 'ubuntu-latest'
 #          - 'macos-latest'
 
     steps:
@@ -46,8 +46,7 @@ jobs:
       
       - name: Process version
         run: |
-          VERSION="$MAJOR.$MINOR.$PATCH"
-          echo "VERSION=$VERSION"
+          echo "VERSION=$MAJOR.$MINOR.$PATCH" >> "$GITHUB_ENV"
       
       # TODO: use APP_DIR instead of boremapper/
       # TODO rem cat?

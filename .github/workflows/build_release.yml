@@ -10,7 +10,7 @@ on:
 env:
   APP_NAME: 'BoreMapper'
   APP_DIR: 'boremapper/'
-  MAIN_PY_FILE: '${{ env.APP_DIR }}main.py'
+  MAIN_PY_FILE: 'boremapper/main.py'
 
 # TODO: put tags back
 #    tags:
@@ -118,6 +118,11 @@ jobs:
         run: |
           pyinstaller ${{ env.MAIN_PY_FILE }}
 
+#      - name: Create hashes
+#        run: |
+#          sha1sum "${{ env.APP_NAME }}-${{ env.VERSION }}-linux" > "${{ env.APP_NAME }}-${{ env.VERSION }}-linux.sha1"
+#          cat "${{ env.APP_NAME }}-${{ env.VERSION }}-linux.sha1"
+
       - name: Create artifact
         uses: actions/upload-artifact@v6
         with:
@@ -128,84 +133,42 @@ jobs:
         run: |
           ls -R dist/
 
+  release:
+    name: "Create GitHub release"
+    needs:
+      - build-windows
+      - build-linux
+    runs-on: ubuntu-latest
+  # TODO: put back
+  #  if: startswith(github.ref, 'refs/tags/v')
+    
+    steps:
+      - uses: actions/checkout@v6
+    
+      - name: Download and extract artifacts
+        uses: actions/download-artifact@v8
+        with:
+          # TODO: or dist/?
+          path: artifacts
+    
+      - name: List files
+        run: |
+          ls -R
+    
+      - name: Add files to GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          # TODO: or dist/?
+          files: |
+            ${{ github.workspace }}/artifacts/${{ env.APP_NAME }}-${{ env.VERSION }}-windows
+            ${{ github.workspace }}/artifacts/${{ env.APP_NAME }}-${{ env.VERSION }}-windows.sha1
+            ${{ github.workspace }}/artifacts/${{ env.APP_NAME }}-${{ env.VERSION }}-linux
+            ${{ github.workspace }}/artifacts/${{ env.APP_NAME }}-${{ env.VERSION }}-linux.sha1
 
-
-#      - name: Create artifact - macOS
-#        if: matrix.os == 'macos-latest'
-#        uses: actions/upload-artifact@v6
-#        with:
-#          name: 'macos-executables'
-#          path: dist/
-
-#      - name: 'Install makensis'
-#        if: matrix.os == 'windows-latest'
-#        run: |
-#          choco install nsis
-#
-#      - name: Create Windows NSIS installer
-#        if: matrix.os == 'windows-latest'
-#        run: |
-#          & "${env:ProgramFiles(x86)}\NSIS\makensis.exe" /V4 /DVERSION=${{ env.VERSION }} "install.nsi"
-
-#      - name: Create Windows NSIS installer
-#        uses: EastDesire/makensis-action@publish
-#        with:
-#          script-file: "install.nsi"
-#          # TODO
-#          arguments: "/V4 /DVERSION=0.1.4"
-#        env:
-#          # TODO test
-#          debug: true
-
-#      - name: Create hashes
-#        run: |
-#          sha1sum ${{ env.APP_NAME }}-${{ env.VERSION }}.exe > ${{ env.APP_NAME }}-${{ env.VERSION }}.exe.sha1
-#          sha1sum ${{ env.APP_NAME }}-${{ env.VERSION }}-Setup.exe > ${{ env.APP_NAME }}-${{ env.VERSION }}-Setup.exe.sha1
-#          cat ${{ env.APP_NAME }}-${{ env.VERSION }}.exe.sha1
-#          cat ${{ env.APP_NAME }}-${{ env.VERSION }}-Setup.exe.sha1
-#          
-#      - name: Upload artifacts
-#        uses: actions/upload-artifact@v6
-#        with:
-#          name: Windows Build
-#          if-no-files-found: error
-#          path: |
-#            ${{ env.APP_NAME }}-${{ env.VERSION }}.exe
-#            ${{ env.APP_NAME }}-${{ env.VERSION }}.exe.sha1
-#            ${{ env.APP_NAME }}-${{ env.VERSION }}-Setup.exe
-#            ${{ env.APP_NAME }}-${{ env.VERSION }}-Setup.exe.sha1
-
-#  release:
-#    name: "Create GitHub release"
-#    needs: [ build-windows ]
-#    runs-on: ubuntu-latest
-#    if: startswith(github.ref, 'refs/tags/v')
-#    
-#    steps:
-#      - uses: actions/checkout@v6
-#    
-#      - name: Download and extract artifacts
-#        uses: actions/download-artifact@v8
-#        with:
-#          path: artifacts
-#    
-#      - name: List files
-#        run: |
-#          ls -R
-#    
-#      - name: Add files to GitHub release
-#        uses: softprops/action-gh-release@v2
-#        with:
-#          files: |
-#            ${{ github.workspace }}/artifacts/Windows Build/${{ env.APP_NAME }}-${{ env.VERSION }}.exe
-#            ${{ github.workspace }}/artifacts/Windows Build/${{ env.APP_NAME }}-${{ env.VERSION }}.exe.sha1
-#            ${{ github.workspace }}/artifacts/Windows Build/${{ env.APP_NAME }}-${{ env.VERSION }}-Setup.exe
-#            ${{ github.workspace }}/artifacts/Windows Build/${{ env.APP_NAME }}-${{ env.VERSION }}-Setup.exe.sha1
-#
-#      - name: Create GitHub release
-#        uses: Roang-zero1/github-create-release-action@v3
-#        with:
-#          update_existing: true
-#          version_regex: ^v[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create GitHub release
+        uses: Roang-zero1/github-create-release-action@v3
+        with:
+          update_existing: true
+          version_regex: ^v[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

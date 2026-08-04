@@ -13,17 +13,17 @@ When crafting a woodwind instrument, it is often important to calculate its effe
 
 Yet split-bore flutes, after glued together, rarely have a perfectly circular bore. The math gets more complex when the router bit is semi-elliptical rather than semi-circular, or when the groove width/depth is irregular.
 
-How great would it be to have an app that would calculate the effective bore diameter for us.
+How great would it be to have an app that would calculate the effective bore diameter for us!
 
 
 Usage
 -----
 
-After measuring the width and height (depth) of the groove at various positions (in both *bottom* and *top* part), the app reconstructs bore shape at each of these positions, and calculates its area-equivalent diameter.
+After you measure the width and height (depth) of the groove at various positions (in both *bottom* and *top* part), the app reconstructs bore shape at each of these positions, and calculates its area-equivalent diameter.
 The calculated diameters can be exported into `WIDesigner <https://github.com/edwardkort/WWIDesigner>`_ application.
 
-- For a **routed bore**, it is advisable to also specify dimensions of the cutter bit used, so that the groove shape can be determined more accurately.
-- For a **hand-chiseled bore**, leave the cutter dimensions at their default values - the groove is then assumed to have an arc shape.
+- For a **routed bore**, it is advisable to also specify dimensions of the cutter bit used, so that the groove shape can be reconstructed more accurately.
+- For a **hand-chiseled bore**, either leave the cutter dimensions at their default values (the groove is then assumed to have an arc shape), or estimate the diameters of the cut by comparing washers of different sizes against the groove shape (cutter width is then the diameter of the washer, cutter height is 1/2 of it).
 
 
 Tools Needed
@@ -33,7 +33,7 @@ Tools Needed
 - Depth caliper
 - Convenient ruler or tape measure
 
-**Recommendation:** To best utilize the app, it is recommended to use calipers with a **data output** feature. By enabling *Voice Hints* option in the app, it keeps reading the current position as you measure. This makes the process much easier, since you don't need to keep checking the screen.
+**Recommendation:** To best utilize the app, it is recommended to use calipers with a **data output** feature. By enabling *Voice Hints* option, the app keeps reading the current position as you measure. This makes the process much smoother, since you don't need to keep checking the screen.
 
 
 Exporting to WIDesigner
@@ -51,7 +51,7 @@ Exporting to WIDesigner
 Current Limitations
 -----
 
-- Bore is assumed to be split horizontally (halves are named *bottom* and *top*, and displayed in this orientation)
+- Bore is assumed to be split horizontally (halves are named *bottom* and *top*, and displayed as such)
 - Only round cutter shape is supported (circular or elliptical). This, however, covers most of the traditionally used router bits as well as semi-elliptical grooves made with chisel.
 
 

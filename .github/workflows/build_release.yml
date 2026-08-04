@@ -21,11 +21,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
-      - name: Setup Python
+      - name: Setup python
         uses: actions/setup-python@v6
         with:
           python-version: 3.14.x
-          architecture: 'x64'
           cache: 'pip'
           cache-dependency-path: |
             **/requirements*.txt
@@ -42,7 +41,14 @@ jobs:
   build-windows:
     needs:
       - prebuild
-    runs-on: 'windows-latest'
+    runs-on: ${{ matrix.variant.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        variant: [
+          { arch: 'x64', os: 'windows-2025' },
+          { arch: 'arm64', os: 'windows-11-arm' },
+        ]
     
     steps:
       - name: Checkout code
@@ -53,8 +59,9 @@ jobs:
       - name: Extract version from tag
         uses: damienaicheh/extract-version-from-tag-action@v1.3.0
 
-      - name: Set version
+      - name: Setup env variables
         run: |
+          Add-Content -Path $env:GITHUB_ENV -Value "ARCH=${{ matrix.variant.arch }}"
           Add-Content -Path $env:GITHUB_ENV -Value "VERSION=${env:MAJOR}.${env:MINOR}.${env:PATCH}"
       
       - name: Write version file
@@ -63,11 +70,10 @@ jobs:
           echo "Version file contents:"
           cat "${env:APP_DIR}/version.py"
 
-      - name: Setup Python
+      - name: Setup python
         uses: actions/setup-python@v6
         with:
           python-version: 3.14.x
-          architecture: 'x64'
           cache: 'pip'
           cache-dependency-path: |
             **/requirements*.txt
@@ -84,7 +90,7 @@ jobs:
       - name: Create artifact
         uses: actions/upload-artifact@v6
         with:
-          name: 'windows-dist'
+          name: 'windows-${{ env.ARCH }}-dist'
           path: dist/
 
       - name: Show dist files
@@ -94,7 +100,14 @@ jobs:
   build-linux:
     needs:
       - prebuild
-    runs-on: 'ubuntu-latest'
+    runs-on: ${{ matrix.variant.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        variant: [
+          { arch: 'x64', os: 'ubuntu-24.04' },
+          { arch: 'arm64', os: 'ubuntu-24.04-arm' },
+        ]
     
     steps:
       - name: Checkout code
@@ -105,8 +118,9 @@ jobs:
       - name: Extract version from tag
         uses: damienaicheh/extract-version-from-tag-action@v1.3.0
 
-      - name: Set version
+      - name: Setup env variables
         run: |
+          echo "ARCH=${{ matrix.variant.arch }}" >> $GITHUB_ENV
           echo "VERSION=$MAJOR.$MINOR.$PATCH" >> $GITHUB_ENV
       
       - name: Write version file
@@ -115,11 +129,10 @@ jobs:
           echo "Version file contents:"
           cat "${APP_DIR}/version.py"
 
-      - name: Setup Python
+      - name: Setup python
         uses: actions/setup-python@v6
         with:
           python-version: 3.14.x
-          architecture: 'x64'
           cache: 'pip'
           cache-dependency-path: |
             **/requirements*.txt
@@ -136,7 +149,7 @@ jobs:
       - name: Create artifact
         uses: actions/upload-artifact@v6
         with:
-          name: 'linux-dist'
+          name: 'linux-${{ env.ARCH }}-dist'
           path: dist/
 
       - name: Show dist files
@@ -174,8 +187,10 @@ jobs:
         run: |
           ls -R
           mkdir release
-          (cd artifacts/windows-dist/ && zip -r ../../release/$APP_NAME-$VERSION-windows.zip .)
-          (cd artifacts/linux-dist/ && tar -cvzf ../../release/$APP_NAME-$VERSION-linux.tar.gz .)
+          (cd artifacts/windows-x64-dist/ && zip -r ../../release/$APP_NAME-$VERSION-windows-x64.zip .)
+          (cd artifacts/windows-arm64-dist/ && zip -r ../../release/$APP_NAME-$VERSION-windows-arm64.zip .)
+          (cd artifacts/linux-x64-dist/ && tar -cvzf ../../release/$APP_NAME-$VERSION-linux-x64.tar.gz .)
+          (cd artifacts/linux-arm64-dist/ && tar -cvzf ../../release/$APP_NAME-$VERSION-linux-arm64.tar.gz .)
     
       - name: Add files to GitHub release
         uses: softprops/action-gh-release@v3

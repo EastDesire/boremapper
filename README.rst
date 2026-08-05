@@ -61,3 +61,4 @@ Features
 - Voice hints for smoother measurement flow
 - Cross-sectional diagrams, profile diagrams
 - WIDesigner export
+- Support for metric and imperial units

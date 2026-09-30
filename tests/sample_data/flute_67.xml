@@ -49,14 +49,8 @@
       <point position="410" custom-diameter="" bottom-groove-width="20.16" bottom-groove-height="9.19" bottom-cutter-width="19" bottom-cutter-height="9" top-groove-width="19.61" top-groove-height="12.02" top-cutter-width="19" top-cutter-height="9" />
       <point position="420" custom-diameter="" bottom-groove-width="20.2" bottom-groove-height="9.75" bottom-cutter-width="19" bottom-cutter-height="9" top-groove-width="19.98" top-groove-height="10.74" top-cutter-width="19" top-cutter-height="9" />
       <point position="430" custom-diameter="" bottom-groove-width="20.24" bottom-groove-height="10.39" bottom-cutter-width="19" bottom-cutter-height="9" top-groove-width="19.99" top-groove-height="9.93" top-cutter-width="19" top-cutter-height="9" />
-      <point position="440" custom-diameter="" bottom-groove-width="19.91" bottom-groove-height="10.99" bottom-cutter-width="19" bottom-cutter-height="9" top-groove-width="19.76" top-groove-height="9.48" top-cutter-width="19" top-cutter-height="9" />
-      <point position="450" custom-diameter="" bottom-groove-width="20.06" bottom-groove-height="11.29" bottom-cutter-width="19" bottom-cutter-height="9" top-groove-width="19.96" top-groove-height="9.25" top-cutter-width="19" top-cutter-height="9" />
-      <point position="460" custom-diameter="" bottom-groove-width="21.57" bottom-groove-height="11.35" bottom-cutter-width="19" bottom-cutter-height="9" top-groove-width="20.63" top-groove-height="9.18" top-cutter-width="19" top-cutter-height="9" />
-      <point position="470" custom-diameter="" bottom-groove-width="20.19" bottom-groove-height="11.5" bottom-cutter-width="19" bottom-cutter-height="9" top-groove-width="19.42" top-groove-height="8.67" top-cutter-width="19" top-cutter-height="9" />
-      <point position="480" custom-diameter="" bottom-groove-width="19.78" bottom-groove-height="11.17" bottom-cutter-width="19" bottom-cutter-height="9" top-groove-width="20.39" top-groove-height="8.94" top-cutter-width="19" top-cutter-height="9" />
-      <point position="490" custom-diameter="" bottom-groove-width="19.93" bottom-groove-height="10.59" bottom-cutter-width="19" bottom-cutter-height="9" top-groove-width="20.25" top-groove-height="9.96" top-cutter-width="19" top-cutter-height="9" />
-      <point position="500" custom-diameter="" bottom-groove-width="20.48" bottom-groove-height="10.1" bottom-cutter-width="19" bottom-cutter-height="9" top-groove-width="19.66" top-groove-height="11.27" top-cutter-width="19" top-cutter-height="9" />
-      <point position="510" custom-diameter="" bottom-groove-width="20.35" bottom-groove-height="10.11" bottom-cutter-width="19" bottom-cutter-height="9" top-groove-width="19.67" top-groove-height="11.27" top-cutter-width="19" top-cutter-height="9" />
+      <point position="433" custom-diameter="" bottom-groove-width="20.141" bottom-groove-height="10.57" bottom-cutter-width="19" bottom-cutter-height="9" top-groove-width="19.921" top-groove-height="9.795" top-cutter-width="19" top-cutter-height="9" />
+      <point position="447.5" custom-diameter="20.64" bottom-groove-width="20.14" bottom-groove-height="10.57" bottom-cutter-width="19" bottom-cutter-height="9" top-groove-width="19.92" top-groove-height="9.79" top-cutter-width="19" top-cutter-height="9" />
     </points>
   </bore>
   <wid-export length-type="mm" bore-origin="0" />

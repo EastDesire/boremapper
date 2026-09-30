@@ -47,10 +47,7 @@
       <point position="390" custom-diameter="" bottom-groove-width="22.71" bottom-groove-height="9.71" bottom-cutter-width="19" bottom-cutter-height="9" top-groove-width="22.13" top-groove-height="10.52" top-cutter-width="19" top-cutter-height="9" />
       <point position="400" custom-diameter="" bottom-groove-width="22.84" bottom-groove-height="10.02" bottom-cutter-width="19" bottom-cutter-height="9" top-groove-width="22.26" top-groove-height="10.58" top-cutter-width="19" top-cutter-height="9" />
       <point position="410" custom-diameter="" bottom-groove-width="22.72" bottom-groove-height="9.85" bottom-cutter-width="19" bottom-cutter-height="9" top-groove-width="22.57" top-groove-height="11.46" top-cutter-width="19" top-cutter-height="9" />
-      <point position="420" custom-diameter="" bottom-groove-width="22.67" bottom-groove-height="9.56" bottom-cutter-width="19" bottom-cutter-height="9" top-groove-width="22.55" top-groove-height="12.55" top-cutter-width="19" top-cutter-height="9" />
-      <point position="430" custom-diameter="" bottom-groove-width="22.69" bottom-groove-height="9.24" bottom-cutter-width="19" bottom-cutter-height="9" top-groove-width="22.69" top-groove-height="13" top-cutter-width="19" top-cutter-height="9" />
-      <point position="440" custom-diameter="" bottom-groove-width="21.84" bottom-groove-height="9.36" bottom-cutter-width="19" bottom-cutter-height="9" top-groove-width="22.33" top-groove-height="12.26" top-cutter-width="19" top-cutter-height="9" />
-      <point position="442" custom-diameter="" bottom-groove-width="21.84" bottom-groove-height="9.36" bottom-cutter-width="19" bottom-cutter-height="9" top-groove-width="22.38" top-groove-height="11.49" top-cutter-width="19" top-cutter-height="9" />
+      <point position="424" custom-diameter="" bottom-groove-width="22.72" bottom-groove-height="9.85" bottom-cutter-width="19" bottom-cutter-height="9" top-groove-width="22.57" top-groove-height="11.46" top-cutter-width="19" top-cutter-height="9" />
     </points>
   </bore>
   <wid-export length-type="mm" bore-origin="0" />

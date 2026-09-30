@@ -21,22 +21,22 @@ tunings = {
         'name': '6-hole NAF chromatic tuning, equal temperament, A={freq}',
         'note_naming': 'default',
         'fingerings': [
-            # <interval from root>, <name>, <weight>, <open holes>
-            (0, 1, '{note}', (False, False, False, False, False, False)),
-            (3, 1, '{note}', (False, False, False, False, False, True)),
-            (4, 1, '{note}', (False, False, False, False, True, False)),
-            (5, 1, '{note}', (False, False, False, False, True, True)),
-            (6, 1, '{note}', (False, False, False, True, False, True)),
-            (7, 1, '{note}', (False, False, False, True, True, True)),
-            (8, 1, '{note}', (False, False, True, False, True, True)),
-            (9, 1, '{note}', (False, False, True, True, True, True)),
-            (10, 1, '{note}', (False, True, False, True, True, True)),
-            (11, 1, '{note}', (False, True, True, True, True, True)),
-            (12, 1, '{note}', (True, True, False, True, True, True)),
-            (13, 1, '{note} (open)', (True, True, True, True, True, True)),
-            (13, 1, '{note} (closed)', (False, True, False, False, False, False)),
-            (14, 1, '{note}', (True, True, False, False, False, False)),
-            (15, 1, '{note}', (True, True, False, False, False, True)),
+            # <interval from root>, <weight>, <open holes>, <name>
+            (0, 1, (False, False, False, False, False, False), '{note}'),
+            (3, 1, (False, False, False, False, False, True), '{note}'),
+            (4, 1, (False, False, False, False, True, False), '{note}'),
+            (5, 1, (False, False, False, False, True, True), '{note}'),
+            (6, 1, (False, False, False, True, False, True), '{note}'),
+            (7, 1, (False, False, False, True, True, True), '{note}'),
+            (8, 1, (False, False, True, False, True, True), '{note}'),
+            (9, 1, (False, False, True, True, True, True), '{note}'),
+            (10, 1, (False, True, False, True, True, True), '{note}'),
+            (11, 1, (False, True, True, True, True, True), '{note}'),
+            (12, 1, (True, True, False, True, True, True), '{note}'),
+            (13, 1, (True, True, True, True, True, True), '{note} (open)'),
+            (13, 1, (False, True, False, False, False, False), '{note} (closed)'),
+            (14, 1, (True, True, False, False, False, False), '{note}'),
+            (15, 1, (True, True, False, False, False, True), '{note}'),
         ],
     },
 }
@@ -66,7 +66,7 @@ def generate_tuning_data(root_interval: int, a4: int, tuning: dict):
     fingerings_data = []
     
     for fingering in tuning['fingerings']:
-        interval_in_fingering, weight, note_name_format, holes_state = fingering
+        interval_in_fingering, weight, holes_state, note_name_format = fingering
         interval = root_interval + interval_in_fingering
         note_name = note_name_format.format(note=note_full_name(interval, tuning['note_naming']))
         note_freq = note_12tet_frequency(a4, interval)
@@ -82,7 +82,7 @@ def generate_tuning_data(root_interval: int, a4: int, tuning: dict):
             '    </fingering>',
         ])
         
-    interval_in_fingering, weight, note_name_format, holes_state = tuning['fingerings'][0]
+    interval_in_fingering, weight, holes_state, note_name_format = tuning['fingerings'][0]
     number_of_holes = len(holes_state)
     
     format_params = {

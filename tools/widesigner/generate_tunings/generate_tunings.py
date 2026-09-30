@@ -1,32 +1,103 @@
 #!/usr/bin/env python3
-
+from math import floor
 from pathlib import Path
 
 
 out_dir = './tunings'
-holes_range = [4, 8]
-freq_range = [110, 880] # Hz
+
+# A4 pitches to generate
+concert_pitches = [440, 432, 442, 443, 415]
+
+# Note range to generate, relative to concert pitch
+note_range = [-48, 48]
+
+note_namings = {
+    'default': ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#'],
+}
+
+# Based on NAF tunings by Edward Kort
+tunings = {
+    '6-hole_NAF_chromatic_tuning_ET': {
+        'name': '6-hole NAF chromatic tuning, equal temperament, A={freq}',
+        'note_naming': 'default',
+        'fingerings': [
+            # <interval from root>, <name>, <weight>, <open holes>
+            (0, 1, '{note}', (False, False, False, False, False, False)),
+            (3, 1, '{note}', (False, False, False, False, False, True)),
+            (4, 1, '{note}', (False, False, False, False, True, False)),
+            (5, 1, '{note}', (False, False, False, False, True, True)),
+            (6, 1, '{note}', (False, False, False, True, False, True)),
+            (7, 1, '{note}', (False, False, False, True, True, True)),
+            (8, 1, '{note}', (False, False, True, False, True, True)),
+            (9, 1, '{note}', (False, False, True, True, True, True)),
+            (10, 1, '{note}', (False, True, False, True, True, True)),
+            (11, 1, '{note}', (False, True, True, True, True, True)),
+            (12, 1, '{note}', (True, True, False, True, True, True)),
+            (13, 1, '{note} (open)', (True, True, True, True, True, True)),
+            (13, 1, '{note} (closed)', (False, True, False, False, False, False)),
+            (14, 1, '{note}', (True, True, False, False, False, False)),
+            (15, 1, '{note}', (True, True, False, False, False, True)),
+        ],
+    },
+}
 
 
-def generate_tuning_data(freq: int, holes: int):
-    tuning_name = '%d Hz tuning' % (round(freq))
-    tuning_comment = '%d Hz tuning with %d holes' % (round(freq), holes)
-    note_name = 'root'
+def note_full_name(interval: int, naming: str) -> str:
+    """
+    :param interval: Number of semitones relative to A4
+    :param naming: Note naming variant
+    """
+    octave = floor((interval + 9) / 12) + 4
+    return note_namings[naming][interval % 12] + str(octave)
+
+
+def note_12tet_frequency(f0: float, interval: int) -> float:
+    """
+    Calculates a frequency of given note using the 12-tone equal temperament tuning system.
+    See https://music.stackexchange.com/questions/135572/
+    :param f0: Frequency (Hz) of a reference note (usually A4)
+    :param interval: Number of semitones relative to the reference note
+    :return: Note frequency in Hz
+    """
+    return f0 * pow(2, interval / 12)
+
+
+def generate_tuning_data(root_interval: int, a4: int, tuning: dict):
+    fingerings_data = []
     
+    for fingering in tuning['fingerings']:
+        interval_in_fingering, weight, note_name_format, holes_state = fingering
+        interval = root_interval + interval_in_fingering
+        note_name = note_name_format.format(note=note_full_name(interval, tuning['note_naming']))
+        note_freq = note_12tet_frequency(a4, interval)
+        
+        fingerings_data.extend([
+            '    <fingering>',
+            '        <note>',
+            '            <name>' + note_name + '</name>',
+            '            <frequency>' + str(note_freq) + '</frequency>',
+            '        </note>',
+            *(['        <openHole>' + ('true' if is_open else 'false') + '</openHole>' for is_open in holes_state]),
+            '        <optimizationWeight>' + str(weight) + '</optimizationWeight>',
+            '    </fingering>',
+        ])
+        
+    interval_in_fingering, weight, note_name_format, holes_state = tuning['fingerings'][0]
+    number_of_holes = len(holes_state)
+    
+    format_params = {
+        'freq': a4,
+    }
+    tuning_name = tuning['name'].format(**format_params)
+    tuning_comment = tuning['name'].format(**format_params)
+
     out = '\n'.join([
         '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>',
         '<ns2:tuning xmlns:ns2="http://www.wwidesigner.com/Tuning">',
         '    <name>' + tuning_name + '</name>',
         '    <comment>' + tuning_comment + '</comment>',
-        '    <numberOfHoles>' + str(holes) + '</numberOfHoles>',
-        '    <fingering>',
-        '        <note>',
-        '            <name>' + note_name + '</name>',
-        '            <frequency>' + '{:.1f}'.format(freq) + '</frequency>',
-        '        </note>',
-        *(['        <openHole>false</openHole>'] * holes),
-        '        <optimizationWeight>1</optimizationWeight>',
-        '    </fingering>',
+        '    <numberOfHoles>' + str(number_of_holes) + '</numberOfHoles>',
+        *fingerings_data,
         '</ns2:tuning>',
     ])
     return out
@@ -35,16 +106,21 @@ def generate_tuning_data(freq: int, holes: int):
 def generate_files():
     Path(out_dir).mkdir(exist_ok=True)
 
-    for holes in range(holes_range[0], holes_range[1] + 1):
-        holes_dir = out_dir + '/' + ('%d-hole' % holes)
-        Path(holes_dir).mkdir(exist_ok=True)
+    for tuning_name, tuning in tunings.items():
+        tuning_dir = out_dir + '/' + tuning_name + '/'
+        Path(tuning_dir).mkdir(exist_ok=True)
+        
+        for pitch in concert_pitches:
+            pitch_dir = tuning_dir + '/' + ('%d_Hz' % pitch)
+            Path(pitch_dir).mkdir(exist_ok=True)
 
-        for freq in range(freq_range[0], freq_range[1] + 1):
-            data = generate_tuning_data(freq, holes)
-            file = holes_dir + '/' + ('%d_Hz_%d-hole_tuning.xml' % (freq, holes))
+            for interval in range(note_range[0], note_range[1] + 1):
+                root_note_name = note_full_name(interval, tuning['note_naming'])
+                data = generate_tuning_data(interval, pitch, tuning)
+                file = pitch_dir + '/' + ('%s_%s_%d_Hz.xml' % (root_note_name, tuning_name, pitch))
 
-            with open(file, 'w', encoding='utf-8') as f:
-                f.write(data)
+                with open(file, 'w', encoding='utf-8') as f:
+                    f.write(data)
 
 
 def main():

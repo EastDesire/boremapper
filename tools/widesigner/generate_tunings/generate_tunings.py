@@ -111,13 +111,13 @@ def generate_files():
         Path(tuning_dir).mkdir(exist_ok=True)
         
         for pitch in concert_pitches:
-            pitch_dir = tuning_dir + '/' + ('%d_Hz' % pitch)
+            pitch_dir = tuning_dir + '/' + ('A%d' % pitch)
             Path(pitch_dir).mkdir(exist_ok=True)
 
             for interval in range(note_range[0], note_range[1] + 1):
                 root_note_name = note_full_name(interval, tuning['note_naming'])
                 data = generate_tuning_data(interval, pitch, tuning)
-                file = pitch_dir + '/' + ('%s_%s_%d_Hz.xml' % (root_note_name, tuning_name, pitch))
+                file = pitch_dir + '/' + ('%s_%s_A%d.xml' % (root_note_name, tuning_name, pitch))
 
                 with open(file, 'w', encoding='utf-8') as f:
                     f.write(data)

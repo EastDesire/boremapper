@@ -8,7 +8,7 @@ out_dir = './tunings'
 # A4 pitches to generate
 concert_pitches = [440, 432, 442, 443, 415]
 
-# Note range to generate, relative to concert pitch
+# Note range to generate - number of semitones relative to concert pitch
 note_range = [-48, 48]
 
 note_namings = {

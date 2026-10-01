@@ -21,23 +21,27 @@ tunings = {
         'name': '6-hole NAF chromatic tuning, equal temperament, A={freq}',
         'note_naming': 'default',
         'fingerings': [
-            # <interval from root>, <weight>, <open holes>, <name>
-            (0, 1, (False, False, False, False, False, False), '{note}'),
-            (3, 1, (False, False, False, False, False, True), '{note}'),
-            (4, 1, (False, False, False, False, True, False), '{note}'),
-            (5, 1, (False, False, False, False, True, True), '{note}'),
-            (6, 1, (False, False, False, True, False, True), '{note}'),
-            (7, 1, (False, False, False, True, True, True), '{note}'),
-            (8, 1, (False, False, True, False, True, True), '{note}'),
-            (9, 1, (False, False, True, True, True, True), '{note}'),
-            (10, 1, (False, True, False, True, True, True), '{note}'),
-            (11, 1, (False, True, True, True, True, True), '{note}'),
-            (12, 1, (True, True, False, True, True, True), '{note}'),
-            (13, 1, (True, True, True, True, True, True), '{note} (open)'),
-            (13, 1, (False, True, False, False, False, False), '{note} (closed)'),
-            (14, 1, (True, True, False, False, False, False), '{note}'),
-            (15, 1, (True, True, False, False, False, True), '{note}'),
+            # <interval from root>, <open holes>, <name>
+            (0, (False, False, False, False, False, False), '{note}'),
+            (3, (False, False, False, False, False, True), '{note}'),
+            (4, (False, False, False, False, True, False), '{note}'),
+            (5, (False, False, False, False, True, True), '{note}'),
+            (6, (False, False, False, True, False, True), '{note}'),
+            (7, (False, False, False, True, True, True), '{note}'),
+            (8, (False, False, True, False, True, True), '{note}'),
+            (9, (False, False, True, True, True, True), '{note}'),
+            (10, (False, True, False, True, True, True), '{note}'),
+            (11, (False, True, True, True, True, True), '{note}'),
+            (12, (True, True, False, True, True, True), '{note}'),
+            (13, (True, True, True, True, True, True), '{note} (open)'),
+            (13, (False, True, False, False, False, False), '{note} (closed)'),
+            (14, (True, True, False, False, False, False), '{note}'),
+            (15, (True, True, False, False, False, True), '{note}'),
         ],
+        'weightings': {
+            'unweighted': [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            'weighted': [1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0],
+        },
     },
 }
 
@@ -62,14 +66,15 @@ def note_12tet_frequency(f0: float, interval: int) -> float:
     return f0 * pow(2, interval / 12)
 
 
-def generate_tuning_data(root_interval: int, a4: int, tuning: dict):
+def generate_tuning_data(root_interval: int, a4: int, tuning: dict, weighting: str):
     fingerings_data = []
     
-    for fingering in tuning['fingerings']:
-        interval_in_fingering, weight, holes_state, note_name_format = fingering
+    for index, fingering in enumerate(tuning['fingerings']):
+        interval_in_fingering, holes_state, note_name_format = fingering
         interval = root_interval + interval_in_fingering
         note_name = note_name_format.format(note=note_full_name(interval, tuning['note_naming']))
         note_freq = note_12tet_frequency(a4, interval)
+        weight = tuning['weightings'][weighting][index]
         
         fingerings_data.extend([
             '    <fingering>',
@@ -82,7 +87,7 @@ def generate_tuning_data(root_interval: int, a4: int, tuning: dict):
             '    </fingering>',
         ])
         
-    interval_in_fingering, weight, holes_state, note_name_format = tuning['fingerings'][0]
+    interval_in_fingering, holes_state, note_name_format = tuning['fingerings'][0]
     number_of_holes = len(holes_state)
     
     format_params = {
@@ -114,13 +119,17 @@ def generate_files():
             pitch_dir = tuning_dir + '/' + ('A%d' % pitch)
             Path(pitch_dir).mkdir(exist_ok=True)
 
-            for interval in range(note_range[0], note_range[1] + 1):
-                root_note_name = note_full_name(interval, tuning['note_naming'])
-                data = generate_tuning_data(interval, pitch, tuning)
-                file = pitch_dir + '/' + ('%s_%s_A%d.xml' % (root_note_name, tuning_name, pitch))
+            for weighting_name in tuning['weightings'].keys():
+                weighting_dir = pitch_dir + '/' + weighting_name
+                Path(weighting_dir).mkdir(exist_ok=True)
 
-                with open(file, 'w', encoding='utf-8') as f:
-                    f.write(data)
+                for interval in range(note_range[0], note_range[1] + 1):
+                    root_note_name = note_full_name(interval, tuning['note_naming'])
+                    data = generate_tuning_data(interval, pitch, tuning, weighting_name)
+                    file = weighting_dir + '/' + ('%s_%s_A%d_%s.xml' % (root_note_name, tuning_name, pitch, weighting_name))
+
+                    with open(file, 'w', encoding='utf-8') as f:
+                        f.write(data)
 
 
 def main():
